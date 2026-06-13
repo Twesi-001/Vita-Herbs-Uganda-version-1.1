@@ -4,13 +4,17 @@ import About from './About'
 import Products from './Products'
 import Contact from './Contact'
 import Socials from './Socials'
-import heroImage from '../assets/hero-herbs.jpg'; 
+import heroImage from '../assets/Herbs.jpg'; 
+import { useScrollReveal } from '../hooks/useScrollReveal'
 import'./Home.css'
+
 function Home(){
+    useScrollReveal();
+
     return(
         <>
          <main id="home">
-    <section className="hero">
+    <section className="hero reveal reveal--fade-up">
       <div className="container hero-grid">
         <div className="hero-copy">
           <span className="eyebrow">Natural Herbal Wellness</span>
@@ -41,11 +45,11 @@ function Home(){
       </div>
     </section>
 
-    <Products />
-    <About />
-    <Socials/>
-    <NewsLetter />
-    <Contact />
+    <div className="reveal reveal--fade-up"><Products /></div>
+    <div className="reveal reveal--fade-up"><About /></div>
+    <div className="reveal reveal--fade-up"><Socials /></div>
+    <div className="reveal reveal--fade-up"><NewsLetter /></div>
+    <div className="reveal reveal--fade-up"><Contact /></div>
   </main>
         
         </>
