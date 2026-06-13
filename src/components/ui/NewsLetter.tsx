@@ -21,23 +21,24 @@ function NewsLetter() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/subscribers', {
+      // ✅ Changed to live backend URL
+      const response = await fetch('https://vitaherbs-backend.onrender.com/api/subscribers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email: v })
       });
       const data = await response.json();
       
       if (response.ok) {
-        setNewsletterMsg({ type: 'success', text: 'Thanks for subscribing!' });
+        setNewsletterMsg({ type: 'success', text: data.message || 'Thanks for subscribing!' });
         setEmail('');
         setTimeout(() => setNewsletterMsg(null), 5000);
       } else {
         setNewsletterMsg({ type: 'error', text: data.message || 'Subscription failed' });
         setTimeout(() => setNewsletterMsg(null), 5000);
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.error('Subscription error:', error);
       setNewsletterMsg({ type: 'error', text: 'Subscription failed. Please try again.' });
       setTimeout(() => setNewsletterMsg(null), 5000);
     } finally {
