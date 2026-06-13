@@ -125,7 +125,7 @@
 .card-body p {
   font-size: 13px;
   line-height: 1.5;
-  color: var(--text-light);
+  color:white;
   margin-bottom: 16px;
   flex: 1;
 }
@@ -135,7 +135,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--green);
+  color: white;
   font-weight: 600;
   text-decoration: none;
   transition: var(--transition);
