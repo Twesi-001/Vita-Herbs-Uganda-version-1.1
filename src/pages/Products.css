@@ -374,17 +374,38 @@
   margin-bottom: 12px;
 }
 
+/* Order Button  */
 .order-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: var(--green, #2e7d32);
-  color: white;
+  color: white; 
   padding: 10px 20px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: var(--transition);
+  margin-top: auto;
+  align-self: flex-start;
+  font-size: 13px;
+}
+
+.order-btn::before {
+  content: "💬";
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.order-btn:hover {
+  background: var(--green-dark, #1b5e20);
+  color: white;  /* ✅ Keep white on hover */
+  gap: 12px;
+  transform: translateY(-2px);
+}
+
+.order-btn:hover::before {
+  transform: scale(1.1);
 }
 
 .order-btn:hover {
