@@ -23,21 +23,26 @@ interface Stats {
   products: number;
 }
 
+interface LoginResponse {
+  token: string;
+  message?: string;
+}
+
 function AdminDashboard() {
   const [authState, setAuthState] = useState<'loading' | 'loggedout' | 'loggedin'>('loading');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [stats, setStats] = useState<Stats>({ subscribers: 0, contacts: 0, products: 0 });
   const [activeTab, setActiveTab] = useState<'subscribers' | 'contacts'>('subscribers');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const API_URL = 'https://vitaherbs-backend.onrender.com/api';
 
-  // Load dashboard data function - DECLARED FIRST
-  const loadDashboardData = async (token: string) => {
+  // Load dashboard data function
+  const loadDashboardData = async (token: string): Promise<void> => {
     try {
       const [statsRes, subscribersRes, contactsRes] = await Promise.all([
         fetch(`${API_URL}/admin/stats`, { headers: { 'Authorization': `Bearer ${token}` } }),
@@ -45,9 +50,13 @@ function AdminDashboard() {
         fetch(`${API_URL}/admin/contacts`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
       
-      const statsData = await statsRes.json();
-      const subscribersData = await subscribersRes.json();
-      const contactsData = await contactsRes.json();
+      if (!statsRes.ok || !subscribersRes.ok || !contactsRes.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const statsData: Stats = await statsRes.json();
+      const subscribersData: Subscriber[] = await subscribersRes.json();
+      const contactsData: Contact[] = await contactsRes.json();
       
       setStats(statsData);
       setSubscribers(subscribersData);
@@ -58,9 +67,9 @@ function AdminDashboard() {
     }
   };
 
-  // Check auth on mount only - NOW loadDashboardData is defined
+  // Check auth on mount
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = async (): Promise<void> => {
       const token = localStorage.getItem('adminToken');
       if (!token) {
         setAuthState('loggedout');
@@ -79,25 +88,26 @@ function AdminDashboard() {
           localStorage.removeItem('adminToken');
           setAuthState('loggedout');
         }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
+        console.error('Auth check failed:', err);
         setAuthState('loggedout');
       }
     };
     
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Refresh data
-  const refreshData = async () => {
+  const refreshData = async (): Promise<void> => {
     const token = localStorage.getItem('adminToken');
     if (token) {
       await loadDashboardData(token);
     }
   };
 
-  // Login handler
-  const handleLogin = async (e: React.FormEvent) => {
+  // Login handler - using React.FormEvent (not deprecated, it's the correct one)
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -109,17 +119,17 @@ function AdminDashboard() {
         body: JSON.stringify({ username, password })
       });
       
-      const data = await response.json();
+      const data: LoginResponse = await response.json();
       
-      if (response.ok) {
+      if (response.ok && data.token) {
         localStorage.setItem('adminToken', data.token);
         await loadDashboardData(data.token);
         setAuthState('loggedin');
       } else {
         setError(data.message || 'Login failed');
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
+      console.error('Login failed:', err);
       setError('Connection failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -127,30 +137,37 @@ function AdminDashboard() {
   };
 
   // Export CSV
-  const exportCSV = async (type: 'subscribers' | 'contacts') => {
+  const exportCSV = (type: 'subscribers' | 'contacts'): void => {
     const token = localStorage.getItem('adminToken');
-    window.open(`${API_URL}/admin/export/${type}?token=${token}`, '_blank');
+    if (token) {
+      window.open(`${API_URL}/admin/export/${type}?token=${token}`, '_blank');
+    }
   };
 
   // Delete item
-  const deleteItem = async (type: 'subscribers' | 'contacts', id: string) => {
+  const deleteItem = async (type: 'subscribers' | 'contacts', id: string): Promise<void> => {
     const token = localStorage.getItem('adminToken');
     if (!confirm('Are you sure you want to delete this item?')) return;
     
     try {
-      await fetch(`${API_URL}/admin/${type}/${id}`, {
+      const response = await fetch(`${API_URL}/admin/${type}/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      await refreshData();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      
+      if (response.ok) {
+        await refreshData();
+      } else {
+        throw new Error('Delete failed');
+      }
     } catch (err) {
+      console.error('Delete failed:', err);
       alert('Delete failed');
     }
   };
 
   // Logout
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem('adminToken');
     setAuthState('loggedout');
     setSubscribers([]);
@@ -179,14 +196,14 @@ function AdminDashboard() {
               type="text"
               placeholder="Username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
               required
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               required
             />
             <button type="submit" disabled={isLoading}>
@@ -265,7 +282,7 @@ function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {subscribers.map((sub) => (
+              {subscribers.map((sub: Subscriber) => (
                 <tr key={sub._id}>
                   <td>{sub.email}</td>
                   <td>{new Date(sub.subscribedAt).toLocaleDateString()}</td>
@@ -278,7 +295,9 @@ function AdminDashboard() {
                 </tr>
               ))}
               {subscribers.length === 0 && (
-                <tr><td colSpan={4}>No subscribers yet</td></tr>
+                <tr key="no-subscribers">
+                  <td colSpan={4} style={{ textAlign: 'center' }}>No subscribers yet</td>
+                </tr>
               )}
             </tbody>
           </table>
@@ -294,7 +313,7 @@ function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {contacts.map((contact) => (
+              {contacts.map((contact: Contact) => (
                 <tr key={contact._id}>
                   <td>{contact.name}</td>
                   <td>{contact.email}</td>
@@ -308,7 +327,9 @@ function AdminDashboard() {
                 </tr>
               ))}
               {contacts.length === 0 && (
-                <tr><td colSpan={5}>No contacts yet</td></tr>
+                <tr key="no-contacts">
+                  <td colSpan={5} style={{ textAlign: 'center' }}>No contacts yet</td>
+                </tr>
               )}
             </tbody>
           </table>
