@@ -1,24 +1,34 @@
 import React, { useState } from 'react';
 import './Contact.css';
 
+interface FetchError extends Error {
+  name: string;
+}
+
 function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
+    
+    // Create abort controller for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     
     try {
       const response = await fetch('https://vitaherbs-backend.onrender.com/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        signal: controller.signal
       });
       
-      const data = await response.json();
+      clearTimeout(timeoutId);
+      const data = await response.json() as { message: string };
       
       if (response.ok) {
         setStatus({ type: 'success', text: 'Message sent! We\'ll contact you soon.' });
@@ -26,9 +36,16 @@ function Contact() {
       } else {
         setStatus({ type: 'error', text: data.message || 'Failed to send message' });
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      setStatus({ type: 'error', text: 'Unable to connect. Please try again.' });
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.error('Fetch error:', err);
+      
+      const error = err as FetchError;
+      if (error.name === 'AbortError') {
+        setStatus({ type: 'error', text: 'Request timeout. Server is waking up. Please try again.' });
+      } else {
+        setStatus({ type: 'error', text: 'Unable to connect. Please try again.' });
+      }
     } finally {
       setLoading(false);
       setTimeout(() => setStatus(null), 5000);
