@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
+import { API_URL } from '../lib/api';
 import './AdminDashboard.css';
 
 interface Subscriber {
-  _id: string;
+  id: number;
   email: string;
-  subscribedAt: string;
-  isActive: boolean;
+  created_at: string;
 }
 
 interface Contact {
-  _id: string;
+  id: number;
   name: string;
-  email: string;
-  message: string;
-  createdAt: string;
-  isFollowedUp: boolean;
+  email: string | null;
+  phone: string;
+  product: string;
+  quantity: string;
+  message: string | null;
+  created_at: string;
 }
 
 interface Stats {
@@ -38,8 +41,6 @@ function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'subscribers' | 'contacts'>('subscribers');
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const API_URL = 'https://vitaherbs-backend.onrender.com/api';
 
   // Load dashboard data function
   const loadDashboardData = async (token: string): Promise<void> => {
@@ -106,8 +107,8 @@ function AdminDashboard() {
     }
   };
 
-  // Login handler - using React.FormEvent (not deprecated, it's the correct one)
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  // Login handler
+  const handleLogin = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -144,8 +145,8 @@ function AdminDashboard() {
     }
   };
 
-  // Delete item
-  const deleteItem = async (type: 'subscribers' | 'contacts', id: string): Promise<void> => {
+  // Delete item - Fixed to use id (not _id)
+  const deleteItem = async (type: 'subscribers' | 'contacts', id: number): Promise<void> => {
     const token = localStorage.getItem('adminToken');
     if (!confirm('Are you sure you want to delete this item?')) return;
     
@@ -277,18 +278,16 @@ function AdminDashboard() {
               <tr>
                 <th>Email</th>
                 <th>Subscribed Date</th>
-                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {subscribers.map((sub: Subscriber) => (
-                <tr key={sub._id}>
+                <tr key={sub.id}>
                   <td>{sub.email}</td>
-                  <td>{new Date(sub.subscribedAt).toLocaleDateString()}</td>
-                  <td>{sub.isActive ? '✅ Active' : '❌ Inactive'}</td>
+                  <td>{new Date(sub.created_at).toLocaleDateString()}</td>
                   <td>
-                    <button onClick={() => deleteItem('subscribers', sub._id)} className="delete-btn">
+                    <button onClick={() => deleteItem('subscribers', sub.id)} className="delete-btn">
                       Delete
                     </button>
                   </td>
@@ -296,7 +295,7 @@ function AdminDashboard() {
               ))}
               {subscribers.length === 0 && (
                 <tr key="no-subscribers">
-                  <td colSpan={4} style={{ textAlign: 'center' }}>No subscribers yet</td>
+                  <td colSpan={3} style={{ textAlign: 'center' }}>No subscribers yet</td>
                 </tr>
               )}
             </tbody>
@@ -306,7 +305,8 @@ function AdminDashboard() {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Email</th>
+                <th>Phone</th>
+                <th>Product</th>
                 <th>Message</th>
                 <th>Date</th>
                 <th>Actions</th>
@@ -314,13 +314,14 @@ function AdminDashboard() {
             </thead>
             <tbody>
               {contacts.map((contact: Contact) => (
-                <tr key={contact._id}>
+                <tr key={contact.id}>
                   <td>{contact.name}</td>
-                  <td>{contact.email}</td>
-                  <td>{contact.message.substring(0, 60)}...</td>
-                  <td>{new Date(contact.createdAt).toLocaleDateString()}</td>
+                  <td>{contact.phone}</td>
+                  <td>{contact.product}</td>
+                  <td>{contact.message ? `${contact.message.substring(0, 60)}…` : '—'}</td>
+                  <td>{new Date(contact.created_at).toLocaleDateString()}</td>
                   <td>
-                    <button onClick={() => deleteItem('contacts', contact._id)} className="delete-btn">
+                    <button onClick={() => deleteItem('contacts', contact.id)} className="delete-btn">
                       Delete
                     </button>
                   </td>
@@ -328,7 +329,7 @@ function AdminDashboard() {
               ))}
               {contacts.length === 0 && (
                 <tr key="no-contacts">
-                  <td colSpan={5} style={{ textAlign: 'center' }}>No contacts yet</td>
+                  <td colSpan={6} style={{ textAlign: 'center' }}>No contacts yet</td>
                 </tr>
               )}
             </tbody>
