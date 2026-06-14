@@ -21,30 +21,31 @@ function NewsLetter() {
     setLoading(true);
 
     try {
-      // Simulate API call (replace with actual API endpoint)
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // ✅ Changed to live backend URL
+      const response = await fetch('https://vitaherbs-backend.onrender.com/api/subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: v })
+      });
+      const data = await response.json();
       
-      const key = 'vitaherbs_subscribers';
-      const existing: string[] = JSON.parse(localStorage.getItem(key) || '[]');
-      
-      if (!existing.includes(v)) {
-        existing.push(v);
-        localStorage.setItem(key, JSON.stringify(existing));
-        setNewsletterMsg({ type: 'success', text: 'Thanks for subscribing! Check your email for updates.' });
+      if (response.ok) {
+        setNewsletterMsg({ type: 'success', text: data.message || 'Thanks for subscribing!' });
         setEmail('');
+        setTimeout(() => setNewsletterMsg(null), 5000);
       } else {
-        setNewsletterMsg({ type: 'error', text: 'This email is already subscribed!' });
+        setNewsletterMsg({ type: 'error', text: data.message || 'Subscription failed' });
+        setTimeout(() => setNewsletterMsg(null), 5000);
       }
-      setTimeout(() => setNewsletterMsg(null), 5000);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch (error) {
+      console.error('Subscription error:', error);
       setNewsletterMsg({ type: 'error', text: 'Subscription failed. Please try again.' });
       setTimeout(() => setNewsletterMsg(null), 5000);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <section className="newsletter-section">
       <div className="container">

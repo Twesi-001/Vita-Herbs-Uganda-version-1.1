@@ -125,7 +125,7 @@
 .card-body p {
   font-size: 13px;
   line-height: 1.5;
-  color: var(--text-light);
+  color:white;
   margin-bottom: 16px;
   flex: 1;
 }
@@ -135,7 +135,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--green);
+  color: white;
   font-weight: 600;
   text-decoration: none;
   transition: var(--transition);
@@ -308,3 +308,132 @@
 .card:nth-child(1) { animation-delay: 0.05s; }
 .card:nth-child(2) { animation-delay: 0.1s; }
 .card:nth-child(3) { animation-delay: 0.15s; }
+
+.retry-btn {
+  background: var(--green, #2e7d32);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: var(--green-dark, #1b5e20);
+  transform: translateY(-2px);
+}
+
+.loading-text {
+  margin-top: 16px;
+  color: var(--text-light, #4b5563);
+  font-size: 0.9rem;
+}
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border, #e5e7eb);
+  border-top: 4px solid var(--green, #2e7d32);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 16px;
+  color: var(--text-light, #4b5563);
+  font-size: 0.9rem;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--green, #2e7d32);
+  margin: 12px 0 8px;
+}
+
+.product-category {
+  font-size: 0.75rem;
+  color: var(--text-light, #4b5563);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* Order Button  */
+.order-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green, #2e7d32);
+  color: white; 
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+  margin-top: auto;
+  align-self: flex-start;
+  font-size: 13px;
+}
+
+.order-btn::before {
+  content: "💬";
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.order-btn:hover {
+  background: var(--green-dark, #1b5e20);
+  color: white;  /* ✅ Keep white on hover */
+  gap: 12px;
+  transform: translateY(-2px);
+}
+
+.order-btn:hover::before {
+  transform: scale(1.1);
+}
+
+.order-btn:hover {
+  background: var(--green-dark, #1b5e20);
+  transform: translateY(-2px);
+}
+
+.error-message {
+  color: #dc2626;
+  text-align: center;
+  padding: 20px;
+  background: #fef2f2;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.retry-btn {
+  background: var(--green, #2e7d32);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: var(--green-dark, #1b5e20);
+  transform: translateY(-2px);
+}
