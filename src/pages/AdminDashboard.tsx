@@ -34,7 +34,7 @@ function AdminDashboard() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_URL = 'https://vitaherbs-backend.onrender.com';
+  const API_URL = 'https://vitaherbs-backend.onrender.com/api';
 
   // Load dashboard data function - DECLARED FIRST
   const loadDashboardData = async (token: string) => {
