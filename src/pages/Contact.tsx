@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Mail, MapPin, MessageCircle, Send, Loader2 } from "lucide-react";
+import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
 import "./Contact.css";
 
 // Simple toast implementation since you don't have sonner set up
@@ -22,10 +22,9 @@ const toast = {
 };
 
 function ContactPage() {
-  const [form, setForm] = useState({ 
-    name: "", phone: "", email: "", product: "", quantity: "", message: "" 
+  const [form, setForm] = useState({
+    name: "", phone: "", email: "", product: "", quantity: "", message: ""
   });
-  const [loading, setLoading] = useState(false);
 
   const products = [
     { id: 1, name: "Vita Detox Extract" },
@@ -38,17 +37,27 @@ function ContactPage() {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
-  async function onSubmit(e: React.FormEvent) {
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.phone || !form.product || !form.quantity) {
       toast.error("Please fill in all required fields");
       return;
     }
-    
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setLoading(false);
-    toast.success("Inquiry sent! We'll get back to you shortly.");
+
+    const lines = [
+      "New inquiry from VitaHerbs website:",
+      `Name: ${form.name}`,
+      `Phone: ${form.phone}`,
+      form.email ? `Email: ${form.email}` : null,
+      `Product: ${form.product}`,
+      `Quantity: ${form.quantity}`,
+      form.message ? `Message: ${form.message}` : null,
+    ].filter(Boolean);
+
+    const url = `https://wa.me/256760108564?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+
+    toast.success("Opening WhatsApp to send your inquiry...");
     setForm({ name: "", phone: "", email: "", product: "", quantity: "", message: "" });
   }
 
@@ -144,18 +153,9 @@ function ContactPage() {
                     </div>
                   </div>
 
-                  <button type="submit" disabled={loading} className="submit-btn">
-                    {loading ? (
-                      <>
-                        <Loader2 className="spinner" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send />
-                        Send Inquiry
-                      </>
-                    )}
+                  <button type="submit" className="submit-btn">
+                    <Send />
+                    Send Inquiry
                   </button>
                 </form>
               </div>

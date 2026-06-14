@@ -9,7 +9,7 @@ function Header() {
                 <NavLink to="/" className="logo">
                      <span className="header-logo-badge">
                                 <img
-                                    src="logo.jpeg"
+                                    src="/logo.jpeg"
                                     alt="VitaHerbs Uganda"
                                     className="header-logo-img"
                                 />
@@ -27,7 +27,7 @@ function Header() {
                     <NavLink to="/contact" className={({ isActive }) => isActive ? 'active' : ''}>Contact</NavLink>
                 </nav>
 
-                <a className="btn btn-primary" href="whatsapp://send?phone=256760108564" rel="noopener noreferrer">
+                <a className="btn btn-primary" href="https://wa.me/256760108564" target="_blank" rel="noopener noreferrer">
                     WhatsApp Us
                 </a>
             </div>
