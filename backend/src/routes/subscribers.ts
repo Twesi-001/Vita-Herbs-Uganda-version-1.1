@@ -12,7 +12,7 @@ const subscribeInput = z.object({
 router.post('/', async (req, res, next) => {
   const parsed = subscribeInput.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: 'Please provide a valid email address.' });
+    res.status(400).json({ message: 'Please provide a valid email address.' });
     return;
   }
   const email = parsed.data.email.toLowerCase();
@@ -24,10 +24,10 @@ router.post('/', async (req, res, next) => {
       [email],
     );
     if (rows.length === 0) {
-      res.status(409).json({ error: 'This email is already subscribed.' });
+      res.status(409).json({ message: 'This email is already subscribed.' });
       return;
     }
-    res.status(201).json({ message: 'Subscribed', subscriber: rows[0] });
+    res.status(201).json({ message: 'Thanks for subscribing!', subscriber: rows[0] });
   } catch (err) {
     next(err);
   }

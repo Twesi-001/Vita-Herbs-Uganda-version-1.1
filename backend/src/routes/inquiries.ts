@@ -17,7 +17,7 @@ const inquiryInput = z.object({
 router.post('/', async (req, res, next) => {
   const parsed = inquiryInput.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: 'Missing required fields', details: parsed.error.flatten() });
+    res.status(400).json({ message: 'Missing required fields', details: parsed.error.flatten() });
     return;
   }
   const { name, phone, email, product, quantity, message } = parsed.data;

@@ -5,6 +5,7 @@ import { pool } from './db';
 import productsRouter from './routes/products';
 import subscribersRouter from './routes/subscribers';
 import inquiriesRouter from './routes/inquiries';
+import adminRouter from './routes/admin';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
@@ -29,10 +30,11 @@ app.get('/api/health', async (_req, res) => {
 app.use('/api/products', productsRouter);
 app.use('/api/subscribers', subscribersRouter);
 app.use('/api/inquiries', inquiriesRouter);
+app.use('/api/admin', adminRouter);
 
 // 404 for unknown API routes.
 app.use((_req, res) => {
-  res.status(404).json({ error: 'Not found' });
+  res.status(404).json({ message: 'Not found' });
 });
 
 // Centralized error handler.
@@ -44,7 +46,7 @@ app.use(
     _next: express.NextFunction,
   ) => {
     console.error('[error]', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   },
 );
 
