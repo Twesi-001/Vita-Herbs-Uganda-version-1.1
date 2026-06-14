@@ -7,6 +7,7 @@ import About from './About';
 import Products from './Products';
 import Contact from './Contact';
 import Socials from './Socials';
+import AdminDashboard from './AdminDashboard';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/social" element={<Socials />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />
