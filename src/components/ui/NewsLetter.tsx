@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, CheckCircle, XCircle, Send } from 'lucide-react';
+import { API_URL } from '../../lib/api';
 import './NewsLetter.css';
 
 function NewsLetter() {
@@ -21,8 +22,7 @@ function NewsLetter() {
     setLoading(true);
 
     try {
-      // ✅ Changed to live backend URL
-      const response = await fetch('https://vitaherbs-backend.onrender.com/api/subscribers', {
+      const response = await fetch(`${API_URL}/subscribers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: v })

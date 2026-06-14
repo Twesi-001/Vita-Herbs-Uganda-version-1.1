@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { API_URL } from "../lib/api";
 import "./Contact.css";
 
 // Simple toast implementation since you don't have sonner set up
@@ -37,11 +38,23 @@ function ContactPage() {
     setForm((f) => ({ ...f, [k]: v }));
   }
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.phone || !form.product || !form.quantity) {
       toast.error("Please fill in all required fields");
       return;
+    }
+
+    // Save the inquiry to the backend (best-effort — the WhatsApp handoff
+    // still happens even if the API is unreachable).
+    try {
+      await fetch(`${API_URL}/inquiries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+    } catch (err) {
+      console.error("Failed to save inquiry:", err);
     }
 
     const lines = [
@@ -57,7 +70,7 @@ function ContactPage() {
     const url = `https://wa.me/256760108564?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
 
-    toast.success("Opening WhatsApp to send your inquiry...");
+    toast.success("Inquiry sent! Opening WhatsApp...");
     setForm({ name: "", phone: "", email: "", product: "", quantity: "", message: "" });
   }
 
