@@ -11,7 +11,7 @@ function Socials() {
                 </div>
 
                 <div className="social-links">
-                    <a href="whatsapp://send?phone=256760108564" rel="noopener noreferrer" className="social-link whatsapp">
+                    <a href="https://wa.me/256760108564" target="_blank" rel="noopener noreferrer" className="social-link whatsapp">
                         <span className="social-icon">💬</span>
                         <span>WhatsApp</span>
                     </a>

@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# VitaHerbs Uganda
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Marketing & storefront website for VitaHerbs Uganda, a herbal-wellness brand.
+Built as a single-page React app; orders and inquiries are funneled to WhatsApp.
 
-Currently, two official plugins are available:
+## Tech stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [Vite](https://vite.dev) — dev server & build
+- React 19 + TypeScript
+- [react-router-dom](https://reactrouter.com) — client-side routing
+- [lucide-react](https://lucide.dev) — icons
+- Plain CSS (one stylesheet per component)
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev      # start the dev server
+npm run build    # type-check and build for production
+npm run preview  # preview the production build locally
+npm run lint     # run ESLint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+  main.tsx                 App entry — mounts BrowserRouter
+  pages/
+    App.tsx                Shell: Header + routes + Footer + BackToTop
+    Home.tsx               Long-scroll landing page (composes the sections below)
+    About.tsx
+    Products.tsx
+    Contact.tsx            Inquiry form that opens WhatsApp with a prefilled message
+    Socials.tsx
+  components/ui/           Header, Footer, NewsLetter, BackToTop
+  hooks/useScrollReveal.ts IntersectionObserver-based scroll animations
+  assets/                  Product & hero images
+public/                    Static assets served at the site root (logo, icons)
 ```
+
+## Routes
+
+| Path        | Page     |
+| ----------- | -------- |
+| `/`         | Home     |
+| `/about`    | About    |
+| `/products` | Products |
+| `/social`   | Socials  |
+| `/contact`  | Contact  |
+
+## Contact
+
+WhatsApp: [+256 760 108564](https://wa.me/256760108564)
+
+## Deployment notes
+
+This is a client-side-routed SPA. When deploying to a static host, configure a
+fallback so all routes serve `index.html` (otherwise deep links like
+`/products` will 404).

@@ -1,109 +1,231 @@
-import React, { useState } from 'react';
-import './Contact.css';
 
-interface FetchError extends Error {
-  name: string;
-}
+import { useState } from "react";
+import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import "./Contact.css";
 
-function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [loading, setLoading] = useState(false);
+// Simple toast implementation since you don't have sonner set up
+const toast = {
+  success: (msg: string) => {
+    const toastEl = document.createElement('div');
+    toastEl.className = 'toast-success';
+    toastEl.textContent = msg;
+    document.body.appendChild(toastEl);
+    setTimeout(() => toastEl.remove(), 3000);
+  },
+  error: (msg: string) => {
+    const toastEl = document.createElement('div');
+    toastEl.className = 'toast-error';
+    toastEl.textContent = msg;
+    document.body.appendChild(toastEl);
+    setTimeout(() => toastEl.remove(), 3000);
+  }
+};
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+function ContactPage() {
+  const [form, setForm] = useState({
+    name: "", phone: "", email: "", product: "", quantity: "", message: ""
+  });
+
+  const products = [
+    { id: 1, name: "Vita Detox Extract" },
+    { id: 2, name: "Vita Immune Boost" },
+    { id: 3, name: "Vita Joint Relief" },
+    { id: 4, name: "Vita Energy Complex" },
+  ];
+
+  function update(k: string, v: string) {
+    setForm((f) => ({ ...f, [k]: v }));
+  }
+
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setStatus(null);
-    
-    // Create abort controller for timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-    
-    try {
-      const response = await fetch('https://vitaherbs-backend.onrender.com/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      const data = await response.json() as { message: string };
-      
-      if (response.ok) {
-        setStatus({ type: 'success', text: 'Message sent! We\'ll contact you soon.' });
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setStatus({ type: 'error', text: data.message || 'Failed to send message' });
-      }
-    } catch (err) {
-      clearTimeout(timeoutId);
-      console.error('Fetch error:', err);
-      
-      const error = err as FetchError;
-      if (error.name === 'AbortError') {
-        setStatus({ type: 'error', text: 'Request timeout. Server is waking up. Please try again.' });
-      } else {
-        setStatus({ type: 'error', text: 'Unable to connect. Please try again.' });
-      }
-    } finally {
-      setLoading(false);
-      setTimeout(() => setStatus(null), 5000);
+    if (!form.name || !form.phone || !form.product || !form.quantity) {
+      toast.error("Please fill in all required fields");
+      return;
     }
-  };
+
+    const lines = [
+      "New inquiry from VitaHerbs website:",
+      `Name: ${form.name}`,
+      `Phone: ${form.phone}`,
+      form.email ? `Email: ${form.email}` : null,
+      `Product: ${form.product}`,
+      `Quantity: ${form.quantity}`,
+      form.message ? `Message: ${form.message}` : null,
+    ].filter(Boolean);
+
+    const url = `https://wa.me/256760108564?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+
+    toast.success("Opening WhatsApp to send your inquiry...");
+    setForm({ name: "", phone: "", email: "", product: "", quantity: "", message: "" });
+  }
 
   return (
-    <section className="section" id="contact">
-      <div className="container contact-box">
-        <div>
-          <span className="eyebrow">Contact</span>
-          <h2>Talk to us today</h2>
-          <p>For product questions, orders, and support, contact us directly.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="contact-form">
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-            disabled={loading}
-          />
-          <input
-            type="email"
-            placeholder="Your Email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            required
-            disabled={loading}
-          />
-          <textarea
-            placeholder="Your Message"
-            rows={4}
-            value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            required
-            disabled={loading}
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Message'}
-          </button>
-        </form>
-
-        {status && (
-          <div className={`contact-message ${status.type}`}>
-            {status.text}
+    <>
+      {/* Hero Section */}
+      <section className="contact-hero">
+        <div className="container">
+          <div className="contact-hero-content">
+            <span className="eyebrow">Contact</span>
+            <h1>Get In Touch</h1>
+            <p className="hero-description">
+              We'd love to hear from you. Send us an inquiry or reach out directly —
+              we usually respond within a few hours.
+            </p>
           </div>
-        )}
-
-        <div className="contact-actions">
-          <a href="mailto:info@vitaherbs.com">info@vitaherbs.com</a>
-          <a href="whatsapp://send?phone=256760108564" rel="noopener noreferrer">Chat on WhatsApp</a>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Main Content */}
+      <section className="contact-main">
+        <div className="container">
+          <div className="contact-grid">
+            {/* Form Section */}
+            <div className="contact-form-wrapper">
+              <div className="contact-card">
+                <h2>Send an Inquiry</h2>
+                <p className="form-subtitle">Fill in your details and we'll respond shortly.</p>
+
+                <form onSubmit={onSubmit} className="contact-form">
+                  <div className="form-grid">
+                    <div className="field-group">
+                      <label>Full Name <span className="required">*</span></label>
+                      <input 
+                        type="text"
+                        value={form.name} 
+                        onChange={(e) => update("name", e.target.value)} 
+                        placeholder="Your name"
+                      />
+                    </div>
+
+                    <div className="field-group">
+                      <label>Phone Number <span className="required">*</span></label>
+                      <input 
+                        type="tel"
+                        value={form.phone} 
+                        onChange={(e) => update("phone", e.target.value)} 
+                        placeholder="+256 ..."
+                      />
+                    </div>
+
+                    <div className="field-group">
+                      <label>Email (Optional)</label>
+                      <input 
+                        type="email"
+                        value={form.email} 
+                        onChange={(e) => update("email", e.target.value)} 
+                        placeholder="you@example.com"
+                      />
+                    </div>
+
+                    <div className="field-group">
+                      <label>Product of Interest <span className="required">*</span></label>
+                      <select 
+                        value={form.product} 
+                        onChange={(e) => update("product", e.target.value)}
+                      >
+                        <option value="">Select a product...</option>
+                        {products.map((p) => (
+                          <option key={p.id} value={p.name}>{p.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="field-group full-width">
+                      <label>Quantity <span className="required">*</span></label>
+                      <input 
+                        type="text"
+                        value={form.quantity} 
+                        onChange={(e) => update("quantity", e.target.value)} 
+                        placeholder="e.g. 2"
+                      />
+                    </div>
+
+                    <div className="field-group full-width">
+                      <label>Additional Message</label>
+                      <textarea 
+                        value={form.message} 
+                        onChange={(e) => update("message", e.target.value)} 
+                        rows={4}
+                        placeholder="Anything else we should know?"
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="submit-btn">
+                    <Send />
+                    Send Inquiry
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            {/* Info Sidebar */}
+            <div className="contact-info">
+              <a href="https://wa.me/256760108564" target="_blank" rel="noreferrer" className="info-card whatsapp-card">
+                <div className="info-icon"><MessageCircle /></div>
+                <div className="info-content">
+                  <div className="info-badge">Fastest Reply</div>
+                  <div className="info-title">Chat on WhatsApp</div>
+                </div>
+              </a>
+
+              <div className="info-card">
+                <div className="info-icon"><Mail /></div>
+                <div className="info-content">
+                  <div className="info-title">Email Us</div>
+                  <div className="info-lines">
+                    <p>hello@vitaherbs.ug</p>
+                    <p>support@vitaherbs.ug</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="info-card">
+                <div className="info-icon"><MapPin /></div>
+                <div className="info-content">
+                  <div className="info-title">Visit Us</div>
+                  <div className="info-lines">
+                    <p>Mbarara, Western Uganda</p>
+                    <p>Mon – Sat, 9am – 6pm</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <style>{`
+        .spinner {
+          animation: spin 1s linear infinite;
+          width: 16px;
+          height: 16px;
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .toast-success, .toast-error {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          padding: 12px 24px;
+          border-radius: 8px;
+          color: white;
+          z-index: 10000;
+          animation: slideIn 0.3s ease;
+        }
+        .toast-success { background: #2e7d32; }
+        .toast-error { background: #dc2626; }
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `}</style>
+    </>
   );
 }
 
-export default Contact;
+export default ContactPage;
