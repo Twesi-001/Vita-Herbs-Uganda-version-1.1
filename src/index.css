@@ -1,7 +1,23 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+/* Contain any horizontal overflow without breaking the sticky header
+   (overflow-x: clip does not create a scroll container). */
+body {
+  overflow-x: clip;
+}
+
+img {
+  max-width: 100%;
 }
 
 #root {

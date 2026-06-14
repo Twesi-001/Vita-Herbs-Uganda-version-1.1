@@ -76,9 +76,77 @@
   opacity: 0.9;
 }
 
+/* Hamburger toggle — hidden on desktop, shown on mobile */
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 6px;
+  line-height: 0;
+}
+
+.menu-toggle svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* WhatsApp button that lives inside the mobile dropdown — hidden on desktop.
+   Scoped under .menu so it beats the generic .btn-primary display rule. */
+.menu .menu-cta {
+  display: none;
+}
+
+/* ── Tablet / mobile ─────────────────────────────────────── */
 @media (max-width: 960px) {
-  .menu {
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  /* Hide the standalone desktop WhatsApp button (scoped to beat .btn-primary) */
+  .nav .header-cta {
     display: none;
+  }
+
+  /* Turn the nav into a full-width dropdown panel under the header */
+  .menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: linear-gradient(135deg, #4d884b 0%, #0f2a0f 100%);
+    padding: 8px 0 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    /* hidden until toggled */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+  }
+
+  .menu--open {
+    max-height: 420px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu a {
+    font-size: 1.1rem;
+    padding: 14px 24px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .menu .menu-cta {
+    display: inline-block;
+    margin: 12px 24px 0;
+    text-align: center;
+    padding: 12px 20px;
   }
 }
 .header-logo-img{

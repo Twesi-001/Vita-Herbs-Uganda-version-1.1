@@ -1,18 +1,28 @@
 import 'dotenv/config';
 import { Pool } from 'pg';
 
-if (!process.env.DATABASE_URL) {
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
   console.warn(
-    '[db] DATABASE_URL is not set. Copy server/.env.example to server/.env and set it.',
+    '[db] DATABASE_URL is not set. Copy backend/.env.example to backend/.env and set it.',
   );
 }
+
+/**
+ * Hosted databases (Neon, Render, etc.) require SSL; a local Postgres does not.
+ * We enable SSL automatically for any non-local connection string.
+ */
+const isLocal = /@(localhost|127\.0\.0\.1)\b/.test(connectionString ?? '');
+const useSsl = !!connectionString && !isLocal;
 
 /**
  * Shared PostgreSQL connection pool. The pool connects lazily, so the server
  * can start even if the database is not reachable yet.
  */
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
+  ssl: useSsl ? { rejectUnauthorized: false } : false,
 });
 
 pool.on('error', (err) => {
