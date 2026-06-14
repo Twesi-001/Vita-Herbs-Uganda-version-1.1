@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Products.css';
 import detoxImg from '../assets/product-detox.jpg';
 import capsulesImg from '../assets/product-capsules.jpg';
@@ -28,7 +29,7 @@ function orderLink(productName: string) {
     return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 
-function Products() {
+function Products({ showAllLink = false }: { showAllLink?: boolean }) {
     return (
         <section className="section" id="products">
             <div className="container">
@@ -50,6 +51,12 @@ function Products() {
                         </article>
                     ))}
                 </div>
+
+                {showAllLink && (
+                    <div className="products-cta">
+                        <Link to="/products" className="btn btn-primary">Explore All Products</Link>
+                    </div>
+                )}
             </div>
         </section>
     );

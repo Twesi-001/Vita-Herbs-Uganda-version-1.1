@@ -11,7 +11,7 @@ function AboutPage() {
             <span className="eyebrow">Our Story</span>
             <h1>About VitaHerbs Uganda</h1>
             <p className="hero-description">
-              A heritage of healing herbs, a future of holistic wellness — rooted
+              A heritage of healing herbs, a future of holistic wellness - rooted
               deeply in the rich soils of Uganda.
             </p>
           </div>
@@ -27,7 +27,7 @@ function AboutPage() {
               <p>
                 VitaHerbs Uganda was born from a simple belief: the herbs that have
                 sustained East African communities for generations deserve to be shared
-                with the world — pure, potent, and properly honored.
+                with the world - pure, potent, and properly honored.
               </p>
             </div>
             

@@ -1,4 +1,5 @@
 import NewsLetter from '../components/ui/NewsLetter'
+import ValueSection from '../components/ui/ValueSection'
 import { Link } from 'react-router-dom'
 import About from './About'
 import Products from './Products'
@@ -45,7 +46,8 @@ function Home(){
       </div>
     </section>
 
-    <div className="reveal reveal--fade-up"><Products /></div>
+    <div className="reveal reveal--fade-up"><Products showAllLink /></div>
+    <div className="reveal reveal--fade-up"><ValueSection /></div>
     <div className="reveal reveal--fade-up"><About /></div>
     <div className="reveal reveal--fade-up"><Socials /></div>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>

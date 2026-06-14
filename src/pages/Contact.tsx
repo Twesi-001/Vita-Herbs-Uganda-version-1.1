@@ -45,7 +45,7 @@ function ContactPage() {
       return;
     }
 
-    // Save the inquiry to the backend (best-effort — the WhatsApp handoff
+    // Save the inquiry to the backend (best-effort - the WhatsApp handoff
     // still happens even if the API is unreachable).
     try {
       await fetch(`${API_URL}/inquiries`, {
@@ -83,7 +83,7 @@ function ContactPage() {
             <span className="eyebrow">Contact</span>
             <h1>Get In Touch</h1>
             <p className="hero-description">
-              We'd love to hear from you. Send us an inquiry or reach out directly —
+              We'd love to hear from you. Send us an inquiry or reach out directly -
               we usually respond within a few hours.
             </p>
           </div>

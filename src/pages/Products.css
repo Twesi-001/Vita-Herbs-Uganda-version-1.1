@@ -125,7 +125,7 @@
 .card-body p {
   font-size: 13px;
   line-height: 1.5;
-  color:white;
+  color: var(--text-light);
   margin-bottom: 16px;
   flex: 1;
 }
@@ -135,7 +135,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: white;
+  color: var(--green);
   font-weight: 600;
   text-decoration: none;
   transition: var(--transition);
@@ -436,4 +436,10 @@
 .retry-btn:hover {
   background: var(--green-dark, #1b5e20);
   transform: translateY(-2px);
+}
+
+/* "View All Products" call-to-action under the featured cards */
+.products-cta {
+  text-align: center;
+  margin-top: 2.5rem;
 }
