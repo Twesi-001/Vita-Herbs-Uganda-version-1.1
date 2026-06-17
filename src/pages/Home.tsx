@@ -5,12 +5,14 @@ import About from './About'
 import Products from './Products'
 import Contact from './Contact'
 import Socials from './Socials'
-import heroImage from '../assets/Herbs.jpg'; 
+import heroImage from '../assets/Herbs.jpg';
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { useSiteContent } from '../hooks/useSiteContent'
 import'./Home.css'
 
 function Home(){
     useScrollReveal();
+    const get = useSiteContent();
 
     return(
         <>
@@ -18,11 +20,10 @@ function Home(){
     <section className="hero reveal reveal--fade-up">
       <div className="container hero-grid">
         <div className="hero-copy">
-          <span className="eyebrow">Natural Herbal Wellness</span>
-          <h1>Herbal Extract Medicine for Better Everyday Living</h1>
+          <span className="eyebrow">{get('hero.eyebrow', 'Natural Herbal Wellness')}</span>
+          <h1>{get('hero.heading', 'Herbal Extract Medicine for Better Everyday Living')}</h1>
           <p>
-            Vita Herbs is a new herbal company focused on natural extract-based wellness products.
-            Discover trusted herbal solutions and order easily through WhatsApp.
+            {get('hero.subtext', 'Vita Herbs is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.')}
           </p>
 
           <div className="hero-actions">

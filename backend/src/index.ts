@@ -6,6 +6,7 @@ import productsRouter from './routes/products';
 import subscribersRouter from './routes/subscribers';
 import inquiriesRouter from './routes/inquiries';
 import adminRouter from './routes/admin';
+import contentRouter from './routes/content';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
@@ -31,6 +32,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/subscribers', subscribersRouter);
 app.use('/api/inquiries', inquiriesRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/content', contentRouter);
 
 // 404 for unknown API routes.
 app.use((_req, res) => {

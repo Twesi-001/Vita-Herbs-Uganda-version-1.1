@@ -1,65 +1,79 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../lib/api';
 import './Products.css';
-import detoxImg from '../assets/product-detox.jpg';
-import capsulesImg from '../assets/product-capsules.jpg';
-import oilImg from '../assets/product-oil.jpg';
 
 const WHATSAPP_PHONE = '256760108564';
 
-const products = [
-    {
-        name: 'Vita Detox Extract',
-        description: 'Supports body cleansing and wellness balance.',
-        image: detoxImg,
-    },
-    {
-        name: 'Vita Immune Boost',
-        description: 'Made to support everyday immune wellness.',
-        image: capsulesImg,
-    },
-    {
-        name: 'Vita Joint Relief',
-        description: 'Herbal support for movement comfort and wellness.',
-        image: oilImg,
-    },
-];
-
-function orderLink(productName: string) {
-    const message = `Hello VitaHerbs, I'd like to order ${productName}.`;
-    return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  image_url: string | null;
+  price: number | null;
+  active: boolean;
 }
 
-function Products({ showAllLink = false }: { showAllLink?: boolean }) {
-    return (
-        <section className="section" id="products">
-            <div className="container">
-                <div className="section-heading">
-                    <span className="eyebrow">Featured Products</span>
-                    <h2>Our Herbal Products</h2>
-                    <p>Browse a few of our featured herbal extract products.</p>
-                </div>
+function orderLink(productName: string) {
+  const message = `Hello VitaHerbs, I'd like to order ${productName}.`;
+  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+}
 
-                <div className="cards">
-                    {products.map((product) => (
-                        <article className="card" key={product.name}>
-                            <img src={product.image} alt={product.name} />
-                            <div className="card-body">
-                                <h3>{product.name}</h3>
-                                <p>{product.description}</p>
-                                <a href={orderLink(product.name)} target="_blank" rel="noopener noreferrer">Order on WhatsApp</a>
-                            </div>
-                        </article>
-                    ))}
-                </div>
+function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit?: number }) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-                {showAllLink && (
-                    <div className="products-cta">
-                        <Link to="/products" className="btn btn-primary">Explore All Products</Link>
-                    </div>
+  useEffect(() => {
+    fetch(`${API_URL}/products`)
+      .then((r) => r.json())
+      .then(setProducts)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  const displayed = limit ? products.slice(0, limit) : products;
+
+  return (
+    <section className="section" id="products">
+      <div className="container">
+        <div className="section-heading">
+          <span className="eyebrow">Featured Products</span>
+          <h2>Our Herbal Products</h2>
+          <p>Browse a few of our featured herbal extract products.</p>
+        </div>
+
+        {loading ? (
+          <div className="loading-spinner"><div className="spinner"></div></div>
+        ) : (
+          <div className="cards">
+            {displayed.map((product) => (
+              <article className="card" key={product.id}>
+                {product.image_url && (
+                  <img src={product.image_url} alt={product.name} />
                 )}
-            </div>
-        </section>
-    );
+                <div className="card-body">
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  {product.price && (
+                    <p className="product-price">UGX {Number(product.price).toLocaleString()}</p>
+                  )}
+                  <a href={orderLink(product.name)} target="_blank" rel="noopener noreferrer">
+                    Order on WhatsApp
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {showAllLink && (
+          <div className="products-cta">
+            <Link to="/products" className="btn btn-primary">Explore All Products</Link>
+          </div>
+        )}
+      </div>
+    </section>
+  );
 }
 
 export default Products;

@@ -134,4 +134,71 @@ router.get('/export/contacts', async (_req, res, next) => {
   }
 });
 
+// ── Product management ────────────────────────────────────────────────────────
+
+const productInput = z.object({
+  name: z.string().min(1),
+  description: z.string().default(''),
+  image_url: z.string().optional(),
+  price: z.number().nonnegative().optional(),
+  active: z.boolean().optional(),
+});
+
+router.get('/products', async (_req, res, next) => {
+  try {
+    const { rows } = await query('SELECT * FROM products ORDER BY id');
+    res.json(rows);
+  } catch (err) { next(err); }
+});
+
+router.post('/products', async (req, res, next) => {
+  const parsed = productInput.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: 'Invalid product' }); return; }
+  const { name, description, image_url, price, active } = parsed.data;
+  try {
+    const { rows } = await query(
+      `INSERT INTO products (name, description, image_url, price, active)
+       VALUES ($1, $2, $3, $4, COALESCE($5, TRUE)) RETURNING *`,
+      [name, description, image_url ?? null, price ?? null, active ?? null],
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) { next(err); }
+});
+
+router.put('/products/:id', async (req, res, next) => {
+  const parsed = productInput.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: 'Invalid product' }); return; }
+  const { name, description, image_url, price, active } = parsed.data;
+  try {
+    const { rows } = await query(
+      `UPDATE products SET name=$1, description=$2, image_url=$3, price=$4, active=COALESCE($5, active) WHERE id=$6 RETURNING *`,
+      [name, description, image_url ?? null, price ?? null, active ?? null, req.params.id],
+    );
+    if (rows.length === 0) { res.status(404).json({ error: 'Not found' }); return; }
+    res.json(rows[0]);
+  } catch (err) { next(err); }
+});
+
+router.delete('/products/:id', async (req, res, next) => {
+  try {
+    await query('DELETE FROM products WHERE id=$1', [req.params.id]);
+    res.json({ message: 'Product deleted' });
+  } catch (err) { next(err); }
+});
+
+// ── Site content management ───────────────────────────────────────────────────
+
+router.put('/content/:key', async (req, res, next) => {
+  const parsed = z.object({ value: z.string() }).safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: 'value is required' }); return; }
+  try {
+    await query(
+      `INSERT INTO site_content (key, value) VALUES ($1, $2)
+       ON CONFLICT (key) DO UPDATE SET value=$2, updated_at=NOW()`,
+      [req.params.key, parsed.data.value],
+    );
+    res.json({ ok: true });
+  } catch (err) { next(err); }
+});
+
 export default router;
