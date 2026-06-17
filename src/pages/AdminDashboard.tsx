@@ -102,7 +102,11 @@ export default function AdminDashboard() {
       fetch(`${API_URL}/admin/products`, { headers: h }).then(r => r.json()),
       fetch(`${API_URL}/content`).then(r => r.json()),
     ]);
-    setStats(st); setSubscribers(su); setContacts(co); setProducts(pr); setContent(ct);
+    setStats(st);
+    setSubscribers(Array.isArray(su) ? su : []);
+    setContacts(Array.isArray(co) ? co : []);
+    setProducts(Array.isArray(pr) ? pr : []);
+    setContent(ct && typeof ct === 'object' && !Array.isArray(ct) ? ct : {});
   };
 
   useEffect(() => {
