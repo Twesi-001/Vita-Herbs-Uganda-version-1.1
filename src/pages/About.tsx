@@ -30,10 +30,10 @@ function AboutPage() {
 
             <div className="about-card">
               <h3>Why choose us?</h3>
-              <ul>
-                <li><CheckCircle /> 100% natural ingredients</li>
-                <li><CheckCircle /> Easy WhatsApp ordering</li>
-                <li><CheckCircle /> Fast customer support</li>
+              <ul className="why-choose-list">
+                <li><CheckCircle size={18} /> 100% natural ingredients</li>
+                <li><CheckCircle size={18} /> Easy WhatsApp ordering</li>
+                <li><CheckCircle size={18} /> Fast customer support</li>
               </ul>
             </div>
           </div>

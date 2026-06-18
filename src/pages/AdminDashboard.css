@@ -1,5 +1,7 @@
-/* ── Variables ── */
-:root {
+/* ── Variables (scoped to admin only — do not use :root to avoid overriding global vars) ── */
+.admin-layout,
+.admin-login-page,
+.admin-splash {
   --sidebar-w: 230px;
   --sidebar-bg: #0f1f0f;
   --sidebar-border: rgba(255,255,255,0.06);
@@ -10,17 +12,17 @@
   --nav-text-active: #ffffff;
   --main-bg: #f1f5f1;
   --card-bg: #ffffff;
-  --border: #e5e7eb;
-  --text: #1a2e1a;
-  --text-muted: #6b7280;
-  --green: #2e7d32;
-  --green-dark: #1b5e20;
-  --green-light: #4caf50;
-  --red: #dc2626;
-  --red-light: #fee2e2;
-  --blue: #1d4ed8;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --admin-border: #e5e7eb;
+  --admin-text: #1a2e1a;
+  --admin-text-muted: #6b7280;
+  --admin-green: #2e7d32;
+  --admin-green-dark: #1b5e20;
+  --admin-green-light: #4caf50;
+  --admin-red: #dc2626;
+  --admin-red-light: #fee2e2;
+  --admin-blue: #1d4ed8;
+  --admin-radius: 12px;
+  --admin-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
 }
 
 /* ── Splash / loading ── */
@@ -65,13 +67,13 @@
 .login-logo h1 {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--green);
+  color: var(--admin-green);
   margin: 0 0 4px;
 }
 
 .login-logo p {
   font-size: 0.875rem;
-  color: var(--text-muted);
+  color: var(--admin-text-muted);
   margin: 0;
 }
 
@@ -82,40 +84,40 @@
 .login-field label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--admin-text);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .login-field input {
   padding: 13px 16px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--admin-border);
   border-radius: 10px;
   font-size: 0.95rem;
   font-family: inherit;
-  color: var(--text);
+  color: var(--admin-text);
   transition: border-color 0.2s;
 }
 
 .login-field input:focus {
   outline: none;
-  border-color: var(--green);
+  border-color: var(--admin-green);
   box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
 }
 
 .login-error {
-  color: var(--red);
+  color: var(--admin-red);
   font-size: 0.875rem;
   text-align: center;
   margin: 0;
   padding: 10px;
-  background: var(--red-light);
+  background: var(--admin-red-light);
   border-radius: 8px;
 }
 
 .login-btn {
   padding: 14px;
-  background: var(--green);
+  background: var(--admin-green);
   color: white;
   border: none;
   border-radius: 10px;
@@ -130,7 +132,7 @@
   margin-top: 4px;
 }
 
-.login-btn:hover:not(:disabled) { background: var(--green-dark); }
+.login-btn:hover:not(:disabled) { background: var(--admin-green-dark); }
 .login-btn:disabled { opacity: 0.7; cursor: default; }
 
 /* ── Layout ── */
@@ -198,7 +200,7 @@
   display: block;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--green-light);
+  color: var(--admin-green-light);
   line-height: 1;
 }
 
@@ -252,7 +254,7 @@
 
 .nav-badge {
   background: rgba(76,175,80,0.25);
-  color: var(--green-light);
+  color: var(--admin-green-light);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 2px 7px;
@@ -292,7 +294,7 @@
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--admin-text);
   margin: 0;
 }
 
@@ -314,23 +316,23 @@
 
 .action-btn:active { transform: scale(0.98); }
 
-.action-primary { background: var(--green); color: white; }
-.action-primary:hover { background: var(--green-dark); }
+.action-primary { background: var(--admin-green); color: white; }
+.action-primary:hover { background: var(--admin-green-dark); }
 
-.action-secondary { background: white; color: var(--text); border: 1.5px solid var(--border); }
+.action-secondary { background: white; color: var(--admin-text); border: 1.5px solid var(--admin-border); }
 .action-secondary:hover { background: #f9fafb; }
 
-.action-ghost { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+.action-ghost { background: transparent; color: var(--admin-text-muted); border: 1.5px solid var(--admin-border); }
 .action-ghost:hover { background: #f3f4f6; }
 
 /* ── Content card ── */
 .content-card {
   background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: var(--admin-radius);
+  box-shadow: var(--admin-shadow);
   margin: 20px 32px 0;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid var(--admin-border);
 }
 
 /* ── Table ── */
@@ -346,9 +348,9 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-muted);
+  color: var(--admin-text-muted);
   background: #fafafa;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--admin-border);
 }
 
 .data-table td {
@@ -360,9 +362,9 @@
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr:hover td { background: #fafff9; }
 
-.td-main { font-weight: 500; color: var(--text); }
-.td-muted { color: var(--text-muted); font-size: 0.875rem; }
-.td-empty { text-align: center; color: var(--text-muted); padding: 40px !important; font-size: 0.9rem; }
+.td-main { font-weight: 500; color: var(--admin-text); }
+.td-muted { color: var(--admin-text-muted); font-size: 0.875rem; }
+.td-empty { text-align: center; color: var(--admin-text-muted); padding: 40px !important; font-size: 0.9rem; }
 .td-actions { display: flex; gap: 6px; align-items: center; }
 
 .icon-btn {
@@ -377,14 +379,14 @@
   transition: background 0.15s;
 }
 
-.icon-edit { background: #eff6ff; color: var(--blue); }
+.icon-edit { background: #eff6ff; color: var(--admin-blue); }
 .icon-edit:hover { background: #dbeafe; }
-.icon-danger { background: var(--red-light); color: var(--red); }
+.icon-danger { background: var(--admin-red-light); color: var(--admin-red); }
 .icon-danger:hover { background: #fecaca; }
 
 .product-tag {
   background: rgba(46,125,50,0.1);
-  color: var(--green);
+  color: var(--admin-green);
   padding: 3px 10px;
   border-radius: 999px;
   font-size: 0.78rem;
@@ -418,7 +420,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--admin-text-muted);
 }
 
 .product-thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -429,10 +431,10 @@
 .form-title {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--admin-text);
   margin: 0 0 20px;
   padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--admin-border);
 }
 
 .product-form { display: flex; flex-direction: column; gap: 16px; }
@@ -452,11 +454,11 @@
 .form-field input,
 .form-field textarea {
   padding: 11px 14px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--admin-border);
   border-radius: 9px;
   font-size: 0.9rem;
   font-family: inherit;
-  color: var(--text);
+  color: var(--admin-text);
   transition: border-color 0.2s;
   resize: vertical;
 }
@@ -464,7 +466,7 @@
 .form-field input:focus,
 .form-field textarea:focus {
   outline: none;
-  border-color: var(--green);
+  border-color: var(--admin-green);
   box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
 }
 
@@ -476,7 +478,7 @@
   align-items: center;
   gap: 6px;
   padding: 11px 16px;
-  background: var(--blue);
+  background: var(--admin-blue);
   color: white;
   border: none;
   border-radius: 9px;
@@ -496,7 +498,7 @@
   height: 90px;
   object-fit: cover;
   border-radius: 10px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--admin-border);
 }
 
 .checkbox-row {
@@ -504,11 +506,11 @@
   align-items: center;
   gap: 8px;
   font-size: 0.875rem;
-  color: var(--text);
+  color: var(--admin-text);
   cursor: pointer;
 }
 
-.checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--green); cursor: pointer; }
+.checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--admin-green); cursor: pointer; }
 
 .form-actions { display: flex; gap: 10px; padding-top: 4px; }
 
@@ -530,10 +532,10 @@
 .group-title {
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--green);
+  color: var(--admin-green);
   margin: 0 0 18px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--admin-border);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -556,11 +558,11 @@
 .cf-input-row textarea {
   flex: 1;
   padding: 10px 13px;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--admin-border);
   border-radius: 9px;
   font-size: 0.875rem;
   font-family: inherit;
-  color: var(--text);
+  color: var(--admin-text);
   resize: vertical;
   transition: border-color 0.2s;
 }
@@ -568,7 +570,7 @@
 .cf-input-row input:focus,
 .cf-input-row textarea:focus {
   outline: none;
-  border-color: var(--green);
+  border-color: var(--admin-green);
   box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
 }
 
@@ -577,7 +579,7 @@
   align-items: center;
   gap: 5px;
   padding: 10px 16px;
-  background: var(--green);
+  background: var(--admin-green);
   color: white;
   border: none;
   border-radius: 9px;
@@ -590,7 +592,7 @@
   justify-content: center;
 }
 
-.save-key-btn:hover:not(:disabled) { background: var(--green-dark); }
+.save-key-btn:hover:not(:disabled) { background: var(--admin-green-dark); }
 .save-key-btn:disabled { opacity: 0.6; cursor: default; }
 .save-key-btn.saved { background: #059669; }
 
@@ -601,7 +603,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255,255,255,0.1);
-  border-top-color: var(--green-light);
+  border-top-color: var(--admin-green-light);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
