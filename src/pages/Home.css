@@ -45,7 +45,9 @@
 }
 
 .btn-primary {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--green, #2e7d32);
   color: white;
   padding: 12px 24px;
@@ -53,6 +55,7 @@
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
+  line-height: 1;
 }
 
 .btn-primary:hover {
@@ -61,13 +64,16 @@
 }
 
 .btn-outline {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   color: var(--green, #2e7d32);
   padding: 12px 24px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
+  line-height: 1;
   border: 2px solid var(--green, #2e7d32);
   transition: all 0.3s ease;
 }
