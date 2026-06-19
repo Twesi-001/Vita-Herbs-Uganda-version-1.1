@@ -1,6 +1,6 @@
-# VitaHerbs Uganda — API Server
+# KarOrganicsUganda — API Server
 
-Express + PostgreSQL backend for the VitaHerbs website. Stores newsletter
+Express + PostgreSQL backend for the KarOrganicswebsite. Stores newsletter
 subscribers, contact/order inquiries, and the product catalog.
 
 ## Requirements
@@ -47,7 +47,7 @@ If you have Docker, this gives you one in seconds:
 
 ```bash
 docker run --name vitaherbs-db -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=vitaherbs -p 5432:5432 -d postgres:16
+  -e POSTGRES_DB=KarOrganics-p 5432:5432 -d postgres:16
 ```
 
 That matches the default `DATABASE_URL` in `.env.example`.

@@ -58,7 +58,7 @@ function ContactPage() {
     }
 
     const lines = [
-      "New inquiry from VitaHerbs website:",
+      "New inquiry from KarOrganicswebsite:",
       `Name: ${form.name}`,
       `Phone: ${form.phone}`,
       form.email ? `Email: ${form.email}` : null,

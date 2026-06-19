@@ -1,5 +1,5 @@
 /**
- * Base URL for the VitaHerbs API.
+ * Base URL for the KarOrganicsAPI.
  *
  * Set `VITE_API_URL` in an `.env` file (e.g. `.env.local` for development):
  *   VITE_API_URL=http://localhost:4000/api

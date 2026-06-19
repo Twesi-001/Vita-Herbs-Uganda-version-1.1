@@ -1,4 +1,4 @@
--- VitaHerbs Uganda — database schema
+-- KarOrganicsUganda — database schema
 -- Run with: npm run migrate   (or: psql "$DATABASE_URL" -f db/schema.sql)
 
 CREATE TABLE IF NOT EXISTS products (
@@ -49,11 +49,11 @@ INSERT INTO site_content (key, value) VALUES
   ('hero.heading',             'Herbal Extract Medicine for Better Everyday Living'),
   ('hero.subtext',             'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.'),
   ('about.hero.eyebrow',       'Our Story'),
-  ('about.hero.heading',       'About VitaHerbs Uganda'),
+  ('about.hero.heading',       'About KarOrganicsUganda'),
   ('about.hero.description',   'A heritage of healing herbs, a future of holistic wellness - rooted deeply in the rich soils of Uganda.'),
   ('about.story.eyebrow',      'Our Heritage'),
   ('about.story.heading',      'Crafted from heritage, made for today.'),
-  ('about.story.body',         'VitaHerbs Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.'),
+  ('about.story.body',         'KarOrganicsUganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.'),
   ('about.pillar1.title',      'Purity'),
   ('about.pillar1.body',       'Only single-origin, ethically harvested herbs'),
   ('about.pillar2.title',      'Sustainability'),
@@ -61,7 +61,7 @@ INSERT INTO site_content (key, value) VALUES
   ('about.pillar3.title',      'Community'),
   ('about.pillar3.body',       'Fair partnerships with local farmers'),
   ('value.heading',            'You''re Not Buying Herbs. You''re Buying Your Body''s Way Back to Balance.'),
-  ('value.subtext',            'Every VitaHerbs extract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.'),
+  ('value.subtext',            'Every KarOrganicsextract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.'),
   ('value.card1.title',        'Wake Up Light & Renewed'),
   ('value.card1.text',         'Start your day clear-headed and refreshed - the way mornings are meant to feel.'),
   ('value.card2.title',        'Energy That Carries You'),

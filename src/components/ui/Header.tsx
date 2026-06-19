@@ -17,12 +17,12 @@ function Header() {
                     <span className="header-logo-badge">
                         <img
                             src="/logo.jpeg"
-                            alt="VitaHerbs Uganda"
+                            alt="KarOrganicsUganda"
                             className="header-logo-img"
                         />
                     </span>
                     <span className="footer-site-title">
-                        VitaHerbs <span className="footer-site-region">Uganda</span>
+                        KarOrganics<span className="footer-site-region">Uganda</span>
                     </span>
                 </NavLink>
 

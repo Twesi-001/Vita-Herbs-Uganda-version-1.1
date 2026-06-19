@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════
-   VitaHerbs Admin Dashboard — scoped variables (never use :root,
+   KarOrganicsAdmin Dashboard — scoped variables (never use :root,
    it would leak into the public site)
    ══════════════════════════════════════════════════════════════ */
 .admin-layout,

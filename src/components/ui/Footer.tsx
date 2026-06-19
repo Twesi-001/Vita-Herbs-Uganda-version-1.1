@@ -13,7 +13,7 @@ function Footer() {
           <div className="footer-section">
             <div className="footer-logo">
               <Leaf className="footer-logo-icon" />
-              <span>VitaHerbs <span className="logo-region">Uganda</span></span>
+              <span>KarOrganics<span className="logo-region">Uganda</span></span>
             </div>
             <p>Premium herbal extracts for holistic wellness. Trusted by thousands across Uganda.</p>
             <div className="social-links">
@@ -54,7 +54,7 @@ function Footer() {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {currentYear} VitaHerbs Uganda. All rights reserved.</p>
+          <p>&copy; {currentYear} KarOrganicsUganda. All rights reserved.</p>
         </div>
       </div>
     </footer>
