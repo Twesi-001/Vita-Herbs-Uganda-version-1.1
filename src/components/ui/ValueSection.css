@@ -1,5 +1,8 @@
 .value-section {
   background: linear-gradient(180deg, #fbfcfa, #f4f8f3);
+  /* Clean sans-serif font (matches admin/products/contact) */
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .value-section .section-heading {
@@ -23,8 +26,9 @@
 }
 
 .value-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 24px;
 }
 
@@ -34,12 +38,16 @@
   border-radius: 16px;
   padding: 28px 22px;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  width: 280px;
+  max-width: 100%;
 }
 
 .value-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(27, 94, 32, 0.10);
+  box-shadow: 0 14px 30px rgba(27, 94, 32, 0.1);
 }
 
 .value-icon {
@@ -50,7 +58,7 @@
   height: 56px;
   border-radius: 50%;
   margin-bottom: 1rem;
-  background: rgba(46, 125, 50, 0.10);
+  background: rgba(46, 125, 50, 0.1);
   color: var(--green, #2e7d32);
 }
 
@@ -73,17 +81,7 @@
   margin: 0;
 }
 
-@media (max-width: 960px) {
-  .value-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 540px) {
-  .value-grid {
-    grid-template-columns: 1fr;
-  }
-
   .value-section .section-heading h2 {
     font-size: 1.6rem;
   }

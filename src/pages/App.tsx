@@ -9,7 +9,7 @@ import Contact from './Contact';
 import Socials from './Socials';
 import AdminDashboard from './AdminDashboard';
 
-function App() {
+function PublicLayout() {
   return (
     <div className="app-container">
       <Header />
@@ -20,12 +20,21 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/social" element={<Socials />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />
       <BackToTop />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      {/* Admin dashboard renders standalone — no public header/footer */}
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/*" element={<PublicLayout />} />
+    </Routes>
   );
 }
 

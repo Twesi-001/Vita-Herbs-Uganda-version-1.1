@@ -1,23 +1,21 @@
-import { Sunrise, Zap, ShieldCheck, Heart } from 'lucide-react';
+import { Sunrise, Zap, Heart } from 'lucide-react';
 import './ValueSection.css';
 import { useSiteContent } from '../../hooks/useSiteContent';
 
-const icons = [Sunrise, Zap, ShieldCheck, Heart];
-
-const CARD_DEFAULTS = [
-  { title: 'Wake Up Light & Renewed', text: 'Start your day clear-headed and refreshed - the way mornings are meant to feel.' },
-  { title: 'Energy That Carries You', text: 'Steady energy that keeps you going - for your family, your work, and everything in between.' },
-  { title: 'Trust in Every Drop', text: "Single-origin herbs, nothing hidden. Know exactly what's going into your body, every time." },
-  { title: 'Rooted in Community', text: 'Sourced directly from East African farmers. Your wellness journey helps build theirs too.' },
+// Three value cards. `key` maps to the value.cardN.* content keys in the DB.
+const CARDS = [
+  { key: 1, icon: Sunrise, title: 'Wake Up Light & Renewed', text: 'Start your day clear-headed and refreshed - the way mornings are meant to feel.' },
+  { key: 2, icon: Zap, title: 'Energy That Carries You', text: 'Steady energy that keeps you going - for your family, your work, and everything in between.' },
+  { key: 4, icon: Heart, title: 'Rooted in Community', text: 'Sourced directly from East African farmers. Your wellness journey helps build theirs too.' },
 ];
 
 function ValueSection() {
   const get = useSiteContent();
 
-  const cards = [1, 2, 3, 4].map((n, i) => ({
-    icon: icons[i],
-    title: get(`value.card${n}.title`, CARD_DEFAULTS[i].title),
-    text: get(`value.card${n}.text`, CARD_DEFAULTS[i].text),
+  const cards = CARDS.map(({ key, icon, title, text }) => ({
+    icon,
+    title: get(`value.card${key}.title`, title),
+    text: get(`value.card${key}.text`, text),
   }));
 
   return (

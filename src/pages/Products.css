@@ -85,6 +85,15 @@
   flex-direction: column;
   width: 280px;  /* Fixed reduced width */
   max-width: 100%;
+  /* Match the clean sans-serif used in the admin product cards */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Ensure all text inside cards inherits the sans-serif font */
+.card h3,
+.card-body p,
+.card-body a {
+  font-family: inherit;
 }
 
 .card:hover {
