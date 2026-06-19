@@ -177,21 +177,21 @@
 .search-box:focus-within { border-color: var(--accent); }
 .search-box input { border: none; background: none; outline: none; font-size: 0.88rem; width: 150px; color: var(--ink); }
 
-/* Buttons */
-.btn {
+/* Buttons (scoped to admin so they don't override the public site's .btn-primary etc.) */
+.admin-layout .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   padding: 10px 18px; border-radius: 10px; font-size: 0.875rem; font-weight: 700;
   cursor: pointer; border: none; white-space: nowrap; transition: background 0.15s, transform 0.1s, border-color 0.15s;
 }
-.btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-dark); }
-.btn-outline { background: var(--card); color: var(--ink); border: 1.5px solid var(--bd-strong); }
-.btn-outline:hover { border-color: var(--accent); color: var(--accent-dark); }
-.btn-ghost { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--bd); }
-.btn-ghost:hover { background: var(--bg); }
-.btn-soft { background: var(--accent-soft); color: var(--accent-dark); flex: 1; }
-.btn-soft:hover { background: rgba(52,168,83,0.2); }
+.admin-layout .btn:active { transform: scale(0.98); }
+.admin-layout .btn-primary { background: var(--accent); color: #fff; }
+.admin-layout .btn-primary:hover { background: var(--accent-dark); }
+.admin-layout .btn-outline { background: var(--card); color: var(--ink); border: 1.5px solid var(--bd-strong); }
+.admin-layout .btn-outline:hover { border-color: var(--accent); color: var(--accent-dark); }
+.admin-layout .btn-ghost { background: transparent; color: var(--ink-soft); border: 1.5px solid var(--bd); }
+.admin-layout .btn-ghost:hover { background: var(--bg); }
+.admin-layout .btn-soft { background: var(--accent-soft); color: var(--accent-dark); flex: 1; }
+.admin-layout .btn-soft:hover { background: rgba(52,168,83,0.2); }
 
 .admin-content { padding: 24px 28px 48px; flex: 1; }
 
