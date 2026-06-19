@@ -71,8 +71,8 @@ INSERT INTO site_content (key, value) VALUES
   ('value.card4.title',        'Rooted in Community'),
   ('value.card4.text',         'Sourced directly from East African farmers. Your wellness journey helps build theirs too.'),
   ('social.whatsapp.url',      'https://wa.me/256760108564'),
-  ('social.tiktok.url',        'https://www.tiktok.com/@vitaherbsuganda'),
-  ('social.instagram.url',     'https://www.instagram.com/vitaherbsuganda'),
-  ('social.facebook.url',      'https://www.facebook.com/vitaherbsuganda'),
-  ('social.youtube.url',       'https://www.youtube.com/@vitaherbsuganda')
+  ('social.tiktok.url',        'https://www.tiktok.com/@karorganics uganda'),
+  ('social.instagram.url',     'https://www.instagram.com/karorganics uganda'),
+  ('social.facebook.url',      'https://www.facebook.com/karorganics uganda'),
+  ('social.youtube.url',       'https://www.youtube.com/@karorganics uganda')
 ON CONFLICT (key) DO NOTHING;

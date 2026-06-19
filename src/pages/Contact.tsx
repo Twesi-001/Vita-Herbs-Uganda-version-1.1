@@ -189,8 +189,8 @@ function ContactPage() {
                 <div className="info-content">
                   <div className="info-title">Email Us</div>
                   <div className="info-lines">
-                    <p>hello@vitaherbs.ug</p>
-                    <p>support@vitaherbs.ug</p>
+                    <p>hello@karorganics .ug</p>
+                    <p>support@karorganics .ug</p>
                   </div>
                 </div>
               </div>

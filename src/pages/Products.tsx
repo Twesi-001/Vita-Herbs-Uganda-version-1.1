@@ -15,7 +15,7 @@ interface Product {
 }
 
 function orderLink(productName: string) {
-  const message = `Hello VitaHerbs, I'd like to order ${productName}.`;
+  const message = `Hello karorganics , I'd like to order ${productName}.`;
   return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 

@@ -195,7 +195,7 @@ export default function AdminDashboard() {
       <div className="login-box">
         <div className="login-logo">
           <span className="login-leaf">🌿</span>
-          <h1>VitaHerbs</h1>
+          <h1>karorganics </h1>
           <p>Admin Dashboard</p>
         </div>
         <form onSubmit={handleLogin} className="login-form">
@@ -241,7 +241,7 @@ export default function AdminDashboard() {
         <div className="sidebar-brand">
           <span className="brand-leaf">🌿</span>
           <div>
-            <div className="brand-name">VitaHerbs</div>
+            <div className="brand-name">karorganics </div>
             <div className="brand-sub">Admin Panel</div>
           </div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><X size={20} /></button>

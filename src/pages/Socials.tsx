@@ -6,10 +6,10 @@ function Socials() {
 
   const links = [
     { key: 'social.whatsapp.url', fallback: 'https://wa.me/256760108564', icon: '💬', label: 'WhatsApp', cls: 'whatsapp' },
-    { key: 'social.tiktok.url', fallback: 'https://www.tiktok.com/@vitaherbsuganda', icon: '🎵', label: 'TikTok', cls: 'tiktok' },
-    { key: 'social.instagram.url', fallback: 'https://www.instagram.com/vitaherbsuganda', icon: '📷', label: 'Instagram', cls: 'instagram' },
-    { key: 'social.facebook.url', fallback: 'https://www.facebook.com/vitaherbsuganda', icon: '👍', label: 'Facebook', cls: 'facebook' },
-    { key: 'social.youtube.url', fallback: 'https://www.youtube.com/@vitaherbsuganda', icon: '▶️', label: 'YouTube', cls: 'youtube' },
+    { key: 'social.tiktok.url', fallback: 'https://www.tiktok.com/@karorganics uganda', icon: '🎵', label: 'TikTok', cls: 'tiktok' },
+    { key: 'social.instagram.url', fallback: 'https://www.instagram.com/karorganics uganda', icon: '📷', label: 'Instagram', cls: 'instagram' },
+    { key: 'social.facebook.url', fallback: 'https://www.facebook.com/karorganics uganda', icon: '👍', label: 'Facebook', cls: 'facebook' },
+    { key: 'social.youtube.url', fallback: 'https://www.youtube.com/@karorganics uganda', icon: '▶️', label: 'YouTube', cls: 'youtube' },
   ];
 
   return (

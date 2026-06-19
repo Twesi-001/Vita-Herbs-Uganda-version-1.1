@@ -46,7 +46,7 @@ subscribers, contact/order inquiries, and the product catalog.
 If you have Docker, this gives you one in seconds:
 
 ```bash
-docker run --name vitaherbs-db -e POSTGRES_PASSWORD=postgres \
+docker run --name karorganics -db -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_DB=KarOrganics-p 5432:5432 -d postgres:16
 ```
 
