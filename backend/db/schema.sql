@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS inquiries (
 -- Seed the featured products (only if the table is empty).
 INSERT INTO products (name, description, image_url)
 SELECT * FROM (VALUES
-    ('Vita Detox Extract', 'Supports body cleansing and wellness balance.', '/assets/product-detox.jpg'),
-    ('Vita Immune Boost',  'Made to support everyday immune wellness.',    '/assets/product-capsules.jpg'),
-    ('Vita Joint Relief',  'Herbal support for movement comfort and wellness.', '/assets/product-oil.jpg')
+    ('kar Detox Extract', 'Supports body cleansing and wellness balance.', '/assets/product-detox.jpg'),
+    ('kar Immune Boost',  'Made to support everyday immune wellness.',    '/assets/product-capsules.jpg'),
+    ('kar Joint Relief',  'Herbal support for movement comfort and wellness.', '/assets/product-oil.jpg')
 ) AS seed(name, description, image_url)
 WHERE NOT EXISTS (SELECT 1 FROM products);
 

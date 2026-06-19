@@ -76,7 +76,7 @@ curl -X POST http://localhost:4000/api/subscribers \
 # Submit a contact inquiry
 curl -X POST http://localhost:4000/api/inquiries \
   -H "Content-Type: application/json" \
-  -d '{"name":"Jane","phone":"+256...","product":"Vita Detox Extract","quantity":"2"}'
+  -d '{"name":"Jane","phone":"+256...","product":"kar Detox Extract","quantity":"2"}'
 ```
 
 ## Project layout

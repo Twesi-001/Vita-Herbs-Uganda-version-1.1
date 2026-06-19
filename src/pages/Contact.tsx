@@ -28,10 +28,10 @@ function ContactPage() {
   });
 
   const products = [
-    { id: 1, name: "Vita Detox Extract" },
-    { id: 2, name: "Vita Immune Boost" },
-    { id: 3, name: "Vita Joint Relief" },
-    { id: 4, name: "Vita Energy Complex" },
+    { id: 1, name: "kar Detox Extract" },
+    { id: 2, name: "kar Immune Boost" },
+    { id: 3, name: "kar Joint Relief" },
+    { id: 4, name: "kar Energy Complex" },
   ];
 
   function update(k: string, v: string) {

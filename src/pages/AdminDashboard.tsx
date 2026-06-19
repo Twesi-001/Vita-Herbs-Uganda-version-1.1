@@ -323,7 +323,7 @@ export default function AdminDashboard() {
                     <div className="form-grid">
                       <div className="field">
                         <label>Product Name <span>*</span></label>
-                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Vita Detox Extract" />
+                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. kar Detox Extract" />
                       </div>
                       <div className="field">
                         <label>Price (UGX)</label>
