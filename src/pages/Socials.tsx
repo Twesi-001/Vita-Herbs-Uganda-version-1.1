@@ -17,7 +17,7 @@ function Socials() {
       <div className="container">
         <div className="section-heading">
           <span className="eyebrow">Marketing Channels</span>
-          <h2>Follow Vita Herbs</h2>
+          <h2>Follow Kar Organics</h2>
           <p>Connect with us for updates, tips, and product videos.</p>
         </div>
 

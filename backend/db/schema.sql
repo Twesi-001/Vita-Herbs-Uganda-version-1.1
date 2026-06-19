@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS site_content (
 INSERT INTO site_content (key, value) VALUES
   ('hero.eyebrow',             'Natural Herbal Wellness'),
   ('hero.heading',             'Herbal Extract Medicine for Better Everyday Living'),
-  ('hero.subtext',             'Vita Herbs is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.'),
+  ('hero.subtext',             'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.'),
   ('about.hero.eyebrow',       'Our Story'),
   ('about.hero.heading',       'About VitaHerbs Uganda'),
   ('about.hero.description',   'A heritage of healing herbs, a future of holistic wellness - rooted deeply in the rich soils of Uganda.'),
