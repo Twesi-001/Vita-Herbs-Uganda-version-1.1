@@ -17,7 +17,7 @@ function Header() {
                     <span className="header-logo-badge">
                         <img
                             src="/logo.jpeg"
-                            alt="KarOrganicsUganda"
+                            alt="KarOrganics Uganda"
                             className="header-logo-img"
                         />
                     </span>

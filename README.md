@@ -1,6 +1,6 @@
-# KarOrganicsUganda
+# KarOrganics Uganda
 
-Marketing & storefront website for KarOrganicsUganda, a herbal-wellness brand.
+Marketing & storefront website for KarOrganics Uganda, a herbal-wellness brand.
 Built as a single-page React app; orders and inquiries are funneled to WhatsApp.
 
 ## Tech stack

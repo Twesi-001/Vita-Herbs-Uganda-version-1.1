@@ -1,4 +1,4 @@
--- KarOrganicsUganda — database schema
+-- KarOrganics Uganda — database schema
 -- Run with: npm run migrate   (or: psql "$DATABASE_URL" -f db/schema.sql)
 
 CREATE TABLE IF NOT EXISTS products (
@@ -49,11 +49,11 @@ INSERT INTO site_content (key, value) VALUES
   ('hero.heading',             'Herbal Extract Medicine for Better Everyday Living'),
   ('hero.subtext',             'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.'),
   ('about.hero.eyebrow',       'Our Story'),
-  ('about.hero.heading',       'About KarOrganicsUganda'),
+  ('about.hero.heading',       'About KarOrganics Uganda'),
   ('about.hero.description',   'A heritage of healing herbs, a future of holistic wellness - rooted deeply in the rich soils of Uganda.'),
   ('about.story.eyebrow',      'Our Heritage'),
   ('about.story.heading',      'Crafted from heritage, made for today.'),
-  ('about.story.body',         'KarOrganicsUganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.'),
+  ('about.story.body',         'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.'),
   ('about.pillar1.title',      'Purity'),
   ('about.pillar1.body',       'Only single-origin, ethically harvested herbs'),
   ('about.pillar2.title',      'Sustainability'),

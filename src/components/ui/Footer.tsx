@@ -54,7 +54,7 @@ function Footer() {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {currentYear} KarOrganicsUganda. All rights reserved.</p>
+          <p>&copy; {currentYear} KarOrganics Uganda. All rights reserved.</p>
         </div>
       </div>
     </footer>

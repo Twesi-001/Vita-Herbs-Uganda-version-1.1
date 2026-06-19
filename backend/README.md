@@ -1,4 +1,4 @@
-# KarOrganicsUganda — API Server
+# KarOrganics Uganda — API Server
 
 Express + PostgreSQL backend for the KarOrganicswebsite. Stores newsletter
 subscribers, contact/order inquiries, and the product catalog.
