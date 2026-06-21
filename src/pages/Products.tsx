@@ -19,9 +19,34 @@ function orderLink(productName: string) {
   return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 
+function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  return (
+    <div className="lightbox-backdrop" onClick={onClose}>
+      <button className="lightbox-close" onClick={onClose} aria-label="Close">✕</button>
+      <img
+        src={src}
+        alt={alt}
+        className="lightbox-img"
+        onClick={e => e.stopPropagation()}
+      />
+    </div>
+  );
+}
+
 function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit?: number }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
     fetch(`${API_URL}/products`)
@@ -37,7 +62,7 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
     <section className="section" id="products">
       <div className="container">
         <div className="section-heading">
-<h2>Our Herbal Products</h2>
+          <h2>Our Herbal Products</h2>
           <p>Browse a few of our featured herbal extract products.</p>
         </div>
 
@@ -48,7 +73,12 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
             {displayed.map((product) => (
               <article className="card" key={product.id}>
                 {product.image_url && (
-                  <img src={product.image_url} alt={product.name} />
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    className="card-img-clickable"
+                    onClick={() => setLightbox({ src: product.image_url!, alt: product.name })}
+                  />
                 )}
                 <div className="card-body">
                   <h3>{product.name}</h3>
@@ -71,6 +101,10 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
           </div>
         )}
       </div>
+
+      {lightbox && (
+        <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
+      )}
     </section>
   );
 }
