@@ -34,7 +34,6 @@ function Header() {
                     <NavLink to="/products" className={linkClass} onClick={close}>Products</NavLink>
                     <NavLink to="/social" className={linkClass} onClick={close}>Socials</NavLink>
                     <NavLink to="/contact" className={linkClass} onClick={close}>Contact</NavLink>
-                    <NavLink to="/AdminDashboard" className={linkClass} onClick={close}>Admin</NavLink>
 
                     <a
                         className="btn btn-primary menu-cta"

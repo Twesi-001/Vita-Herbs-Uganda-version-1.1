@@ -37,8 +37,7 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
     <section className="section" id="products">
       <div className="container">
         <div className="section-heading">
-          <span className="eyebrow">Featured Products</span>
-          <h2>Our Herbal Products</h2>
+<h2>Our Herbal Products</h2>
           <p>Browse a few of our featured herbal extract products.</p>
         </div>
 
