@@ -1,142 +1,88 @@
-.section {
+.socials-section {
   padding: 80px 0;
-  background: linear-gradient(135deg, #f9f7f3 0%, #ffffff 100%);
+  background: #fafaf8;
 }
 
-.section-heading {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.section-heading .eyebrow {
-  display: inline-block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--green, #2e7d32);
-  margin-bottom: 1rem;
-}
-
-.section-heading h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text, #1f2937);
-  margin-bottom: 1rem;
-}
-
-.section-heading p {
-  font-size: 1.125rem;
-  color: var(--text-light, #4b5563);
-  max-width: 600px;
+.socials-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 620px;
   margin: 0 auto;
 }
 
-.social-links {
+.socials-card {
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.social-link {
-  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 32px;
-  border-radius: 999px;
-  background: white;
-  color: var(--text, #1f2937);
+  gap: 18px;
+  padding: 20px 24px;
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 16px;
   text-decoration: none;
-  font-weight: 600;
+  color: #1a1a1a;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.socials-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+  border-color: var(--platform-color);
+}
+
+.socials-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--platform-bg);
+  color: var(--platform-color);
+  flex-shrink: 0;
+}
+
+.socials-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.socials-card-label {
   font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--border, #e5e7eb);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  color: #111;
+  line-height: 1.2;
 }
 
-.social-icon {
-  font-size: 1.25rem;
-  transition: transform 0.2s ease;
+.socials-card-handle {
+  font-size: 0.82rem;
+  color: var(--platform-color);
+  font-weight: 500;
 }
 
-.social-link:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-  border-color: transparent;
+.socials-card-desc {
+  font-size: 0.83rem;
+  color: #888;
+  margin-top: 2px;
 }
 
-.social-link:hover .social-icon {
-  transform: scale(1.15);
+.socials-card-arrow {
+  color: #ccc;
+  flex-shrink: 0;
+  transition: color 0.2s, transform 0.2s;
 }
 
-/* Platform specific colors */
-.social-link.whatsapp:hover {
-  background: #25D366;
-  color: white;
-}
-
-.social-link.tiktok:hover {
-  background: #000000;
-  color: white;
-}
-
-.social-link.instagram:hover {
-  background: radial-gradient(circle at 30% 110%, #ffdb8b, #f56040, #bc2a8d, #833ab4);
-  color: white;
-}
-
-.social-link.facebook:hover {
-  background: #1877F2;
-  color: white;
-}
-
-.social-link.youtube:hover {
-  background: #FF0000;
-  color: white;
-}
-
-@media (max-width: 960px) {
-  .section {
-    padding: 60px 0;
-  }
-  
-  .section-heading h2 {
-    font-size: 2rem;
-  }
-  
-  .social-link {
-    padding: 12px 28px;
-  }
+.socials-card:hover .socials-card-arrow {
+  color: var(--platform-color);
+  transform: translateX(3px);
 }
 
 @media (max-width: 640px) {
-  .section {
-    padding: 48px 0;
-  }
-  
-  .section-heading {
-    margin-bottom: 32px;
-  }
-  
-  .section-heading h2 {
-    font-size: 1.75rem;
-  }
-  
-  .section-heading p {
-    font-size: 1rem;
-  }
-  
-  .social-links {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .social-link {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
-    padding: 12px 24px;
-  }
+  .socials-section { padding: 60px 0; }
+  .socials-card { padding: 16px 18px; gap: 14px; }
+  .socials-card-icon { width: 44px; height: 44px; border-radius: 12px; }
 }
