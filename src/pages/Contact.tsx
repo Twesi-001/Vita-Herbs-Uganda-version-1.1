@@ -28,10 +28,10 @@ function ContactPage() {
   });
 
   const products = [
-    { id: 1, name: "Vita Detox Extract" },
-    { id: 2, name: "Vita Immune Boost" },
-    { id: 3, name: "Vita Joint Relief" },
-    { id: 4, name: "Vita Energy Complex" },
+    { id: 1, name: "kar Detox Extract" },
+    { id: 2, name: "kar Immune Boost" },
+    { id: 3, name: "kar Joint Relief" },
+    { id: 4, name: "kar Energy Complex" },
   ];
 
   function update(k: string, v: string) {
@@ -58,7 +58,7 @@ function ContactPage() {
     }
 
     const lines = [
-      "New inquiry from VitaHerbs website:",
+      "New inquiry from KarOrganicswebsite:",
       `Name: ${form.name}`,
       `Phone: ${form.phone}`,
       form.email ? `Email: ${form.email}` : null,
@@ -67,7 +67,7 @@ function ContactPage() {
       form.message ? `Message: ${form.message}` : null,
     ].filter(Boolean);
 
-    const url = `https://wa.me/256760108564?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = `https://wa.me/256 701 924517?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
 
     toast.success("Inquiry sent! Opening WhatsApp...");
@@ -176,7 +176,7 @@ function ContactPage() {
 
             {/* Info Sidebar */}
             <div className="contact-info">
-              <a href="https://wa.me/256760108564" target="_blank" rel="noreferrer" className="info-card whatsapp-card">
+              <a href="https://wa.me/256 701 924517" target="_blank" rel="noreferrer" className="info-card whatsapp-card">
                 <div className="info-icon"><MessageCircle /></div>
                 <div className="info-content">
                   <div className="info-badge">Fastest Reply</div>
@@ -189,8 +189,8 @@ function ContactPage() {
                 <div className="info-content">
                   <div className="info-title">Email Us</div>
                   <div className="info-lines">
-                    <p>hello@vitaherbs.ug</p>
-                    <p>support@vitaherbs.ug</p>
+                    <p>hello@karorganics .ug</p>
+                    <p>support@karorganics .ug</p>
                   </div>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
+  Package, MessageSquare, Users, FileEdit, logo1ut, Plus, Pencil, Trash2,
   Upload, Check, Loader, Menu, X, Download, Search, TrendingUp,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
     finally { setLoggingIn(false); }
   };
 
-  const handleLogout = () => { localStorage.removeItem('adminToken'); setAuthState('out'); setSubscribers([]); setContacts([]); setProducts([]); setContent({}); };
+  const handlelogo1ut = () => { localStorage.removeItem('adminToken'); setAuthState('out'); setSubscribers([]); setContacts([]); setProducts([]); setContent({}); };
 
   const deleteRow = async (type: 'subscribers' | 'contacts', id: number) => {
     if (!confirm('Delete this entry?')) return;
@@ -201,9 +201,9 @@ export default function AdminDashboard() {
   if (authState === 'out') return (
     <div className="admin-login-page">
       <div className="login-box">
-        <div className="login-logo">
+        <div className="login-logo1">
           <span className="login-leaf">🌿</span>
-          <h1>VitaHerbs</h1>
+          <h1>karorganics </h1>
           <p>Admin Dashboard</p>
         </div>
         <form onSubmit={handleLogin} className="login-form">
@@ -249,7 +249,7 @@ export default function AdminDashboard() {
         <div className="sidebar-brand">
           <span className="brand-leaf">🌿</span>
           <div>
-            <div className="brand-name">VitaHerbs</div>
+            <div className="brand-name">karorganics </div>
             <div className="brand-sub">Admin Panel</div>
           </div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><X size={20} /></button>
@@ -267,9 +267,9 @@ export default function AdminDashboard() {
         </nav>
 
         <div className="sidebar-footer">
-          <button className="nav-item nav-logout" onClick={handleLogout}>
-            <span className="nav-icon"><LogOut size={19} /></span>
-            <span className="nav-label">Logout</span>
+          <button className="nav-item nav-logo1ut" onClick={handlelogo1ut}>
+            <span className="nav-icon"><logo1ut size={19} /></span>
+            <span className="nav-label">logo1ut</span>
           </button>
         </div>
       </aside>
@@ -331,7 +331,7 @@ export default function AdminDashboard() {
                     <div className="form-grid">
                       <div className="field">
                         <label>Product Name <span>*</span></label>
-                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Vita Detox Extract" />
+                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. kar Detox Extract" />
                       </div>
                       <div className="field">
                         <label>Price (UGX)</label>

@@ -11,7 +11,7 @@ function AboutPage() {
         <div className="container">
           <div className="about-hero-content">
             <span className="eyebrow">{get('about.hero.eyebrow', 'Our Story')}</span>
-            <h1>{get('about.hero.heading', 'About VitaHerbs Uganda')}</h1>
+            <h1>{get('about.hero.heading', 'About KarOrganics Uganda')}</h1>
             <p className="hero-description">
               {get('about.hero.description', 'A heritage of healing herbs, a future of holistic wellness - rooted deeply in the rich soils of Uganda.')}
             </p>
@@ -25,7 +25,7 @@ function AboutPage() {
             <div className="about-story-content">
               <span className="eyebrow">{get('about.story.eyebrow', 'Our Heritage')}</span>
               <h2>{get('about.story.heading', 'Crafted from heritage, made for today.')}</h2>
-              <p>{get('about.story.body', 'VitaHerbs Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.')}</p>
+              <p>{get('about.story.body', 'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.')}</p>
             </div>
 
             <div className="about-card">

@@ -1,6 +1,6 @@
-# VitaHerbs Uganda
+# KarOrganics Uganda
 
-Marketing & storefront website for VitaHerbs Uganda, a herbal-wellness brand.
+Marketing & storefront website for KarOrganics Uganda, a herbal-wellness brand.
 Built as a single-page React app; orders and inquiries are funneled to WhatsApp.
 
 ## Tech stack
@@ -36,7 +36,7 @@ src/
   components/ui/           Header, Footer, NewsLetter, BackToTop
   hooks/useScrollReveal.ts IntersectionObserver-based scroll animations
   assets/                  Product & hero images
-public/                    Static assets served at the site root (logo, icons)
+public/                    Static assets served at the site root (logo1, icons)
 ```
 
 ## Routes
@@ -51,7 +51,7 @@ public/                    Static assets served at the site root (logo, icons)
 
 ## Contact
 
-WhatsApp: [+256 760 108564](https://wa.me/256760108564)
+WhatsApp: [+256 760 108564](https://wa.me/256 701 924517)
 
 ## Deployment notes
 

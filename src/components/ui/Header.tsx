@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import './Header.css';
+import logo from '../../assets/logo1.jpeg';
 
 function Header() {
     const [open, setOpen] = useState(false);
@@ -12,17 +13,18 @@ function Header() {
 
     return (
         <header className="header">
+
             <div className="container nav">
-                <NavLink to="/" className="logo" onClick={close}>
-                    <span className="header-logo-badge">
+                <NavLink to="/" className="logo1" onClick={close}>
+                    <span className="header-logo1-badge">
                         <img
-                            src="/logo.jpeg"
-                            alt="VitaHerbs Uganda"
-                            className="header-logo-img"
+                            src={logo}
+                            alt="KarOrganics Uganda"
+                            className="header-logo1-img"
                         />
                     </span>
                     <span className="footer-site-title">
-                        VitaHerbs <span className="footer-site-region">Uganda</span>
+                        KarOrganics<span className="footer-site-region">Uganda</span>
                     </span>
                 </NavLink>
 
@@ -34,7 +36,7 @@ function Header() {
                     <NavLink to="/contact" className={linkClass} onClick={close}>Contact</NavLink>
                     <a
                         className="btn btn-primary menu-cta"
-                        href="https://wa.me/256760108564"
+                        href="https://wa.me/256 701 924517"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={close}
@@ -45,7 +47,7 @@ function Header() {
 
                 <a
                     className="btn btn-primary header-cta"
-                    href="https://wa.me/256760108564"
+                    href="https://wa.me/256 701 924517"
                     target="_blank"
                     rel="noopener noreferrer"
                 >

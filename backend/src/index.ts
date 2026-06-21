@@ -58,5 +58,5 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log(`VitaHerbs API listening on http://localhost:${PORT}`);
+  console.log(`KarOrganicsAPI listening on http://localhost:${PORT}`);
 });

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { API_URL } from '../lib/api';
 import './Products.css';
 
-const WHATSAPP_PHONE = '256760108564';
+const WHATSAPP_PHONE = '256 701 924517';
 
 interface Product {
   id: number;
@@ -15,7 +15,7 @@ interface Product {
 }
 
 function orderLink(productName: string) {
-  const message = `Hello VitaHerbs, I'd like to order ${productName}.`;
+  const message = `Hello karorganics , I'd like to order ${productName}.`;
   return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 

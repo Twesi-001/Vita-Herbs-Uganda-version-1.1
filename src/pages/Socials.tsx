@@ -5,11 +5,11 @@ function Socials() {
   const get = useSiteContent();
 
   const links = [
-    { key: 'social.whatsapp.url', fallback: 'https://wa.me/256760108564', icon: '💬', label: 'WhatsApp', cls: 'whatsapp' },
-    { key: 'social.tiktok.url', fallback: 'https://www.tiktok.com/@vitaherbsuganda', icon: '🎵', label: 'TikTok', cls: 'tiktok' },
-    { key: 'social.instagram.url', fallback: 'https://www.instagram.com/vitaherbsuganda', icon: '📷', label: 'Instagram', cls: 'instagram' },
-    { key: 'social.facebook.url', fallback: 'https://www.facebook.com/vitaherbsuganda', icon: '👍', label: 'Facebook', cls: 'facebook' },
-    { key: 'social.youtube.url', fallback: 'https://www.youtube.com/@vitaherbsuganda', icon: '▶️', label: 'YouTube', cls: 'youtube' },
+    { key: 'social.whatsapp.url', fallback: 'https://wa.me/256 701 924517', icon: '💬', label: 'WhatsApp', cls: 'whatsapp' },
+    { key: 'social.tiktok.url', fallback: 'https://www.tiktok.com/@karorganics uganda', icon: '🎵', label: 'TikTok', cls: 'tiktok' },
+    { key: 'social.instagram.url', fallback: 'https://www.instagram.com/karorganics uganda', icon: '📷', label: 'Instagram', cls: 'instagram' },
+    { key: 'social.facebook.url', fallback: 'https://www.facebook.com/karorganics uganda', icon: '👍', label: 'Facebook', cls: 'facebook' },
+    { key: 'social.youtube.url', fallback: 'https://www.youtube.com/@karorganics uganda', icon: '▶️', label: 'YouTube', cls: 'youtube' },
   ];
 
   return (
@@ -17,7 +17,7 @@ function Socials() {
       <div className="container">
         <div className="section-heading">
           <span className="eyebrow">Marketing Channels</span>
-          <h2>Follow Vita Herbs</h2>
+          <h2>Follow Kar Organics</h2>
           <p>Connect with us for updates, tips, and product videos.</p>
         </div>
 

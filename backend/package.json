@@ -1,8 +1,8 @@
 {
-  "name": "vita-herbs-server",
+  "name": "kar-herbs-server",
   "version": "1.0.0",
   "private": true,
-  "description": "Express + PostgreSQL API for the VitaHerbs Uganda website",
+  "description": "Express + PostgreSQL API for the KarOrganics Uganda website",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",

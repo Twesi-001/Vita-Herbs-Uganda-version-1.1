@@ -11,15 +11,15 @@ function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-section">
-            <div className="footer-logo">
-              <Leaf className="footer-logo-icon" />
-              <span>VitaHerbs <span className="logo-region">Uganda</span></span>
+            <div className="footer-logo1">
+              <Leaf className="footer-logo1-icon" />
+              <span>KarOrganics<span className="logo1-region">Uganda</span></span>
             </div>
             <p>Premium herbal extracts for holistic wellness. Trusted by thousands across Uganda.</p>
             <div className="social-links">
-              <a href="https://wa.me/256760108564" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-              <a href="https://www.instagram.com/vitaherbsuganda" target="_blank" rel="noopener noreferrer">📷 Instagram</a>
-              <a href="https://www.facebook.com/vitaherbsuganda" target="_blank" rel="noopener noreferrer">👍 Facebook</a>
+              <a href="https://wa.me/256 701 924517" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+              <a href="https://www.instagram.com/karorganics uganda" target="_blank" rel="noopener noreferrer">📷 Instagram</a>
+              <a href="https://www.facebook.com/karorganics uganda" target="_blank" rel="noopener noreferrer">👍 Facebook</a>
             </div>
           </div>
           
@@ -38,7 +38,7 @@ function Footer() {
             <h3>Contact Info</h3>
             <ul className="contact-info">
               <li><Phone /> +256 760 108564</li>
-              <li><Mail /> hello@vitaherbs.ug</li>
+              <li><Mail /> hello@karorganics .ug</li>
               <li><MapPin /> Mbarara, Western Uganda</li>
             </ul>
           </div>
@@ -54,7 +54,7 @@ function Footer() {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {currentYear} VitaHerbs Uganda. All rights reserved.</p>
+          <p>&copy; {currentYear} KarOrganics Uganda. All rights reserved.</p>
         </div>
       </div>
     </footer>

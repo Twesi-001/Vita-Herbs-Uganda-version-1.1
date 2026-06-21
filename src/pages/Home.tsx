@@ -22,7 +22,7 @@ function Home(){
         <div className="hero-copy">
           <h1>{get('hero.heading', 'Herbal Extract Medicine for Better Everyday Living')}</h1>
           <p>
-            {get('hero.subtext', 'Vita Herbs is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.')}
+            {get('hero.subtext', 'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.')}
           </p>
 
           <div className="hero-actions">

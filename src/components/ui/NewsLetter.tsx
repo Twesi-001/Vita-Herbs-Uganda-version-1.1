@@ -56,7 +56,7 @@ function NewsLetter() {
           
           <div className="newsletter-content">
             <span className="eyebrow">Newsletter</span>
-            <h2>Stay Updated with Vita Herbs</h2>
+            <h2>Stay Updated with Kar Organics</h2>
             <p>Get herbal wellness tips, new product alerts, and exclusive offers delivered to your inbox.</p>
           </div>
 

@@ -1,6 +1,6 @@
-# VitaHerbs Uganda — API Server
+# KarOrganics Uganda — API Server
 
-Express + PostgreSQL backend for the VitaHerbs website. Stores newsletter
+Express + PostgreSQL backend for the KarOrganicswebsite. Stores newsletter
 subscribers, contact/order inquiries, and the product catalog.
 
 ## Requirements
@@ -46,8 +46,8 @@ subscribers, contact/order inquiries, and the product catalog.
 If you have Docker, this gives you one in seconds:
 
 ```bash
-docker run --name vitaherbs-db -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=vitaherbs -p 5432:5432 -d postgres:16
+docker run --name karorganics -db -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=KarOrganics-p 5432:5432 -d postgres:16
 ```
 
 That matches the default `DATABASE_URL` in `.env.example`.
@@ -76,7 +76,7 @@ curl -X POST http://localhost:4000/api/subscribers \
 # Submit a contact inquiry
 curl -X POST http://localhost:4000/api/inquiries \
   -H "Content-Type: application/json" \
-  -d '{"name":"Jane","phone":"+256...","product":"Vita Detox Extract","quantity":"2"}'
+  -d '{"name":"Jane","phone":"+256...","product":"kar Detox Extract","quantity":"2"}'
 ```
 
 ## Project layout
