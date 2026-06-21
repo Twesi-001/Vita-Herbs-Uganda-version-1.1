@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import './Header.css';
+import logo from '../../assets/logo1.jpeg';
 
 function Header() {
     const [open, setOpen] = useState(false);
@@ -12,11 +13,12 @@ function Header() {
 
     return (
         <header className="header">
+
             <div className="container nav">
                 <NavLink to="/" className="logo1" onClick={close}>
                     <span className="header-logo1-badge">
                         <img
-                            src="/logo1.jpeg"
+                            src={logo}
                             alt="KarOrganics Uganda"
                             className="header-logo1-img"
                         />
