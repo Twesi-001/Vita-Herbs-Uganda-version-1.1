@@ -154,19 +154,8 @@
   font-size: 13px;
 }
 
-.card-body a::before {
-  content: "💬";
-  font-size: 14px;
-  transition: transform 0.3s ease;
-}
-
 .card-body a:hover {
   color: var(--green-dark);
-  gap: 12px;
-}
-
-.card-body a:hover::before {
-  transform: scale(1.1);
 }
 
 /*
@@ -369,10 +358,15 @@
 }
 
 .product-price {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--green, #2e7d32);
-  margin: 12px 0 8px;
+  display: inline-block;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1b5e20;
+  background: #e8f5e9;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin: 12px 0 10px;
+  letter-spacing: 0.01em;
 }
 
 .product-category {
