@@ -67,7 +67,7 @@
   width: 100%; max-width: 410px;
   box-shadow: 0 30px 60px rgba(0,0,0,0.35);
 }
-.login-logo { text-align: center; margin-bottom: 34px; }
+.login-logo1 { text-align: center; margin-bottom: 34px; }
 .login-leaf {
   font-size: 2.4rem;
   display: inline-flex; align-items: center; justify-content: center;
@@ -76,8 +76,8 @@
   border-radius: 20px;
   margin-bottom: 16px;
 }
-.login-logo h1 { font-size: 1.7rem; font-weight: 800; color: var(--accent-dark); margin: 0 0 4px; }
-.login-logo p { font-size: 0.875rem; color: var(--ink-faint); margin: 0; }
+.login-logo1 h1 { font-size: 1.7rem; font-weight: 800; color: var(--accent-dark); margin: 0 0 4px; }
+.login-logo1 p { font-size: 0.875rem; color: var(--ink-faint); margin: 0; }
 .login-form { display: flex; flex-direction: column; gap: 16px; }
 .login-field { display: flex; flex-direction: column; gap: 7px; }
 .login-field label { font-size: 0.78rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -151,8 +151,8 @@
 .nav-active .nav-badge { background: rgba(255,255,255,0.25); }
 
 .sidebar-footer { padding: 14px; border-top: 1px solid var(--side-border); }
-.nav-logout { color: #f3a3a3; }
-.nav-logout:hover { background: rgba(226,59,59,0.14) !important; color: #ffb4b4 !important; }
+.nav-logo1ut { color: #f3a3a3; }
+.nav-logo1ut:hover { background: rgba(226,59,59,0.14) !important; color: #ffb4b4 !important; }
 
 /* ── Main ── */
 .admin-main { margin-left: var(--side-w); flex: 1; min-width: 0; display: flex; flex-direction: column; }

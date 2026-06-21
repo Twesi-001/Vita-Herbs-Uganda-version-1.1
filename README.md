@@ -36,7 +36,7 @@ src/
   components/ui/           Header, Footer, NewsLetter, BackToTop
   hooks/useScrollReveal.ts IntersectionObserver-based scroll animations
   assets/                  Product & hero images
-public/                    Static assets served at the site root (logo, icons)
+public/                    Static assets served at the site root (logo1, icons)
 ```
 
 ## Routes

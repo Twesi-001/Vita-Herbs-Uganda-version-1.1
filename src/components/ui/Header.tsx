@@ -13,12 +13,12 @@ function Header() {
     return (
         <header className="header">
             <div className="container nav">
-                <NavLink to="/" className="logo" onClick={close}>
-                    <span className="header-logo-badge">
+                <NavLink to="/" className="logo1" onClick={close}>
+                    <span className="header-logo1-badge">
                         <img
-                            src="/logo.jpeg"
+                            src="/logo1.jpeg"
                             alt="KarOrganics Uganda"
-                            className="header-logo-img"
+                            className="header-logo1-img"
                         />
                     </span>
                     <span className="footer-site-title">
