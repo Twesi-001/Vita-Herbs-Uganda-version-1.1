@@ -22,8 +22,7 @@ function ValueSection() {
     <section className="section value-section" id="value">
       <div className="container">
         <div className="section-heading">
-          <span className="eyebrow">Why It Matters</span>
-          <h2>{get('value.heading', "You're Not Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>
+<h2>{get('value.heading', "You're Not Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>
           <p>{get('value.subtext', 'Every KarOrganicsextract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.')}</p>
         </div>
 

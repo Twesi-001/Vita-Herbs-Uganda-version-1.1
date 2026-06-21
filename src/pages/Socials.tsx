@@ -16,8 +16,7 @@ function Socials() {
     <section className="section" id="social">
       <div className="container">
         <div className="section-heading">
-          <span className="eyebrow">Marketing Channels</span>
-          <h2>Follow Kar Organics</h2>
+<h2>Follow Kar Organics</h2>
           <p>Connect with us for updates, tips, and product videos.</p>
         </div>
 
