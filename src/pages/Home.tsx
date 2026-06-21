@@ -8,7 +8,43 @@ import Socials from './Socials'
 import heroImage from '../assets/Herbs.jpg';
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { useState, useEffect } from 'react'
+import { API_URL } from '../lib/api'
 import'./Home.css'
+
+function HeroSlideshow() {
+  const [slides, setSlides] = useState<string[]>([heroImage]);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    fetch(`${API_URL}/products`)
+      .then(r => r.json())
+      .then((products: { image_url: string | null }[]) => {
+        const urls = products.map(p => p.image_url).filter(Boolean) as string[];
+        if (urls.length > 0) setSlides([heroImage, ...urls]);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const id = setInterval(() => setCurrent(c => (c + 1) % slides.length), 7000);
+    return () => clearInterval(id);
+  }, [slides]);
+
+  return (
+    <div className="hero-image hero-slideshow">
+      <img src={heroImage} alt="" className="hero-slideshow-sizer" aria-hidden="true" />
+      {slides.map((src, i) => (
+        <div
+          key={src}
+          className={`hero-slide${i === current ? ' hero-slide--active' : ''}`}
+          style={{ backgroundImage: `url(${src})` }}
+        />
+      ))}
+    </div>
+  );
+}
 
 function Home(){
     useScrollReveal();
@@ -37,12 +73,7 @@ function Home(){
           </div>
         </div>
 
-        <div className="hero-image">
-          <img
-            src={heroImage}
-            alt="Herbal leaves and natural medicine"
-          />
-        </div>
+        <HeroSlideshow />
       </div>
     </section>
 

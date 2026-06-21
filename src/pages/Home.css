@@ -27,7 +27,7 @@
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1rem;
-  color: var(--green-dark, #1d4a1a);
+  color: var(--text, #1f2937);
 }
 
 .hero-copy p {
@@ -56,7 +56,7 @@
 }
 
 .btn-primary:hover {
-  background: var(--green-dark, #1b5e20);
+  background: var(--brown, #7a5025);
   transform: translateY(-2px);
 }
 
@@ -73,7 +73,8 @@
 }
 
 .btn-outline:hover {
-  background: var(--green, #2e7d32);
+  background: var(--brown, #7a5025);
+  border-color: var(--brown, #7a5025);
   color: white;
 }
 
@@ -97,6 +98,41 @@
   font-weight: bold;
 }
 
+.hero-image {
+  position: relative;
+}
+
+/* Slideshow */
+.hero-slideshow {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.hero-slideshow-sizer {
+  width: 100%;
+  height: auto;
+  display: block;
+  visibility: hidden;
+  position: static !important;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 2.2s ease-in-out;
+}
+
+.hero-slide--active {
+  opacity: 1;
+}
+
 .hero-image img {
   width: 100%;
   height: auto;
@@ -105,10 +141,6 @@
   position: relative;
 }
 
-/* Overlay on the hero image for text contrast */
-.hero-image {
-  position: relative;
-}
 
 .hero-image::after {
   content: '';
