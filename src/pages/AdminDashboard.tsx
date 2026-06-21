@@ -201,9 +201,9 @@ export default function AdminDashboard() {
   if (authState === 'out') return (
     <div className="admin-login-page">
       <div className="login-box">
-        <div className="login-logo1">
+        <div className="login-logo">
           <span className="login-leaf">🌿</span>
-          <h1>karorganics </h1>
+          <h1>KarOrganics</h1>
           <p>Admin Dashboard</p>
         </div>
         <form onSubmit={handleLogin} className="login-form">
@@ -249,7 +249,7 @@ export default function AdminDashboard() {
         <div className="sidebar-brand">
           <span className="brand-leaf">🌿</span>
           <div>
-            <div className="brand-name">karorganics </div>
+            <div className="brand-name">KarOrganics</div>
             <div className="brand-sub">Admin Panel</div>
           </div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><X size={20} /></button>
@@ -267,15 +267,9 @@ export default function AdminDashboard() {
         </nav>
 
         <div className="sidebar-footer">
-<<<<<<< HEAD
-          <button className="nav-item nav-logo1ut" onClick={handlelogo1ut}>
-            <span className="nav-icon"><LogOut  size={19} /></span>
-            <span className="nav-label">logo1ut</span>
-=======
           <button className="nav-item nav-logout" onClick={handleLogout}>
             <span className="nav-icon"><LogOut size={19} /></span>
             <span className="nav-label">Log out</span>
->>>>>>> 77b86f6d69fa69f5d9dfe9c47bd99bc6acc23744
           </button>
         </div>
       </aside>
@@ -337,7 +331,7 @@ export default function AdminDashboard() {
                     <div className="form-grid">
                       <div className="field">
                         <label>Product Name <span>*</span></label>
-                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. kar Detox Extract" />
+                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Kar Detox Extract" />
                       </div>
                       <div className="field">
                         <label>Price (UGX)</label>

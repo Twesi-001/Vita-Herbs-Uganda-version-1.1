@@ -20,6 +20,8 @@ function PublicLayout() {
           <Route path="/products" element={<Products />} />
           <Route path="/social" element={<Socials />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+
         </Routes>
       </main>
       <Footer />
