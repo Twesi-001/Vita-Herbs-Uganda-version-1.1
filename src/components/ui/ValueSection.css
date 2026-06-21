@@ -56,9 +56,7 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  border-radius: 50%;
   margin-bottom: 1rem;
-  background: rgba(46, 125, 50, 0.1);
   color: var(--green, #2e7d32);
 }
 
