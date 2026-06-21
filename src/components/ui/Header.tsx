@@ -38,7 +38,7 @@ function Header() {
 
                     <a
                         className="btn btn-primary menu-cta"
-                        href="https://wa.me/256 701 924517"
+                        href="https://wa.me/256701924517"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={close}
@@ -49,7 +49,7 @@ function Header() {
 
                 <a
                     className="btn btn-primary header-cta"
-                    href="https://wa.me/256 701 924517"
+                    href="https://wa.me/256701924517"
                     target="_blank"
                     rel="noopener noreferrer"
                 >

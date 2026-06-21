@@ -70,7 +70,7 @@ INSERT INTO site_content (key, value) VALUES
   ('value.card3.text',         'Single-origin herbs, nothing hidden. Know exactly what''s going into your body, every time.'),
   ('value.card4.title',        'Rooted in Community'),
   ('value.card4.text',         'Sourced directly from East African farmers. Your wellness journey helps build theirs too.'),
-  ('social.whatsapp.url',      'https://wa.me/256 701 924517'),
+  ('social.whatsapp.url',      'https://wa.me/256701924517'),
   ('social.tiktok.url',        'https://www.tiktok.com/@karorganics uganda'),
   ('social.instagram.url',     'https://www.instagram.com/karorganics uganda'),
   ('social.facebook.url',      'https://www.facebook.com/karorganics uganda'),

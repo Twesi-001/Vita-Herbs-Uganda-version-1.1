@@ -5,7 +5,7 @@ function Socials() {
   const get = useSiteContent();
 
   const links = [
-    { key: 'social.whatsapp.url', fallback: 'https://wa.me/256 701 924517', icon: '💬', label: 'WhatsApp', cls: 'whatsapp' },
+    { key: 'social.whatsapp.url', fallback: 'https://wa.me/256701924517', icon: '💬', label: 'WhatsApp', cls: 'whatsapp' },
     { key: 'social.tiktok.url', fallback: 'https://www.tiktok.com/@karorganics uganda', icon: '🎵', label: 'TikTok', cls: 'tiktok' },
     { key: 'social.instagram.url', fallback: 'https://www.instagram.com/karorganics uganda', icon: '📷', label: 'Instagram', cls: 'instagram' },
     { key: 'social.facebook.url', fallback: 'https://www.facebook.com/karorganics uganda', icon: '👍', label: 'Facebook', cls: 'facebook' },

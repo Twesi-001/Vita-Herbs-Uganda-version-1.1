@@ -67,7 +67,7 @@ function ContactPage() {
       form.message ? `Message: ${form.message}` : null,
     ].filter(Boolean);
 
-    const url = `https://wa.me/256 701 924517?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = `https://wa.me/256701924517?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
 
     toast.success("Inquiry sent! Opening WhatsApp...");
@@ -176,7 +176,7 @@ function ContactPage() {
 
             {/* Info Sidebar */}
             <div className="contact-info">
-              <a href="https://wa.me/256 701 924517" target="_blank" rel="noreferrer" className="info-card whatsapp-card">
+              <a href="https://wa.me/256701924517" target="_blank" rel="noreferrer" className="info-card whatsapp-card">
                 <div className="info-icon"><MessageCircle /></div>
                 <div className="info-content">
                   <div className="info-badge">Fastest Reply</div>
