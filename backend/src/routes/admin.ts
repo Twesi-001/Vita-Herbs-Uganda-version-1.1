@@ -1,12 +1,17 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import bcrypt from 'bcryptjs';
 import { query } from '../db';
 import { requireAdmin, signToken } from '../middleware/auth';
 
 const router = Router();
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'changeme';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+
+if (!ADMIN_USERNAME || !ADMIN_PASSWORD_HASH) {
+  throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD_HASH environment variables are required');
+}
 
 const loginInput = z.object({
   username: z.string().min(1),
@@ -14,14 +19,16 @@ const loginInput = z.object({
 });
 
 // POST /api/admin/login — exchange credentials for a JWT.
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const parsed = loginInput.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ message: 'Username and password are required' });
     return;
   }
   const { username, password } = parsed.data;
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+  const usernameMatch = username === ADMIN_USERNAME;
+  const passwordMatch = await bcrypt.compare(password, ADMIN_PASSWORD_HASH!);
+  if (!usernameMatch || !passwordMatch) {
     res.status(401).json({ message: 'Invalid credentials' });
     return;
   }
