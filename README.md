@@ -51,7 +51,7 @@ public/                    Static assets served at the site root (logo1, icons)
 
 ## Contact
 
-WhatsApp: [+256 760 108564](https://wa.me/256760108564)
+WhatsApp: [+256 760 108564](https://wa.me/256 701 924517)
 
 ## Deployment notes
 

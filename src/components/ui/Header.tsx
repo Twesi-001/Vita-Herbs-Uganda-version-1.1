@@ -34,7 +34,7 @@ function Header() {
                     <NavLink to="/contact" className={linkClass} onClick={close}>Contact</NavLink>
                     <a
                         className="btn btn-primary menu-cta"
-                        href="https://wa.me/256760108564"
+                        href="https://wa.me/256 701 924517"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={close}
@@ -45,7 +45,7 @@ function Header() {
 
                 <a
                     className="btn btn-primary header-cta"
-                    href="https://wa.me/256760108564"
+                    href="https://wa.me/256 701 924517"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
