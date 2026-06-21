@@ -1,12 +1,14 @@
 :root {
-  --green: #2e7d32;
-  --green-dark: #1b5e20;
-  --beige: #f5f1e8;
-  --text: #1f2937;
-  --muted: #6b7280;
+  --green: #3a7a2e;        /* Kar Organics text green */
+  --green-dark: #1d4a1a;   /* Deep forest K green */
+  --green-light: #5ba832;  /* Fresh leaf green */
+  --brown: #7a5025;        /* Earth/mortar brown accent */
+  --beige: #f7f3ec;        /* Warm logo background */
+  --text: #1a2e1a;         /* Near-black with green tint */
+  --muted: #6b7a6b;        /* Muted green-grey */
   --white: #ffffff;
-  --border: #e5e7eb;
-  --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  --border: #e0e8dc;       /* Soft green-tinted border */
+  --shadow: 0 12px 30px rgba(29, 74, 26, 0.10);
   --radius: 18px;
 }
 .eyebrow {

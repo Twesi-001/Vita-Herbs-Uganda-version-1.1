@@ -1,6 +1,6 @@
 
 .footer {
-  background: linear-gradient(135deg, #1e3c2c 0%, #2d5a3b 100%);
+  background: linear-gradient(135deg, #1d4a1a 0%, #2d5a1e 100%);
   color: white;
   padding: 60px 0 20px;
   margin-top: auto;
@@ -25,11 +25,11 @@
 .footer-logo1-icon {
   width: 32px;
   height: 32px;
-  color: #d4af37;
+  color: #c4832a;
 }
 
 .logo1-region {
-  color: #d4af37;
+  color: #c4832a;
   font-weight: 600;
 }
 
@@ -54,7 +54,7 @@
   left: 0;
   width: 40px;
   height: 2px;
-  background: #d4af37;
+  background: #c4832a;
 }
 
 .footer-section ul {
@@ -73,7 +73,7 @@
 }
 
 .footer-section ul li a:hover {
-  color: #d4af37;
+  color: #c4832a;
   padding-left: 5px;
 }
 
@@ -109,7 +109,7 @@
 .social-links a svg { flex-shrink: 0; }
 
 .social-links a:hover {
-  color: #d4af37;
+  color: #c4832a;
   transform: translateX(4px);
 }
 
