@@ -104,7 +104,7 @@
 /* Image Container */
 .card img {
   width: 100%;
-  height: 200px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: center;
   display: block;
@@ -168,9 +168,6 @@
     width: 260px;
   }
   
-  .card img {
-    height: 180px;
-  }
 }
 
 /* Mobile Landscape */
@@ -187,9 +184,6 @@
     width: 240px;
   }
   
-  .card img {
-    height: 170px;
-  }
   
   .section-heading h2 {
     font-size: 32px;
@@ -212,9 +206,6 @@
     max-width: 320px;
   }
   
-  .card img {
-    height: 200px;
-  }
 }
 
 @media (max-width: 640px) {
@@ -242,9 +233,6 @@
     max-width: 300px;
   }
   
-  .card img {
-    height: 180px;
-  }
   
   .card-body {
     padding: 16px;
@@ -266,9 +254,6 @@
     max-width: 280px;
   }
   
-  .card img {
-    height: 160px;
-  }
   
   .card-body {
     padding: 14px;
