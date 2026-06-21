@@ -140,7 +140,7 @@ export default function AdminDashboard() {
     finally { setLoggingIn(false); }
   };
 
-  const handlelogo1ut = () => { localStorage.removeItem('adminToken'); setAuthState('out'); setSubscribers([]); setContacts([]); setProducts([]); setContent({}); };
+  const handleLogout = () => { localStorage.removeItem('adminToken'); setAuthState('out'); setSubscribers([]); setContacts([]); setProducts([]); setContent({}); };
 
   const deleteRow = async (type: 'subscribers' | 'contacts', id: number) => {
     if (!confirm('Delete this entry?')) return;
@@ -267,9 +267,15 @@ export default function AdminDashboard() {
         </nav>
 
         <div className="sidebar-footer">
+<<<<<<< HEAD
           <button className="nav-item nav-logo1ut" onClick={handlelogo1ut}>
             <span className="nav-icon"><LogOut  size={19} /></span>
             <span className="nav-label">logo1ut</span>
+=======
+          <button className="nav-item nav-logout" onClick={handleLogout}>
+            <span className="nav-icon"><LogOut size={19} /></span>
+            <span className="nav-label">Log out</span>
+>>>>>>> 77b86f6d69fa69f5d9dfe9c47bd99bc6acc23744
           </button>
         </div>
       </aside>
