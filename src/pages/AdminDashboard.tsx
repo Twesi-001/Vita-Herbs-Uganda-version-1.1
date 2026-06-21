@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Package, MessageSquare, Users, FileEdit, logo1ut, Plus, Pencil, Trash2,
+  Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
   Upload, Check, Loader, Menu, X, Download, Search, TrendingUp,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
@@ -268,7 +268,7 @@ export default function AdminDashboard() {
 
         <div className="sidebar-footer">
           <button className="nav-item nav-logo1ut" onClick={handlelogo1ut}>
-            <span className="nav-icon"><logo1ut size={19} /></span>
+            <span className="nav-icon"><LogOut  size={19} /></span>
             <span className="nav-label">logo1ut</span>
           </button>
         </div>
