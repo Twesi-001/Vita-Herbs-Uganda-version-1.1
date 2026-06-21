@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { API_URL } from '../lib/api';
 import './Products.css';
 
-const WHATSAPP_PHONE = '256 701 924517';
+const WHATSAPP_PHONE = '256701924517';
 
 interface Product {
   id: number;

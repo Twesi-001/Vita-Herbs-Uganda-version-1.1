@@ -17,7 +17,7 @@ function Footer() {
             </div>
             <p>Premium herbal extracts for holistic wellness. Trusted by thousands across Uganda.</p>
             <div className="social-links">
-              <a href="https://wa.me/256 701 924517" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+              <a href="https://wa.me/256701924517" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
               <a href="https://www.instagram.com/karorganics uganda" target="_blank" rel="noopener noreferrer">📷 Instagram</a>
               <a href="https://www.facebook.com/karorganics uganda" target="_blank" rel="noopener noreferrer">👍 Facebook</a>
             </div>

@@ -74,6 +74,7 @@ async function uploadToCloudinary(file: File): Promise<string> {
 }
 
 export default function AdminDashboard() {
+  // Start with 'loading' state
   const [authState, setAuthState] = useState<'loading' | 'out' | 'in'>('loading');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -118,29 +119,77 @@ export default function AdminDashboard() {
     setContent(ct && typeof ct === 'object' && !Array.isArray(ct) ? ct : {});
   };
 
+  // Authentication check - runs once on mount
   useEffect(() => {
-    const tok = token();
-    if (!tok) { setAuthState('out'); return; }
-    fetch(`${API_URL}/admin/stats`, { headers: { Authorization: `Bearer ${tok}` } })
-      .then(r => r.ok ? loadAll(tok).then(() => setAuthState('in')) : Promise.reject())
-      .catch(() => { localStorage.removeItem('adminToken'); setAuthState('out'); });
+    const checkAuth = async () => {
+      const tok = token();
+      if (!tok) {
+        setAuthState('out');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/stats`, {
+          headers: { Authorization: `Bearer ${tok}` }
+        });
+        
+        if (response.ok) {
+          await loadAll(tok);
+          setAuthState('in');
+        } else {
+          localStorage.removeItem('adminToken');
+          setAuthState('out');
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('adminToken');
+        setAuthState('out');
+      }
+    };
+    
+    checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // reset search when switching tabs
   useEffect(() => { setSearch(''); setSidebarOpen(false); }, [activeTab]);
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); setLoginError(''); setLoggingIn(true);
+    e.preventDefault();
+    setLoginError('');
+    setLoggingIn(true);
+    
     try {
-      const r = await fetch(`${API_URL}/admin/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+      const r = await fetch(`${API_URL}/admin/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      
       const d = await r.json();
-      if (r.ok) { localStorage.setItem('adminToken', d.token); await loadAll(d.token); setAuthState('in'); }
-      else setLoginError(d.message || 'Invalid credentials');
-    } catch { setLoginError('Connection failed'); }
-    finally { setLoggingIn(false); }
+      
+      if (r.ok) {
+        localStorage.setItem('adminToken', d.token);
+        await loadAll(d.token);
+        setAuthState('in');
+      } else {
+        setLoginError(d.message || 'Invalid credentials');
+      }
+    } catch {
+      setLoginError('Connection failed');
+    } finally {
+      setLoggingIn(false);
+    }
   };
 
-  const handleLogout = () => { localStorage.removeItem('adminToken'); setAuthState('out'); setSubscribers([]); setContacts([]); setProducts([]); setContent({}); };
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    setAuthState('out');
+    setSubscribers([]);
+    setContacts([]);
+    setProducts([]);
+    setContent({});
+  };
 
   const deleteRow = async (type: 'subscribers' | 'contacts', id: number) => {
     if (!confirm('Delete this entry?')) return;
@@ -192,39 +241,66 @@ export default function AdminDashboard() {
     } finally { setSavingKey(null); }
   };
 
-  // ── Loading ────────────────────────────────────────────────────────────────
-  if (authState === 'loading') return (
-    <div className="admin-splash"><div className="splash-spinner" /></div>
-  );
-
-  // ── Login ──────────────────────────────────────────────────────────────────
-  if (authState === 'out') return (
-    <div className="admin-login-page">
-      <div className="login-box">
-        <div className="login-logo1">
-          <span className="login-leaf">🌿</span>
-          <h1>karorganics </h1>
-          <p>Admin Dashboard</p>
-        </div>
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="login-field">
-            <label>Username</label>
-            <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter username" required autoFocus />
-          </div>
-          <div className="login-field">
-            <label>Password</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" required />
-          </div>
-          {loginError && <p className="login-error">{loginError}</p>}
-          <button type="submit" className="login-btn" disabled={loggingIn}>
-            {loggingIn ? <><Loader size={16} className="spin" /> Signing in…</> : 'Sign In'}
-          </button>
-        </form>
+  // ── Loading State ──
+  if (authState === 'loading') {
+    return (
+      <div className="admin-splash">
+        <div className="splash-spinner" />
+        <p>Loading...</p>
       </div>
-    </div>
-  );
+    );
+  }
 
-  // ── Filtered data ──
+  // ── Login Screen ──
+  if (authState === 'out') {
+    return (
+      <div className="admin-login-page">
+        <div className="login-box">
+          <div className="login-logo">
+            <span className="login-leaf">🌿</span>
+            <h1>KarOrganics</h1>
+            <p>Admin Dashboard</p>
+          </div>
+          <form onSubmit={handleLogin} className="login-form">
+            <div className="login-field">
+              <label>Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                placeholder="Enter username"
+                required
+                autoFocus
+              />
+            </div>
+            <div className="login-field">
+              <label>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Enter password"
+                required
+              />
+            </div>
+            {loginError && <p className="login-error">{loginError}</p>}
+            <button type="submit" className="login-btn" disabled={loggingIn}>
+              {loggingIn ? (
+                <>
+                  <Loader size={16} className="spin" />
+                  Signing in…
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Dashboard (only shown when authState === 'in') ──
   const q = search.trim().toLowerCase();
   const filteredProducts = q ? products.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)) : products;
   const filteredContacts = q ? contacts.filter(c => c.name.toLowerCase().includes(q) || c.phone.includes(q) || c.product.toLowerCase().includes(q)) : contacts;
@@ -249,7 +325,7 @@ export default function AdminDashboard() {
         <div className="sidebar-brand">
           <span className="brand-leaf">🌿</span>
           <div>
-            <div className="brand-name">karorganics </div>
+            <div className="brand-name">KarOrganics</div>
             <div className="brand-sub">Admin Panel</div>
           </div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><X size={20} /></button>
@@ -258,7 +334,11 @@ export default function AdminDashboard() {
         <nav className="sidebar-nav">
           <div className="nav-section-label">Manage</div>
           {NAV.map(({ tab, icon, label, count }) => (
-            <button key={tab} className={`nav-item ${activeTab === tab ? 'nav-active' : ''}`} onClick={() => setActiveTab(tab)}>
+            <button
+              key={tab}
+              className={`nav-item ${activeTab === tab ? 'nav-active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
               <span className="nav-icon">{icon}</span>
               <span className="nav-label">{label}</span>
               {count !== undefined && <span className="nav-badge">{count}</span>}
@@ -287,12 +367,22 @@ export default function AdminDashboard() {
             {showSearch && (
               <div className="search-box">
                 <Search size={16} />
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search…" />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search…"
+                />
               </div>
             )}
-            {activeTab === 'products' && <button className="btn btn-primary" onClick={openAddForm}><Plus size={16} /> Add Product</button>}
+            {activeTab === 'products' && (
+              <button className="btn btn-primary" onClick={openAddForm}>
+                <Plus size={16} /> Add Product
+              </button>
+            )}
             {(activeTab === 'contacts' || activeTab === 'subscribers') && (
-              <button className="btn btn-outline" onClick={() => exportCSV(activeTab as 'subscribers' | 'contacts')}><Download size={16} /> Export</button>
+              <button className="btn btn-outline" onClick={() => exportCSV(activeTab as 'subscribers' | 'contacts')}>
+                <Download size={16} /> Export
+              </button>
             )}
           </div>
         </header>
@@ -331,36 +421,83 @@ export default function AdminDashboard() {
                     <div className="form-grid">
                       <div className="field">
                         <label>Product Name <span>*</span></label>
-                        <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. kar Detox Extract" />
+                        <input
+                          required
+                          value={form.name}
+                          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                          placeholder="e.g. Kar Detox Extract"
+                        />
                       </div>
                       <div className="field">
                         <label>Price (UGX)</label>
-                        <input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} placeholder="e.g. 25000" />
+                        <input
+                          type="number"
+                          value={form.price}
+                          onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
+                          placeholder="e.g. 25000"
+                        />
                       </div>
                       <div className="field field-full">
                         <label>Description</label>
-                        <textarea rows={2} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Short product description" />
+                        <textarea
+                          rows={2}
+                          value={form.description}
+                          onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                          placeholder="Short product description"
+                        />
                       </div>
                       <div className="field field-full">
                         <label>Product Image</label>
                         <div className="image-uploader">
-                          {form.image_url
-                            ? <div className="uploader-preview"><img src={form.image_url} alt="preview" /><button type="button" onClick={() => setForm(f => ({ ...f, image_url: '' }))} className="remove-img"><X size={14} /></button></div>
-                            : <button type="button" className="uploader-drop" onClick={() => fileRef.current?.click()} disabled={uploading}>
-                                {uploading ? <><Loader size={18} className="spin" /> Uploading…</> : <><Upload size={18} /> Click to upload image</>}
+                          {form.image_url ? (
+                            <div className="uploader-preview">
+                              <img src={form.image_url} alt="preview" />
+                              <button type="button" onClick={() => setForm(f => ({ ...f, image_url: '' }))} className="remove-img">
+                                <X size={14} />
                               </button>
-                          }
-                          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              className="uploader-drop"
+                              onClick={() => fileRef.current?.click()}
+                              disabled={uploading}
+                            >
+                              {uploading ? (
+                                <><Loader size={18} className="spin" /> Uploading…</>
+                              ) : (
+                                <><Upload size={18} /> Click to upload image</>
+                              )}
+                            </button>
+                          )}
+                          <input
+                            ref={fileRef}
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={handleImageUpload}
+                          />
                         </div>
-                        <input className="url-input" value={form.image_url} onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))} placeholder="…or paste an image URL" />
+                        <input
+                          className="url-input"
+                          value={form.image_url}
+                          onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
+                          placeholder="…or paste an image URL"
+                        />
                       </div>
                     </div>
                     <label className="toggle-row">
-                      <input type="checkbox" checked={form.active} onChange={e => setForm(f => ({ ...f, active: e.target.checked }))} />
+                      <input
+                        type="checkbox"
+                        checked={form.active}
+                        onChange={e => setForm(f => ({ ...f, active: e.target.checked }))}
+                      />
                       <span>Active — visible on the website</span>
                     </label>
                     <div className="form-actions">
-                      <button type="submit" className="btn btn-primary">{editId ? 'Save Changes' : 'Create Product'}</button>
+                      <button type="submit" className="btn btn-primary">
+                        {editId ? 'Save Changes' : 'Create Product'}
+                      </button>
                       <button type="button" className="btn btn-ghost" onClick={closeForm}>Cancel</button>
                     </div>
                   </form>
@@ -371,7 +508,11 @@ export default function AdminDashboard() {
                 <div className="empty-state">
                   <Package size={40} />
                   <h3>{q ? 'No products match your search' : 'No products yet'}</h3>
-                  {!q && <button className="btn btn-primary" onClick={openAddForm}><Plus size={16} /> Add your first product</button>}
+                  {!q && (
+                    <button className="btn btn-primary" onClick={openAddForm}>
+                      <Plus size={16} /> Add your first product
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="product-grid">
@@ -470,12 +611,30 @@ export default function AdminDashboard() {
                           <div key={field.key} className="cf-row">
                             <label>{field.label}</label>
                             <div className="cf-input">
-                              {field.type === 'textarea'
-                                ? <textarea rows={2} value={content[field.key] ?? ''} onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))} />
-                                : <input value={content[field.key] ?? ''} onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))} />
-                              }
-                              <button className={`save-btn ${savedKey === field.key ? 'saved' : ''}`} onClick={() => saveContentKey(field.key)} disabled={savingKey === field.key}>
-                                {savingKey === field.key ? <Loader size={14} className="spin" /> : savedKey === field.key ? <Check size={15} /> : 'Save'}
+                              {field.type === 'textarea' ? (
+                                <textarea
+                                  rows={2}
+                                  value={content[field.key] ?? ''}
+                                  onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
+                                />
+                              ) : (
+                                <input
+                                  value={content[field.key] ?? ''}
+                                  onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
+                                />
+                              )}
+                              <button
+                                className={`save-btn ${savedKey === field.key ? 'saved' : ''}`}
+                                onClick={() => saveContentKey(field.key)}
+                                disabled={savingKey === field.key}
+                              >
+                                {savingKey === field.key ? (
+                                  <Loader size={14} className="spin" />
+                                ) : savedKey === field.key ? (
+                                  <Check size={15} />
+                                ) : (
+                                  'Save'
+                                )}
                               </button>
                             </div>
                           </div>
