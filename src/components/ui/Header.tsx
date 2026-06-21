@@ -24,7 +24,7 @@ function Header() {
                         />
                     </span>
                     <span className="footer-site-title">
-                        KarOrganics<span className="footer-site-region">Uganda</span>
+                        KarOrganics <span className="footer-site-region">Uganda</span>
                     </span>
                 </NavLink>
 
