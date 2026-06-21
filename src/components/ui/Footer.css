@@ -90,8 +90,8 @@
 
 .social-links {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  flex-wrap: nowrap;
 }
 
 .social-links a {
@@ -102,19 +102,15 @@
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 500;
-  padding: 7px 13px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background 0.2s, color 0.2s, transform 0.2s;
-  white-space: nowrap;
+  padding: 4px 0;
+  transition: color 0.2s, transform 0.2s;
 }
 
 .social-links a svg { flex-shrink: 0; }
 
 .social-links a:hover {
-  background: #d4af37;
-  color: #1e3c2c;
-  transform: translateY(-2px);
+  color: #d4af37;
+  transform: translateX(4px);
 }
 
 .footer-bottom {
