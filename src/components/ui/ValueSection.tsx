@@ -20,7 +20,7 @@ function ValueSection() {
   }));
 
   return (
-    <section className="section value-section" id="value" style={{ backgroundImage: `url(${whyHerbs})` }}>
+    <section className="value-section" id="value" style={{ backgroundImage: `url(${whyHerbs})` }}>
       <div className="value-overlay">
       <div className="container">
         <div className="section-heading">
