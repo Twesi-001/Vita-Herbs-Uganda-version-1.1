@@ -90,18 +90,26 @@
 
 .social-links {
   display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
 .social-links a {
-  color: rgba(255, 255, 255, 0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  transition: all 0.3s ease;
-  padding: 5px 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 7px 13px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  white-space: nowrap;
 }
+
+.social-links a svg { flex-shrink: 0; }
 
 .social-links a:hover {
   background: #d4af37;
