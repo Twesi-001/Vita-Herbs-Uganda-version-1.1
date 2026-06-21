@@ -148,7 +148,15 @@ export default function AdminDashboard() {
     await loadAll(token());
   };
 
-  const exportCSV = (type: 'subscribers' | 'contacts') => window.open(`${API_URL}/admin/export/${type}?token=${token()}`, '_blank');
+  const exportCSV = async (type: 'subscribers' | 'contacts') => {
+    const res = await fetch(`${API_URL}/admin/export/${type}`, { headers: authHeader() });
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${type}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const openAddForm = () => { setForm(emptyForm); setEditId(null); setShowForm(true); };
   const openEditForm = (p: Product) => { setForm({ name: p.name, description: p.description, image_url: p.image_url ?? '', price: p.price?.toString() ?? '', active: p.active }); setEditId(p.id); setShowForm(true); };

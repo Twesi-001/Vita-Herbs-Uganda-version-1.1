@@ -33,14 +33,4 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// GET /api/inquiries — list inquiries (admin use).
-router.get('/', async (_req, res, next) => {
-  try {
-    const { rows } = await query('SELECT * FROM inquiries ORDER BY created_at DESC');
-    res.json(rows);
-  } catch (err) {
-    next(err);
-  }
-});
-
 export default router;

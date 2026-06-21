@@ -33,14 +33,4 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// GET /api/subscribers — list subscribers (admin use).
-router.get('/', async (_req, res, next) => {
-  try {
-    const { rows } = await query('SELECT id, email, created_at FROM subscribers ORDER BY created_at DESC');
-    res.json(rows);
-  } catch (err) {
-    next(err);
-  }
-});
-
 export default router;
