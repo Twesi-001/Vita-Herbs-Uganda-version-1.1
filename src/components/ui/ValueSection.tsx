@@ -1,6 +1,7 @@
 import { Sunrise, Zap, Heart } from 'lucide-react';
 import './ValueSection.css';
 import { useSiteContent } from '../../hooks/useSiteContent';
+import whyHerbs from '../../assets/why-herbs.jpg';
 
 // Three value cards. `key` maps to the value.cardN.* content keys in the DB.
 const CARDS = [
@@ -19,7 +20,8 @@ function ValueSection() {
   }));
 
   return (
-    <section className="section value-section" id="value">
+    <section className="section value-section" id="value" style={{ backgroundImage: `url(${whyHerbs})` }}>
+      <div className="value-overlay">
       <div className="container">
         <div className="section-heading">
 <h2>{get('value.heading', "You're Not Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>
@@ -35,6 +37,7 @@ function ValueSection() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

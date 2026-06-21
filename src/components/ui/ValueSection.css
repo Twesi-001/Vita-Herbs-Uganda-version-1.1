@@ -1,8 +1,13 @@
 .value-section {
-  background: linear-gradient(180deg, #fbfcfa, #f4f8f3);
-  /* Clean sans-serif font (matches admin/products/contact) */
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.value-overlay {
+  background: rgba(0, 0, 0, 0.55);
+  padding: 80px 0;
 }
 
 .value-section .section-heading {
@@ -15,14 +20,14 @@
   font-size: 2rem;
   font-weight: 800;
   line-height: 1.25;
-  color: var(--text, #1f2937);
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
 .value-section .section-heading p {
   font-size: 1.0625rem;
   line-height: 1.6;
-  color: var(--text-light, #4b5563);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .value-grid {
@@ -34,20 +39,18 @@
 
 .value-card {
   background: #fff;
-  border: 1px solid rgba(46, 125, 50, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   padding: 28px 22px;
   text-align: center;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   width: 280px;
   max-width: 100%;
 }
 
 .value-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(27, 94, 32, 0.1);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
 }
 
 .value-icon {
@@ -80,7 +83,6 @@
 }
 
 @media (max-width: 540px) {
-  .value-section .section-heading h2 {
-    font-size: 1.6rem;
-  }
+  .value-overlay { padding: 60px 0; }
+  .value-section .section-heading h2 { font-size: 1.6rem; }
 }
