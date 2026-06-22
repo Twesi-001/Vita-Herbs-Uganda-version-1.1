@@ -200,7 +200,7 @@ function ContactPage() {
                 <div className="info-content">
                   <div className="info-title">Visit Us</div>
                   <div className="info-lines">
-                    <p>Mbarara, Western Uganda</p>
+                    <p>kampala, Central Uganda</p>
                     <p>Mon – Sat, 9am – 6pm</p>
                   </div>
                 </div>
