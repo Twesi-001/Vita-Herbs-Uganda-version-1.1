@@ -536,3 +536,15 @@
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
+@media (max-width: 480px) {
+  .products-cta .btn-primary,
+  .products-cta .btn-outline {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 1rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+}
