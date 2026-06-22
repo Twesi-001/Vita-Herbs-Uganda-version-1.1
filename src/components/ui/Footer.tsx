@@ -46,9 +46,9 @@ function Footer() {
           <div className="footer-section">
             <h3>Contact Info</h3>
             <ul className="contact-info">
-              <li><Phone /> +256 760 108564</li>
+              <li><Phone /> +256701924517</li>
               <li><Mail /> hello@karorganics .ug</li>
-              <li><MapPin /> Mbarara, Western Uganda</li>
+              <li><MapPin /> kampala, Central  Uganda</li>
             </ul>
           </div>
           
