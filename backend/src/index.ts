@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import { pool } from './db';
 import productsRouter from './routes/products';
@@ -16,6 +18,8 @@ const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
   .split(',')
   .map((o) => o.trim());
 
+app.use(helmet());
+app.use(morgan('combined'));
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 

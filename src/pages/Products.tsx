@@ -67,7 +67,19 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
         </div>
 
         {loading ? (
-          <div className="loading-spinner"><div className="spinner"></div></div>
+          <div className="cards">
+            {Array.from({ length: limit ?? 3 }).map((_, i) => (
+              <div className="card card-skeleton" key={i}>
+                <div className="skeleton skeleton-img" />
+                <div className="card-body">
+                  <div className="skeleton skeleton-title" />
+                  <div className="skeleton skeleton-text" />
+                  <div className="skeleton skeleton-text skeleton-text--short" />
+                  <div className="skeleton skeleton-btn" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="cards">
             {displayed.map((product) => (
@@ -77,6 +89,8 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
                     src={product.image_url}
                     alt={product.name}
                     className="card-img-clickable"
+                    loading="lazy"
+                    decoding="async"
                     onClick={() => setLightbox({ src: product.image_url!, alt: product.name })}
                   />
                 )}

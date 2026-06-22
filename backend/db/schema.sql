@@ -23,10 +23,16 @@ CREATE TABLE IF NOT EXISTS inquiries (
     phone       TEXT        NOT NULL,
     email       TEXT,
     product     TEXT        NOT NULL,
-    quantity    TEXT        NOT NULL,
+    quantity    INTEGER     NOT NULL DEFAULT 1,
     message     TEXT,
+    status      TEXT        NOT NULL DEFAULT 'new',
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Indexes for common query patterns
+CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_inquiries_status     ON inquiries (status);
+CREATE INDEX IF NOT EXISTS idx_products_active      ON products (active);
 
 -- Seed the featured products (only if the table is empty).
 INSERT INTO products (name, description, image_url)

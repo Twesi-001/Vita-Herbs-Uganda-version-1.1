@@ -7,7 +7,7 @@ import { API_URL } from '../lib/api';
 import './AdminDashboard.css';
 
 interface Subscriber { id: number; email: string; created_at: string; }
-interface Contact { id: number; name: string; email: string | null; phone: string; product: string; quantity: string; message: string | null; created_at: string; }
+interface Contact { id: number; name: string; email: string | null; phone: string; product: string; quantity: string; message: string | null; status: string; created_at: string; }
 interface Product { id: number; name: string; description: string; image_url: string | null; price: number | null; active: boolean; created_at: string; }
 interface Stats { subscribers: number; contacts: number; products: number; }
 type Tab = 'products' | 'contacts' | 'subscribers' | 'content';
@@ -60,17 +60,17 @@ const CONTENT_SECTIONS = [
 
 const emptyForm = { name: '', description: '', image_url: '', price: '', active: true };
 
-async function uploadToCloudinary(file: File): Promise<string> {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  if (!cloudName || !preset) throw new Error('Cloudinary env vars not configured');
+async function uploadToCloudinary(file: File, token: string): Promise<string> {
   const fd = new FormData();
   fd.append('file', file);
-  fd.append('upload_preset', preset);
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, { method: 'POST', body: fd });
-  const data = await res.json();
-  if (!data.secure_url) throw new Error(data.error?.message ?? 'Upload failed');
-  return data.secure_url as string;
+  const res = await fetch(`${API_URL}/admin/upload`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: fd,
+  });
+  const data = await res.json() as { url?: string; message?: string };
+  if (!res.ok || !data.url) throw new Error(data.message ?? 'Upload failed');
+  return data.url;
 }
 
 export default function AdminDashboard() {
@@ -197,6 +197,15 @@ export default function AdminDashboard() {
     await loadAll(token());
   };
 
+  const updateInquiryStatus = async (id: number, status: string) => {
+    await fetch(`${API_URL}/admin/contacts/${id}/status`, {
+      method: 'PATCH',
+      headers: authHeader(),
+      body: JSON.stringify({ status }),
+    });
+    await loadAll(token());
+  };
+
   const exportCSV = async (type: 'subscribers' | 'contacts') => {
     const res = await fetch(`${API_URL}/admin/export/${type}`, { headers: authHeader() });
     if (!res.ok) return;
@@ -213,9 +222,8 @@ export default function AdminDashboard() {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
-    if (!import.meta.env.VITE_CLOUDINARY_CLOUD_NAME) { alert('Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in Vercel env vars.'); return; }
     setUploading(true);
-    try { const url = await uploadToCloudinary(file); setForm(f => ({ ...f, image_url: url })); }
+    try { const url = await uploadToCloudinary(file, token()); setForm(f => ({ ...f, image_url: url })); }
     catch (err) { alert(`Upload failed: ${err instanceof Error ? err.message : err}`); }
     finally { setUploading(false); if (fileRef.current) fileRef.current.value = ''; }
   };
@@ -305,6 +313,14 @@ export default function AdminDashboard() {
   const filteredProducts = q ? products.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)) : products;
   const filteredContacts = q ? contacts.filter(c => c.name.toLowerCase().includes(q) || c.phone.includes(q) || c.product.toLowerCase().includes(q)) : contacts;
   const filteredSubs = q ? subscribers.filter(s => s.email.toLowerCase().includes(q)) : subscribers;
+
+  const PAGE_SIZE = 10;
+  const [contactPage, setContactPage] = useState(1);
+  const [subPage, setSubPage] = useState(1);
+  const pagedContacts = filteredContacts.slice((contactPage - 1) * PAGE_SIZE, contactPage * PAGE_SIZE);
+  const pagedSubs = filteredSubs.slice((subPage - 1) * PAGE_SIZE, subPage * PAGE_SIZE);
+  const contactPages = Math.ceil(filteredContacts.length / PAGE_SIZE);
+  const subPages = Math.ceil(filteredSubs.length / PAGE_SIZE);
 
   const NAV: { tab: Tab; icon: React.ReactNode; label: string; count?: number }[] = [
     { tab: 'products', icon: <Package size={19} />, label: 'Products', count: products.length },
@@ -546,21 +562,40 @@ export default function AdminDashboard() {
               ) : (
                 <div className="table-scroll">
                   <table className="data-table">
-                    <thead><tr><th>Customer</th><th>Phone</th><th>Product</th><th>Qty</th><th>Message</th><th>Date</th><th></th></tr></thead>
+                    <thead><tr><th>Customer</th><th>Phone</th><th>Product</th><th>Qty</th><th>Message</th><th>Status</th><th>Date</th><th></th></tr></thead>
                     <tbody>
-                      {filteredContacts.map(c => (
+                      {pagedContacts.map(c => (
                         <tr key={c.id}>
                           <td><div className="cell-strong">{c.name}</div>{c.email && <div className="cell-sub">{c.email}</div>}</td>
                           <td><a href={`tel:${c.phone}`} className="cell-link">{c.phone}</a></td>
                           <td><span className="tag tag-green">{c.product}</span></td>
                           <td>{c.quantity}</td>
                           <td className="cell-sub cell-msg">{c.message || '—'}</td>
+                          <td>
+                            <select
+                              className={`status-select status-${c.status ?? 'new'}`}
+                              value={c.status ?? 'new'}
+                              onChange={e => updateInquiryStatus(c.id, e.target.value)}
+                            >
+                              <option value="new">New</option>
+                              <option value="read">Read</option>
+                              <option value="responded">Responded</option>
+                              <option value="fulfilled">Fulfilled</option>
+                            </select>
+                          </td>
                           <td className="cell-sub">{new Date(c.created_at).toLocaleDateString()}</td>
                           <td><button className="icon-btn icon-danger" onClick={() => deleteRow('contacts', c.id)}><Trash2 size={15} /></button></td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+              {contactPages > 1 && (
+                <div className="pagination">
+                  <button disabled={contactPage === 1} onClick={() => setContactPage(p => p - 1)} className="page-btn">‹ Prev</button>
+                  <span className="page-info">{contactPage} / {contactPages}</span>
+                  <button disabled={contactPage === contactPages} onClick={() => setContactPage(p => p + 1)} className="page-btn">Next ›</button>
                 </div>
               )}
             </div>
@@ -576,7 +611,7 @@ export default function AdminDashboard() {
                   <table className="data-table">
                     <thead><tr><th>Email</th><th>Date joined</th><th></th></tr></thead>
                     <tbody>
-                      {filteredSubs.map(s => (
+                      {pagedSubs.map(s => (
                         <tr key={s.id}>
                           <td><div className="cell-strong">{s.email}</div></td>
                           <td className="cell-sub">{new Date(s.created_at).toLocaleDateString()}</td>
@@ -585,6 +620,13 @@ export default function AdminDashboard() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+              {subPages > 1 && (
+                <div className="pagination">
+                  <button disabled={subPage === 1} onClick={() => setSubPage(p => p - 1)} className="page-btn">‹ Prev</button>
+                  <span className="page-info">{subPage} / {subPages}</span>
+                  <button disabled={subPage === subPages} onClick={() => setSubPage(p => p + 1)} className="page-btn">Next ›</button>
                 </div>
               )}
             </div>

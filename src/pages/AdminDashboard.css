@@ -293,6 +293,20 @@
 .tag { font-size: 0.76rem; font-weight: 600; padding: 4px 11px; border-radius: 999px; white-space: nowrap; }
 .tag-green { background: var(--accent-soft); color: var(--accent-dark); }
 
+/* Inquiry status select */
+/* Pagination */
+.pagination { display: flex; align-items: center; gap: 12px; padding: 16px 0 4px; justify-content: center; }
+.page-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--ink); transition: background 0.15s; }
+.page-btn:hover:not(:disabled) { background: var(--accent-soft); }
+.page-btn:disabled { opacity: 0.4; cursor: default; }
+.page-info { font-size: 0.85rem; color: var(--ink-soft); }
+
+.status-select { font-size: 0.76rem; font-weight: 600; padding: 4px 8px; border-radius: 999px; border: none; cursor: pointer; outline: none; }
+.status-new       { background: #e0f2fe; color: #0369a1; }
+.status-read      { background: #fef9c3; color: #854d0e; }
+.status-responded { background: #dcfce7; color: #166534; }
+.status-fulfilled { background: #f0fdf4; color: #15803d; }
+
 /* ── Icon buttons ── */
 .icon-btn { width: 34px; height: 34px; border-radius: 9px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
 .icon-danger { background: var(--red-soft); color: var(--red); }

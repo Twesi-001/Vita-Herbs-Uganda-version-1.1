@@ -34,7 +34,7 @@ function HeroSlideshow() {
 
   return (
     <div className="hero-image hero-slideshow">
-      <img src={heroImage} alt="" className="hero-slideshow-sizer" aria-hidden="true" />
+      <img src={heroImage} alt="" className="hero-slideshow-sizer" aria-hidden="true" decoding="async" />
       {slides.map((src, i) => (
         <div
           key={src}

@@ -39,3 +39,33 @@ img {
 .main-content {
   flex: 1;
 }
+
+/* Skip-to-content link for keyboard / screen-reader users */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  background: #1d4a1a;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Global focus ring — visible for keyboard, hidden for mouse */
+:focus-visible {
+  outline: 3px solid #c4832a;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Remove outline for non-keyboard interactions */
+:focus:not(:focus-visible) {
+  outline: none;
+}

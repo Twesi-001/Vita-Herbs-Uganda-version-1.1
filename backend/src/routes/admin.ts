@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import multer from 'multer';
 import { query } from '../db';
 import { requireAdmin, signToken } from '../middleware/auth';
 
@@ -85,6 +86,22 @@ router.delete('/subscribers/:id', async (req, res, next) => {
   try {
     await query('DELETE FROM subscribers WHERE id = $1', [req.params.id]);
     res.json({ message: 'Subscriber deleted' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/admin/contacts/:id/status
+router.patch('/contacts/:id/status', requireAdmin, async (req, res, next) => {
+  const allowed = ['new', 'read', 'responded', 'fulfilled'];
+  const { status } = req.body;
+  if (!allowed.includes(status)) {
+    res.status(400).json({ message: 'Invalid status value' });
+    return;
+  }
+  try {
+    await query('UPDATE inquiries SET status = $1 WHERE id = $2', [status, req.params.id]);
+    res.json({ message: 'Status updated' });
   } catch (err) {
     next(err);
   }
@@ -206,6 +223,54 @@ router.put('/content/:key', async (req, res, next) => {
     );
     res.json({ ok: true });
   } catch (err) { next(err); }
+});
+
+// POST /api/admin/upload — proxy image upload to Cloudinary using server-side credentials
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+
+router.post('/upload', requireAdmin, upload.single('file'), async (req, res, next) => {
+  try {
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey    = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      res.status(500).json({ message: 'Cloudinary env vars not configured on server' });
+      return;
+    }
+    if (!req.file) {
+      res.status(400).json({ message: 'No file uploaded' });
+      return;
+    }
+
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const crypto = await import('crypto');
+    const signature = crypto.createHash('sha1')
+      .update(`timestamp=${timestamp}${apiSecret}`)
+      .digest('hex');
+
+    const formData = new FormData();
+    const blob = new Blob([req.file.buffer as unknown as ArrayBuffer], { type: req.file.mimetype });
+    formData.append('file', blob, req.file.originalname);
+    formData.append('api_key', apiKey);
+    formData.append('timestamp', timestamp);
+    formData.append('signature', signature);
+    formData.append('folder', 'karorganics');
+
+    const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await cloudRes.json() as { secure_url?: string; error?: { message: string } };
+
+    if (!data.secure_url) {
+      res.status(500).json({ message: data.error?.message ?? 'Cloudinary upload failed' });
+      return;
+    }
+    res.json({ url: data.secure_url });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;
