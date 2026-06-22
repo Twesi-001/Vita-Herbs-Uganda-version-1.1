@@ -99,6 +99,8 @@ export default function AdminDashboard() {
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [savedKey, setSavedKey] = useState<string | null>(null);
   const [openSection, setOpenSection] = useState<string | null>(CONTENT_SECTIONS[0].title);
+  const [contactPage, setContactPage] = useState(1);
+  const [subPage, setSubPage] = useState(1);
 
   const token = () => localStorage.getItem('adminToken') ?? '';
   const authHeader = () => ({ Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' });
@@ -315,8 +317,6 @@ export default function AdminDashboard() {
   const filteredSubs = q ? subscribers.filter(s => s.email.toLowerCase().includes(q)) : subscribers;
 
   const PAGE_SIZE = 10;
-  const [contactPage, setContactPage] = useState(1);
-  const [subPage, setSubPage] = useState(1);
   const pagedContacts = filteredContacts.slice((contactPage - 1) * PAGE_SIZE, contactPage * PAGE_SIZE);
   const pagedSubs = filteredSubs.slice((subPage - 1) * PAGE_SIZE, subPage * PAGE_SIZE);
   const contactPages = Math.ceil(filteredContacts.length / PAGE_SIZE);

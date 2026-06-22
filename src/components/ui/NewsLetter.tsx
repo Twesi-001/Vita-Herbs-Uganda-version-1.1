@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, CheckCircle, XCircle, Send } from 'lucide-react';
+import { Mail, Send, CheckCircle, XCircle, Lock, Leaf, Bell, Tag } from 'lucide-react';
 import { API_URL } from '../../lib/api';
 import './NewsLetter.css';
 
@@ -12,7 +12,7 @@ function NewsLetter() {
     e.preventDefault();
     const v = email.trim();
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
     if (!re.test(v)) {
       setNewsletterMsg({ type: 'error', text: 'Please enter a valid email address.' });
       setTimeout(() => setNewsletterMsg(null), 5000);
@@ -20,7 +20,6 @@ function NewsLetter() {
     }
 
     setLoading(true);
-
     try {
       const response = await fetch(`${API_URL}/subscribers`, {
         method: 'POST',
@@ -28,79 +27,84 @@ function NewsLetter() {
         body: JSON.stringify({ email: v })
       });
       const data = await response.json();
-      
       if (response.ok) {
         setNewsletterMsg({ type: 'success', text: data.message || 'Thanks for subscribing!' });
         setEmail('');
-        setTimeout(() => setNewsletterMsg(null), 5000);
       } else {
         setNewsletterMsg({ type: 'error', text: data.message || 'Subscription failed' });
-        setTimeout(() => setNewsletterMsg(null), 5000);
       }
-    } catch (error) {
-      console.error('Subscription error:', error);
+      setTimeout(() => setNewsletterMsg(null), 5000);
+    } catch {
       setNewsletterMsg({ type: 'error', text: 'Subscription failed. Please try again.' });
       setTimeout(() => setNewsletterMsg(null), 5000);
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <section className="newsletter-section">
       <div className="container">
-        <div className="newsletter-card">
-          <div className="newsletter-icon-wrapper">
-            <Mail className="newsletter-main-icon" />
-          </div>
-          
-          <div className="newsletter-content">
-            <span className="eyebrow">Newsletter</span>
-            <h2>Stay Updated with Kar Organics</h2>
-            <p>Get herbal wellness tips, new product alerts, and exclusive offers delivered to your inbox.</p>
-          </div>
+        <div className="newsletter-inner">
 
-          <form className="newsletter-form" onSubmit={handleSubscribe}>
-            <div className="input-wrapper">
-              <Mail className="input-icon" />
-              <input 
-                type="email" 
-                placeholder="Enter your email address" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={loading}
-              />
+          <div className="newsletter-left">
+            <div className="newsletter-icon-badge-row">
+              <div className="newsletter-icon-wrapper">
+                <Mail size={28} />
+              </div>
+              <span className="newsletter-eyebrow">Newsletter</span>
             </div>
-            <button type="submit" disabled={loading}>
-              {loading ? (
-                <>
-                  <span className="spinner"></span>
-                  Subscribing...
-                </>
-              ) : (
-                <>
-                  <Send />
-                  Subscribe
-                </>
-              )}
-            </button>
-          </form>
+            <h2>Stay in the Loop</h2>
+            <p>Herbal wellness tips, new arrivals, and subscriber-only offers — straight to your inbox.</p>
 
-          {newsletterMsg && (
-            <div className={`newsletter-message ${newsletterMsg.type}`}>
-              {newsletterMsg.type === 'success' ? (
-                <CheckCircle className="message-icon" />
-              ) : (
-                <XCircle className="message-icon" />
-              )}
-              {newsletterMsg.text}
-            </div>
-          )}
+            <ul className="newsletter-perks">
+              <li><Leaf size={15} /><span>New product launches</span></li>
+              <li><Bell size={15} /><span>Wellness guides &amp; tips</span></li>
+              <li><Tag size={15} /><span>Exclusive subscriber offers</span></li>
+            </ul>
+          </div>
 
-          <p className="newsletter-note">
-            No spam, ever. Unsubscribe anytime.
-          </p>
+          <div className="newsletter-right">
+            <form className="newsletter-form" onSubmit={handleSubscribe}>
+              <label htmlFor="nl-email">Your email address</label>
+              <div className="newsletter-input-row">
+                <div className="input-wrapper">
+                  <Mail size={17} className="input-icon" />
+                  <input
+                    id="nl-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                  />
+                </div>
+                <button type="submit" disabled={loading}>
+                  {loading ? (
+                    <><span className="nl-spinner" />Subscribing…</>
+                  ) : (
+                    <><Send size={15} />Subscribe</>
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {newsletterMsg && (
+              <div className={`newsletter-message ${newsletterMsg.type}`}>
+                {newsletterMsg.type === 'success'
+                  ? <CheckCircle size={16} />
+                  : <XCircle size={16} />}
+                {newsletterMsg.text}
+              </div>
+            )}
+
+            <p className="newsletter-note">
+              <Lock size={12} />
+              No spam, ever. Unsubscribe anytime.
+            </p>
+          </div>
+
         </div>
       </div>
     </section>

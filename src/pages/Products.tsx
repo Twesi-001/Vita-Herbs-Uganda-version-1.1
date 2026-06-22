@@ -103,13 +103,15 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
                 <div className="card-body">
                   <h3>{product.name}</h3>
                   <p>{product.description}</p>
-                  {product.price && (
-                    <p className="product-price">UGX {Number(product.price).toLocaleString()}</p>
-                  )}
-                  <a href={orderLink(product.name)} target="_blank" rel="noopener noreferrer" className="card-order-btn">
-                    <ShoppingBag size={15} />
-                    Order
-                  </a>
+                  <div className="card-footer">
+                    {product.price && (
+                      <p className="product-price">UGX {Number(product.price).toLocaleString()}</p>
+                    )}
+                    <a href={orderLink(product.name)} target="_blank" rel="noopener noreferrer" className="card-order-btn">
+                      <ShoppingBag size={15} />
+                      Order
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
