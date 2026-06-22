@@ -8,7 +8,7 @@ import './AdminDashboard.css';
 
 interface Subscriber { id: number; email: string; created_at: string; }
 interface Contact { id: number; name: string; email: string | null; phone: string; product: string; quantity: string; message: string | null; status: string; created_at: string; }
-interface Product { id: number; name: string; description: string; image_url: string | null; price: number | null; active: boolean; created_at: string; }
+interface Product { id: number; name: string; description: string; image_url: string | null; price: number | null; category: string | null; active: boolean; created_at: string; }
 interface Stats { subscribers: number; contacts: number; products: number; }
 type Tab = 'products' | 'contacts' | 'subscribers' | 'content';
 
@@ -58,7 +58,7 @@ const CONTENT_SECTIONS = [
   ]},
 ];
 
-const emptyForm = { name: '', description: '', image_url: '', price: '', active: true };
+const emptyForm = { name: '', description: '', image_url: '', price: '', category: '', active: true };
 
 async function uploadToCloudinary(file: File, token: string): Promise<string> {
   const fd = new FormData();
@@ -217,7 +217,7 @@ export default function AdminDashboard() {
   };
 
   const openAddForm = () => { setForm(emptyForm); setEditId(null); setShowForm(true); };
-  const openEditForm = (p: Product) => { setForm({ name: p.name, description: p.description, image_url: p.image_url ?? '', price: p.price?.toString() ?? '', active: p.active }); setEditId(p.id); setShowForm(true); };
+  const openEditForm = (p: Product) => { setForm({ name: p.name, description: p.description, image_url: p.image_url ?? '', price: p.price?.toString() ?? '', category: p.category ?? '', active: p.active }); setEditId(p.id); setShowForm(true); };
   const closeForm = () => { setShowForm(false); setEditId(null); setForm(emptyForm); };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,7 +230,7 @@ export default function AdminDashboard() {
 
   const saveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = { name: form.name, description: form.description, image_url: form.image_url || undefined, price: form.price ? parseFloat(form.price) : undefined, active: form.active };
+    const body = { name: form.name, description: form.description, image_url: form.image_url || undefined, price: form.price ? parseFloat(form.price) : undefined, category: form.category || undefined, active: form.active };
     await fetch(editId ? `${API_URL}/admin/products/${editId}` : `${API_URL}/admin/products`, { method: editId ? 'PUT' : 'POST', headers: authHeader(), body: JSON.stringify(body) });
     closeForm(); await loadAll(token());
   };
@@ -451,6 +451,14 @@ export default function AdminDashboard() {
                           value={form.price}
                           onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
                           placeholder="e.g. 25000"
+                        />
+                      </div>
+                      <div className="field">
+                        <label>Category</label>
+                        <input
+                          value={form.category}
+                          onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                          placeholder="e.g. Teas, Oils, Capsules"
                         />
                       </div>
                       <div className="field field-full">

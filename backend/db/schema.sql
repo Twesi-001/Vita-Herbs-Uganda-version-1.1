@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT        NOT NULL DEFAULT '',
     image_url   TEXT,
     price       NUMERIC(12, 2),
+    category    TEXT,
     active      BOOLEAN     NOT NULL DEFAULT TRUE,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -8,7 +8,7 @@ const router = Router();
 router.get('/', async (_req, res, next) => {
   try {
     const { rows } = await query(
-      'SELECT id, name, description, image_url, price, active, created_at FROM products WHERE active = TRUE ORDER BY id',
+      'SELECT id, name, description, image_url, price, category, active, created_at FROM products WHERE active = TRUE ORDER BY id',
     );
     res.json(rows);
   } catch (err) {

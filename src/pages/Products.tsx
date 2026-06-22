@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ShoppingBag } from 'lucide-react';
 import { API_URL } from '../lib/api';
 import './Products.css';
 
@@ -12,6 +13,7 @@ interface Product {
   image_url: string | null;
   price: number | null;
   active: boolean;
+  category: string | null;
 }
 
 function orderLink(productName: string) {
@@ -84,24 +86,29 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
           <div className="cards">
             {displayed.map((product) => (
               <article className="card" key={product.id}>
-                {product.image_url && (
-                  <img
-                    src={product.image_url}
-                    alt={product.name}
-                    className="card-img-clickable"
-                    loading="lazy"
-                    decoding="async"
-                    onClick={() => setLightbox({ src: product.image_url!, alt: product.name })}
-                  />
-                )}
+                <div className="card-img-wrap" onClick={() => product.image_url && setLightbox({ src: product.image_url, alt: product.name })}>
+                  {product.category && (
+                    <span className="card-category-badge">{product.category}</span>
+                  )}
+                  {product.image_url && (
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="card-img-clickable"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                </div>
                 <div className="card-body">
                   <h3>{product.name}</h3>
                   <p>{product.description}</p>
                   {product.price && (
                     <p className="product-price">UGX {Number(product.price).toLocaleString()}</p>
                   )}
-                  <a href={orderLink(product.name)} target="_blank" rel="noopener noreferrer">
-                    Order on WhatsApp
+                  <a href={orderLink(product.name)} target="_blank" rel="noopener noreferrer" className="card-order-btn">
+                    <ShoppingBag size={15} />
+                    Order
                   </a>
                 </div>
               </article>

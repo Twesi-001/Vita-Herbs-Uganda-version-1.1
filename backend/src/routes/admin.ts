@@ -165,6 +165,7 @@ const productInput = z.object({
   description: z.string().default(''),
   image_url: z.string().optional(),
   price: z.number().nonnegative().optional(),
+  category: z.string().optional(),
   active: z.boolean().optional(),
 });
 
@@ -178,12 +179,12 @@ router.get('/products', async (_req, res, next) => {
 router.post('/products', async (req, res, next) => {
   const parsed = productInput.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: 'Invalid product' }); return; }
-  const { name, description, image_url, price, active } = parsed.data;
+  const { name, description, image_url, price, category, active } = parsed.data;
   try {
     const { rows } = await query(
-      `INSERT INTO products (name, description, image_url, price, active)
-       VALUES ($1, $2, $3, $4, COALESCE($5, TRUE)) RETURNING *`,
-      [name, description, image_url ?? null, price ?? null, active ?? null],
+      `INSERT INTO products (name, description, image_url, price, category, active)
+       VALUES ($1, $2, $3, $4, $5, COALESCE($6, TRUE)) RETURNING *`,
+      [name, description, image_url ?? null, price ?? null, category ?? null, active ?? null],
     );
     res.status(201).json(rows[0]);
   } catch (err) { next(err); }
@@ -192,11 +193,11 @@ router.post('/products', async (req, res, next) => {
 router.put('/products/:id', async (req, res, next) => {
   const parsed = productInput.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: 'Invalid product' }); return; }
-  const { name, description, image_url, price, active } = parsed.data;
+  const { name, description, image_url, price, category, active } = parsed.data;
   try {
     const { rows } = await query(
-      `UPDATE products SET name=$1, description=$2, image_url=$3, price=$4, active=COALESCE($5, active) WHERE id=$6 RETURNING *`,
-      [name, description, image_url ?? null, price ?? null, active ?? null, req.params.id],
+      `UPDATE products SET name=$1, description=$2, image_url=$3, price=$4, category=$5, active=COALESCE($6, active) WHERE id=$7 RETURNING *`,
+      [name, description, image_url ?? null, price ?? null, category ?? null, active ?? null, req.params.id],
     );
     if (rows.length === 0) { res.status(404).json({ error: 'Not found' }); return; }
     res.json(rows[0]);

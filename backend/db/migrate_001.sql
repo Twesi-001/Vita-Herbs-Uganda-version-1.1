@@ -4,6 +4,9 @@
 -- Add status column if not exists
 ALTER TABLE inquiries ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'new';
 
+-- Add category column to products
+ALTER TABLE products ADD COLUMN IF NOT EXISTS category TEXT;
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_inquiries_status     ON inquiries (status);

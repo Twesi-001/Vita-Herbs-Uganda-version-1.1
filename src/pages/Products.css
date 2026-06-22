@@ -83,17 +83,41 @@
 }
 
 /* Image Container */
-.card img {
+.card-img-wrap {
+  position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
+  background: #f5f0e8;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   object-position: center;
   display: block;
-  transition: transform 0.5s ease;
+  padding: 12px;
+  transition: transform 0.4s ease;
 }
 
 .card:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
+}
+
+/* Category badge */
+.card-category-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1a2e1a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.3px;
 }
 
 /* Card Body */
@@ -120,23 +144,26 @@
   flex: 1;
 }
 
-/* Order Link */
-.card-body a {
+/* Order Button */
+.card-order-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--green);
+  gap: 7px;
+  background: var(--green-dark, #1d4a1a);
+  color: #fff;
   font-weight: 600;
   text-decoration: none;
-  transition: var(--transition);
-  padding: 6px 0;
+  border-radius: 999px;
+  padding: 9px 20px;
   margin-top: auto;
   align-self: flex-start;
-  font-size: 13px;
+  font-size: 0.85rem;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.card-body a:hover {
-  color: var(--green-dark);
+.card-order-btn:hover {
+  background: var(--brown, #7a5025);
+  transform: translateY(-1px);
 }
 
 /*
