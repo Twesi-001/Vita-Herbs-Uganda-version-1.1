@@ -50,7 +50,7 @@
 .admin-layout .panel-head h2,
 .admin-layout .accordion-head h3,
 .admin-layout .empty-state h3 {
-  font-family: 'Playfair Display', Georgia, serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
 /* ── Splash ── */
