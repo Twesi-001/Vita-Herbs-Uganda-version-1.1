@@ -39,9 +39,18 @@
 
 * { box-sizing: border-box; }
 
-.admin-layout h1, .admin-layout h2, .admin-layout h3,
-.admin-layout h4, .admin-layout h5, .admin-layout h6 {
-  font-family: 'Playfair Display', Georgia, serif;
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6,
+.admin-layout .page-title,
+.admin-layout .pc-body h3,
+.admin-layout .panel-head h2,
+.admin-layout .accordion-head h3,
+.admin-layout .empty-state h3 {
+  font-family: 'Playfair Display', Georgia, serif !important;
 }
 
 /* ── Splash ── */
