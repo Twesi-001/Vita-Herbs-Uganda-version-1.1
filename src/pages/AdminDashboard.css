@@ -87,6 +87,7 @@
 }
 .login-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .login-error { color: var(--red); font-size: 0.875rem; text-align: center; margin: 0; padding: 11px; background: var(--red-soft); border-radius: 9px; }
+.pw-success { color: #166534; font-size: 0.875rem; display: flex; align-items: center; gap: 6px; padding: 11px; background: #dcfce7; border-radius: 9px; margin: 0; }
 .login-btn {
   padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 11px;
   font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 4px;

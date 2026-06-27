@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
-  Upload, Check, Loader, Menu, X, Download, Search, TrendingUp,
+  Upload, Check, Loader, Menu, X, Download, Search, TrendingUp, KeyRound,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
 import './AdminDashboard.css';
@@ -10,13 +10,14 @@ interface Subscriber { id: number; email: string; created_at: string; }
 interface Contact { id: number; name: string; email: string | null; phone: string; product: string; quantity: string; message: string | null; status: string; created_at: string; }
 interface Product { id: number; name: string; description: string; image_url: string | null; price: number | null; category: string | null; active: boolean; created_at: string; }
 interface Stats { subscribers: number; contacts: number; products: number; }
-type Tab = 'products' | 'contacts' | 'subscribers' | 'content';
+type Tab = 'products' | 'contacts' | 'subscribers' | 'content' | 'settings';
 
 const PAGE_META: Record<Tab, { title: string; subtitle: string }> = {
   products: { title: 'Products', subtitle: 'Add, edit and manage everything customers see in the shop.' },
   contacts: { title: 'Inquiries', subtitle: 'Orders and questions submitted through the contact form.' },
   subscribers: { title: 'Subscribers', subtitle: 'People who joined your newsletter list.' },
   content: { title: 'Site Content', subtitle: 'Edit the text shown across the public website.' },
+  settings: { title: 'Settings', subtitle: 'Manage your admin account and password.' },
 };
 
 const CONTENT_SECTIONS = [
@@ -101,6 +102,11 @@ export default function AdminDashboard() {
   const [openSection, setOpenSection] = useState<string | null>(CONTENT_SECTIONS[0].title);
   const [contactPage, setContactPage] = useState(1);
   const [subPage, setSubPage] = useState(1);
+
+  const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState(false);
 
   const token = () => localStorage.getItem('adminToken') ?? '';
   const authHeader = () => ({ Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' });
@@ -243,6 +249,26 @@ export default function AdminDashboard() {
     await loadAll(token());
   };
 
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwError('');
+    setPwSuccess(false);
+    if (pwForm.next !== pwForm.confirm) { setPwError('New passwords do not match'); return; }
+    if (pwForm.next.length < 8) { setPwError('New password must be at least 8 characters'); return; }
+    setPwSaving(true);
+    try {
+      const r = await fetch(`${API_URL}/admin/change-password`, {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({ currentPassword: pwForm.current, newPassword: pwForm.next }),
+      });
+      const d = await r.json() as { message?: string };
+      if (r.ok) { setPwSuccess(true); setPwForm({ current: '', next: '', confirm: '' }); }
+      else { setPwError(d.message ?? 'Failed to update password'); }
+    } catch { setPwError('Connection failed'); }
+    finally { setPwSaving(false); }
+  };
+
   const saveContentKey = async (key: string) => {
     setSavingKey(key);
     try {
@@ -327,9 +353,10 @@ export default function AdminDashboard() {
     { tab: 'contacts', icon: <MessageSquare size={19} />, label: 'Inquiries', count: contacts.length },
     { tab: 'subscribers', icon: <Users size={19} />, label: 'Subscribers', count: subscribers.length },
     { tab: 'content', icon: <FileEdit size={19} />, label: 'Site Content' },
+    { tab: 'settings', icon: <KeyRound size={19} />, label: 'Settings' },
   ];
 
-  const showSearch = activeTab !== 'content';
+  const showSearch = activeTab !== 'content' && activeTab !== 'settings';
 
   return (
     <div className="admin-layout">
@@ -637,6 +664,56 @@ export default function AdminDashboard() {
                   <button disabled={subPage === subPages} onClick={() => setSubPage(p => p + 1)} className="page-btn">Next ›</button>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ── SETTINGS ── */}
+          {activeTab === 'settings' && (
+            <div className="panel" style={{ maxWidth: 480 }}>
+              <div className="panel-head">
+                <h2>Change Password</h2>
+              </div>
+              <form onSubmit={handleChangePassword} className="product-form">
+                <div className="field">
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    value={pwForm.current}
+                    onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))}
+                    required
+                    autoComplete="current-password"
+                  />
+                </div>
+                <div className="field">
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    value={pwForm.next}
+                    onChange={e => setPwForm(f => ({ ...f, next: e.target.value }))}
+                    required
+                    minLength={8}
+                    autoComplete="new-password"
+                    placeholder="Minimum 8 characters"
+                  />
+                </div>
+                <div className="field">
+                  <label>Confirm New Password</label>
+                  <input
+                    type="password"
+                    value={pwForm.confirm}
+                    onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))}
+                    required
+                    autoComplete="new-password"
+                  />
+                </div>
+                {pwError && <p className="login-error">{pwError}</p>}
+                {pwSuccess && <p className="pw-success"><Check size={15} /> Password updated successfully</p>}
+                <div className="form-actions">
+                  <button type="submit" className="btn btn-primary" disabled={pwSaving}>
+                    {pwSaving ? <><Loader size={16} className="spin" /> Saving…</> : 'Update Password'}
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 

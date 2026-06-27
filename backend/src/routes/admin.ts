@@ -14,6 +14,13 @@ if (!ADMIN_USERNAME || !ADMIN_PASSWORD_HASH) {
   throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD_HASH environment variables are required');
 }
 
+async function getPasswordHash(): Promise<string> {
+  const { rows } = await query<{ value: string }>(
+    "SELECT value FROM site_content WHERE key = 'admin.password_hash'",
+  );
+  return rows[0]?.value ?? ADMIN_PASSWORD_HASH!;
+}
+
 const loginInput = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
@@ -28,7 +35,8 @@ router.post('/login', async (req, res) => {
   }
   const { username, password } = parsed.data;
   const usernameMatch = username === ADMIN_USERNAME;
-  const passwordMatch = await bcrypt.compare(password, ADMIN_PASSWORD_HASH!);
+  const hash = await getPasswordHash();
+  const passwordMatch = await bcrypt.compare(password, hash);
   if (!usernameMatch || !passwordMatch) {
     res.status(401).json({ message: 'Invalid credentials' });
     return;
@@ -38,6 +46,32 @@ router.post('/login', async (req, res) => {
 
 // Everything below this line requires a valid admin token.
 router.use(requireAdmin);
+
+// POST /api/admin/change-password
+router.post('/change-password', async (req, res) => {
+  const parsed = z.object({
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(8),
+  }).safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ message: 'currentPassword and newPassword (min 8 chars) are required' });
+    return;
+  }
+  const { currentPassword, newPassword } = parsed.data;
+  const hash = await getPasswordHash();
+  const match = await bcrypt.compare(currentPassword, hash);
+  if (!match) {
+    res.status(401).json({ message: 'Current password is incorrect' });
+    return;
+  }
+  const newHash = await bcrypt.hash(newPassword, 12);
+  await query(
+    `INSERT INTO site_content (key, value) VALUES ('admin.password_hash', $1)
+     ON CONFLICT (key) DO UPDATE SET value=$1, updated_at=NOW()`,
+    [newHash],
+  );
+  res.json({ message: 'Password updated successfully' });
+});
 
 // GET /api/admin/stats — dashboard counts.
 router.get('/stats', async (_req, res, next) => {
