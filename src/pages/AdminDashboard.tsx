@@ -294,7 +294,6 @@ export default function AdminDashboard() {
         <div className="login-box">
           <div className="login-logo">
             <img src="/logo.jpeg" alt="Kar Organics logo" className="login-logo-img" />
-            <h1>Kar Organics</h1>
             <p>Admin Dashboard</p>
           </div>
           <form onSubmit={handleLogin} className="login-form">
