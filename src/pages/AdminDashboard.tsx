@@ -365,9 +365,9 @@ export default function AdminDashboard() {
       {/* ── Sidebar ── */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-brand">
-          <span className="brand-leaf">🌿</span>
+          <img src="/assets/logo.jpeg" alt="Kar Organics" className="brand-logo-img" />
           <div>
-            <div className="brand-name">KarOrganics</div>
+            <div className="brand-name">Kar Organics</div>
             <div className="brand-sub">Admin Panel</div>
           </div>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><X size={20} /></button>
