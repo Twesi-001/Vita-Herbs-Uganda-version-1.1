@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Mail, Send, CheckCircle, XCircle, Lock, Leaf, Bell, Tag } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import { API_URL } from '../../lib/api';
+import newsletterIcon from '../../assets/newsletter-icon.svg';
 import './NewsLetter.css';
 
 function NewsLetter() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [newsletterMsg, setNewsletterMsg] = useState<null | { type: 'success' | 'error'; text: string }>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,14 +25,14 @@ function NewsLetter() {
       const response = await fetch(`${API_URL}/subscribers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: v })
+        body: JSON.stringify({ email: v }),
       });
       const data = await response.json();
       if (response.ok) {
         setNewsletterMsg({ type: 'success', text: data.message || 'Thanks for subscribing!' });
         setEmail('');
       } else {
-        setNewsletterMsg({ type: 'error', text: data.message || 'Subscription failed' });
+        setNewsletterMsg({ type: 'error', text: data.message || 'Subscription failed.' });
       }
       setTimeout(() => setNewsletterMsg(null), 5000);
     } catch {
@@ -43,66 +44,43 @@ function NewsLetter() {
   };
 
   return (
-    <section className="newsletter-section">
+    <section className="nl-banner">
       <div className="container">
-        <div className="newsletter-inner">
+        <div className="nl-inner">
 
-          <div className="newsletter-left">
-            <div className="newsletter-icon-badge-row">
-              <div className="newsletter-icon-wrapper">
-                <Mail size={28} />
-              </div>
-              <span className="newsletter-eyebrow">Newsletter</span>
+          <div className="nl-left">
+            <img src={newsletterIcon} alt="" aria-hidden="true" className="nl-icon" />
+            <div className="nl-copy">
+              <h2>Sign Up To Newsletter</h2>
+              <p>Join our mailing list and stay up to date on new products, special offers, discounts, and much more!</p>
             </div>
-            <h2>Stay in the Loop</h2>
-            <p>Herbal wellness tips, new arrivals, and subscriber-only offers — straight to your inbox.</p>
-
-            <ul className="newsletter-perks">
-              <li><Leaf size={15} /><span>New product launches</span></li>
-              <li><Bell size={15} /><span>Wellness guides &amp; tips</span></li>
-              <li><Tag size={15} /><span>Exclusive subscriber offers</span></li>
-            </ul>
           </div>
 
-          <div className="newsletter-right">
-            <form className="newsletter-form" onSubmit={handleSubscribe}>
-              <label htmlFor="nl-email">Your email address</label>
-              <div className="newsletter-input-row">
-                <div className="input-wrapper">
-                  <Mail size={17} className="input-icon" />
-                  <input
-                    id="nl-email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    disabled={loading}
-                  />
-                </div>
+          <div className="nl-right">
+            <form className="nl-form" onSubmit={handleSubscribe}>
+              <div className="nl-input-pill">
+                <input
+                  type="email"
+                  placeholder="Your email address..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  aria-label="Email address"
+                />
                 <button type="submit" disabled={loading}>
-                  {loading ? (
-                    <><span className="nl-spinner" />Subscribing…</>
-                  ) : (
-                    <><Send size={15} />Subscribe</>
-                  )}
+                  {loading ? <span className="nl-spinner" /> : null}
+                  {loading ? 'Subscribing…' : 'Subscribe'}
                 </button>
               </div>
             </form>
 
             {newsletterMsg && (
-              <div className={`newsletter-message ${newsletterMsg.type}`}>
-                {newsletterMsg.type === 'success'
-                  ? <CheckCircle size={16} />
-                  : <XCircle size={16} />}
+              <div className={`nl-message ${newsletterMsg.type}`}>
+                {newsletterMsg.type === 'success' ? <CheckCircle size={15} /> : <XCircle size={15} />}
                 {newsletterMsg.text}
               </div>
             )}
-
-            <p className="newsletter-note">
-              <Lock size={12} />
-              No spam, ever. Unsubscribe anytime.
-            </p>
           </div>
 
         </div>
