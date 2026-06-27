@@ -56,7 +56,14 @@ function Home(){
     <section className="hero reveal reveal--fade-up">
       <div className="container hero-grid">
         <div className="hero-copy">
-          <h1>{get('hero.heading', 'Herbal Extract Medicine for Better Everyday Living')}</h1>
+          <h1>
+            Herbal Extract{' '}
+            <span className="hero-break">
+              <span className="hero-nowrap">Medicine for Better</span>
+            </span>
+            {' '}
+            <span className="hero-nowrap">Everyday Living</span>
+          </h1>
           <p>
             {get('hero.subtext', 'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.')}
           </p>

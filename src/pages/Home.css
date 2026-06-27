@@ -30,6 +30,14 @@
   color: var(--text, #1f2937);
 }
 
+.hero-break {
+  display: block;
+}
+
+.hero-nowrap {
+  white-space: nowrap;
+}
+
 .hero-copy p {
   font-size: 1.125rem;
   line-height: 1.6;
@@ -157,6 +165,10 @@
 
 /* Mobile Responsive */
 @media (max-width: 960px) {
+  .hero-break {
+    display: inline;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 48px;
