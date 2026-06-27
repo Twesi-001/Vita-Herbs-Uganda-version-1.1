@@ -197,6 +197,13 @@
 
   .nl-left {
     gap: 12px;
+    flex: 0 0 auto;
+  }
+
+  .nl-right {
+    flex: 0 0 auto;
+    width: 100%;
+    gap: 8px;
   }
 
   .nl-icon {
@@ -212,10 +219,6 @@
   .nl-copy p {
     font-size: 0.78rem;
     line-height: 1.45;
-  }
-
-  .nl-right {
-    gap: 8px;
   }
 
   .nl-input-pill input {
