@@ -26,6 +26,15 @@ img {
   max-width: 100%;
 }
 
+/* Global content container — keeps the header, top bar and page content
+   from going full-bleed (and aligned to the same gutters) on every route.
+   Page CSS may override with the same values; that's intentional. */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
 #root {
   height: 100%;
 }

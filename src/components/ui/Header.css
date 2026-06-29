@@ -1,3 +1,91 @@
+/* ── Top info bar (scrolls away; only the nav below is sticky) ── */
+.topbar {
+  background: #16181c;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  padding: 0 24px;
+}
+
+.topbar-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 64px;
+}
+
+.topbar-info > li {
+  position: relative;
+  padding: 0 26px;
+}
+
+.topbar-info > li:first-child {
+  padding-left: 0;
+}
+
+/* thin vertical dividers between items, like the reference top bar */
+.topbar-info > li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.topbar-info li,
+.topbar-info li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.topbar-info li a:hover {
+  color: #c4832a;
+}
+
+.topbar-info svg {
+  width: 17px;
+  height: 17px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.topbar-cta {
+  flex-shrink: 0;
+  background: var(--green, #3a7a2e);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 11px 26px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.topbar-cta:hover {
+  background: #c4832a;
+  transform: translateY(-1px);
+}
+
 .header {
   position: sticky;
   top: 0;
@@ -11,7 +99,7 @@
 .nav {
   min-height: 78px;
   display: flex;
-  padding: 20px 0;
+  padding: 20px 24px;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
@@ -77,6 +165,45 @@
   opacity: 0.9;
 }
 
+/* ── Search bar ─────────────────────────────────────────── */
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 7px 16px;
+  margin-right: 32px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-search:focus-within {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.nav-search-icon {
+  width: 15px;
+  height: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+
+.nav-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.875rem;
+  width: 240px;
+  font-family: inherit;
+}
+
+.nav-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
 /* Hamburger toggle — hidden on desktop, shown on mobile */
 .menu-toggle {
   display: none;
@@ -99,14 +226,28 @@
   display: none;
 }
 
+/* ── Top bar responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  /* drop the longer items, keep phone + CTA */
+  .topbar-info li:nth-child(1),
+  .topbar-info li:nth-child(2) {
+    display: none;
+  }
+  .topbar-info { gap: 16px; }
+}
+
+@media (max-width: 480px) {
+  /* reclaim vertical space on phones */
+  .topbar { display: none; }
+}
+
 /* ── Tablet / mobile ─────────────────────────────────────── */
 @media (max-width: 960px) {
   .menu-toggle {
     display: inline-flex;
   }
 
-  /* Hide the standalone desktop WhatsApp button (scoped to beat .btn-primary) */
-  .nav .header-cta {
+  .nav-search {
     display: none;
   }
 

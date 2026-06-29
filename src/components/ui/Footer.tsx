@@ -63,7 +63,16 @@ function Footer() {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; {currentYear} KarOrganics Uganda. All rights reserved.</p>
+          <div className="footer-bottom-brand">
+            <Leaf className="footer-bottom-icon" />
+            <span>KarOrganics Uganda</span>
+          </div>
+          <p className="footer-copy">&copy; {currentYear} KarOrganics Uganda. All rights reserved.</p>
+          <ul className="footer-bottom-menu">
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
         </div>
       </div>
     </footer>

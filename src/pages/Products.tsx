@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { API_URL } from '../lib/api';
 import './Products.css';
@@ -49,6 +49,8 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q')?.toLowerCase().trim() ?? '';
 
   useEffect(() => {
     fetch(`${API_URL}/products`)
@@ -58,14 +60,22 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
       .finally(() => setLoading(false));
   }, []);
 
-  const displayed = limit ? products.slice(0, limit) : products;
+  const filtered = searchQuery
+    ? products.filter(p =>
+        p.name.toLowerCase().includes(searchQuery) ||
+        p.description?.toLowerCase().includes(searchQuery) ||
+        p.category?.toLowerCase().includes(searchQuery)
+      )
+    : products;
+
+  const displayed = limit ? filtered.slice(0, limit) : filtered;
 
   return (
     <section className="section" id="products">
       <div className="container">
         <div className="section-heading">
-          <h2>Our Herbal Products</h2>
-          <p>Browse a few of our featured herbal extract products.</p>
+          <h2>{searchQuery ? `Results for "${searchQuery}"` : 'Our Herbal Products'}</h2>
+          <p>{searchQuery ? `${displayed.length} product${displayed.length !== 1 ? 's' : ''} found` : 'Browse a few of our featured herbal extract products.'}</p>
         </div>
 
         {loading ? (
