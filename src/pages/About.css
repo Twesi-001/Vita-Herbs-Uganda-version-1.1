@@ -566,6 +566,8 @@
 }
 
 @media (max-width: 768px) {
+  .history-img { display: none; }
+
   .about-hero {
     background-attachment: scroll;
     padding: 60px 0;
