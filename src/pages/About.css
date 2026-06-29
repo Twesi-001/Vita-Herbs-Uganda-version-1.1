@@ -226,8 +226,8 @@
 }
 
 .mission-icon {
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
   margin: 0 auto 20px;
   display: flex;
   align-items: center;
@@ -238,8 +238,13 @@
 }
 
 .mission-icon svg {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+}
+
+.mission-icon i {
+  font-size: 40px;
+  line-height: 1;
 }
 
 .mission-card h4 {
