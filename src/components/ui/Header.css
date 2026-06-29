@@ -228,12 +228,18 @@
 
 /* ── Top bar responsive ──────────────────────────────────── */
 @media (max-width: 768px) {
-  /* drop the longer items, keep phone + CTA */
   .topbar-info li:nth-child(1),
   .topbar-info li:nth-child(2) {
     display: none;
   }
-  .topbar-info { gap: 16px; }
+  .topbar-info {
+    gap: 16px;
+    padding-left: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar { display: none; }
 }
 
 @media (max-width: 480px) {

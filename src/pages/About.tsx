@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Leaf, Sprout, Heart, CheckCircle, ShieldCheck, Users, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import "./About.css";
 import { useSiteContent } from "../hooks/useSiteContent";
 import herbsImg from "../assets/Herbs.jpg";

@@ -566,7 +566,6 @@
 }
 
 @media (max-width: 768px) {
-  /* mobile: fixed bg falls back to scroll */
   .about-hero {
     background-attachment: scroll;
     padding: 60px 0;
@@ -582,16 +581,38 @@
 
   .container { padding: 0 20px; }
 
-  .history-info h2 { font-size: 1.6rem; }
+  .history-info h2 { font-size: 1.5rem; }
+  .history-info h4 { font-size: 0.9rem; }
 
-  .section-header h2 { font-size: 1.8rem; }
+  .section-header h2 { font-size: 1.7rem; }
+  .section-header p  { font-size: 0.9rem; }
 
   .mission-grid { grid-template-columns: 1fr; gap: 20px; }
 
-  .why-content h2 { font-size: 1.6rem; }
+  .why-content h2 { font-size: 1.5rem; }
+
+  /* team */
+  .team-info { padding: 28px 24px; }
+  .team-info h3 { font-size: 1.2rem; }
+  .about-team  { padding: 56px 0; }
+  .about-history,
+  .about-mission,
+  .about-why { padding: 56px 0; }
 }
 
 @media (max-width: 640px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
   .about-hero h1 { font-size: 26px; }
+  .team-info { padding: 22px 18px; }
+  .team-social a { width: 34px; height: 34px; }
+}
+
+@media (max-width: 480px) {
+  .about-hero h1 { font-size: 22px; }
+  .section-header h2 { font-size: 1.4rem; }
+  .history-info h2 { font-size: 1.3rem; }
+  .why-content h2  { font-size: 1.3rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .team-thumb { min-height: 200px; }
+  .why-list li { font-size: 0.875rem; }
 }

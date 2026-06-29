@@ -230,12 +230,17 @@
     flex-direction: column;
     align-items: center;
   }
-  
+
   .card {
     width: 100%;
-    max-width: 320px;
+    max-width: 400px;
   }
-  
+}
+
+@media (max-width: 400px) {
+  .card {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -252,11 +257,11 @@
   }
   
   .section-heading h2 {
-    font-size: 38px;
+    font-size: 26px;
   }
-  
+
   .section-heading p {
-    font-size: 24px;
+    font-size: 15px;
   }
   
   .card {
