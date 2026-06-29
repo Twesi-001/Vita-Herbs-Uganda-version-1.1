@@ -86,8 +86,8 @@ function Home(){
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
     <div className="reveal reveal--fade-up"><ValueSection /></div>
     <div className="reveal reveal--fade-up"><MissionSection /></div>
-    <div className="reveal reveal--fade-up"><Socials /></div>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>
+    <div className="reveal reveal--fade-up"><Socials /></div>
   </main>
         
         </>
