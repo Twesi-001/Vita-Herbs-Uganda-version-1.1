@@ -1,10 +1,7 @@
 import NewsLetter from '../components/ui/NewsLetter'
-import StatsSection from '../components/ui/StatsSection'
 import ValueSection from '../components/ui/ValueSection'
 import { Link } from 'react-router-dom'
-import About from './About'
 import Products from './Products'
-import Contact from './Contact'
 import Socials from './Socials'
 import heroImage from '../assets/Herbs.jpg';
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -85,13 +82,10 @@ function Home(){
       </div>
     </section>
 
-    <div className="reveal reveal--fade-up"><StatsSection /></div>
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
     <div className="reveal reveal--fade-up"><ValueSection /></div>
-    <div className="reveal reveal--fade-up"><About /></div>
     <div className="reveal reveal--fade-up"><Socials /></div>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>
-    <div className="reveal reveal--fade-up"><Contact /></div>
   </main>
         
         </>
