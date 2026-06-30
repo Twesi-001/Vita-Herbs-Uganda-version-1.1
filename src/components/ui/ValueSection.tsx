@@ -1,7 +1,6 @@
 import { Sunrise, Zap, Heart } from 'lucide-react';
 import './ValueSection.css';
 import { useSiteContent } from '../../hooks/useSiteContent';
-import whyHerbs from '../../assets/why-herbs.jpg';
 
 // Three value cards. `key` maps to the value.cardN.* content keys in the DB.
 const CARDS = [
@@ -20,24 +19,23 @@ function ValueSection() {
   }));
 
   return (
-    <section className="value-section" id="value" style={{ backgroundImage: `url(${whyHerbs})` }}>
+    <section className="value-section" id="value">
       <div className="value-overlay">
-      <div className="container">
-        <div className="section-heading">
-<h2>{get('value.heading', "You're Not Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>
-          <p>{get('value.subtext', 'Every KarOrganicsextract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.')}</p>
+        <div className="container">
+          <div className="section-heading">
+            <h2>{get('value.heading', "You're Not Just Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>
+            <p>{get('value.subtext', 'Every Kar Organics extract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.')}</p>
+          </div>
+          <div className="value-grid">
+            {cards.map(({ icon: Icon, title, text }) => (
+              <div className="value-card" key={title || text}>
+                <div className="value-icon"><Icon /></div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <div className="value-grid">
-          {cards.map(({ icon: Icon, title, text }) => (
-            <div className="value-card" key={title || text}>
-              <div className="value-icon"><Icon /></div>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
       </div>
     </section>
   );

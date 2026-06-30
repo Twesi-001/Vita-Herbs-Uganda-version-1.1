@@ -99,9 +99,11 @@ function AboutPage() {
               <img src={herbsImg} alt="KarOrganics herbs" />
             </div>
             <div className="history-info">
+              <h4>{get('about.story.eyebrow', 'About Us')}</h4>
               <h2>{get('about.story.heading', "Bringing Nature's Healing Power to Your Doorstep.")}</h2>
-              <h4>{get('about.story.eyebrow', "Rooted in Uganda's rich herbal heritage")}</h4>
-              <p>{get('about.story.body', 'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored. We work directly with local farmers to bring you the finest herbal extracts.')}</p>
+              <p>{get('about.story.body', 'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.')}</p>
+              <p>Every product is crafted to the <strong>highest standards of purity and potency</strong>, so you get natural wellness you can rely on, every single day.</p>
+              <Link to="/products" className="history-cta">Explore Our Products</Link>
             </div>
           </div>
         </div>

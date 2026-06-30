@@ -75,7 +75,7 @@ function Products({ showAllLink = false, limit }: { showAllLink?: boolean; limit
       <div className="container">
         <div className="section-heading">
           <h2>{searchQuery ? `Results for "${searchQuery}"` : 'Our Herbal Products'}</h2>
-          <p>{searchQuery ? `${displayed.length} product${displayed.length !== 1 ? 's' : ''} found` : 'Browse a few of our featured herbal extract products.'}</p>
+          <p>{searchQuery ? `${displayed.length} product${displayed.length !== 1 ? 's' : ''} found` : "Carefully sourced from Uganda's finest herbs - natural extract products crafted to support your everyday health and wellness."}</p>
         </div>
 
         {loading ? (
