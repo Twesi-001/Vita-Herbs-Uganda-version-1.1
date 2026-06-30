@@ -281,7 +281,7 @@ router.post('/upload', requireAdmin, upload.single('file'), async (req, res, nex
     const timestamp = Math.floor(Date.now() / 1000).toString();
     const crypto = await import('crypto');
     const signature = crypto.createHash('sha1')
-      .update(`timestamp=${timestamp}${apiSecret}`)
+      .update(`folder=karorganics&timestamp=${timestamp}${apiSecret}`)
       .digest('hex');
 
     const formData = new FormData();
