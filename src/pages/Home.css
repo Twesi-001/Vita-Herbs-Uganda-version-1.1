@@ -114,8 +114,9 @@
 .hero-slideshow {
   position: relative;
   width: 100%;
-  border-radius: 16px;
+  border-radius: 6px;
   overflow: hidden;
+  min-height: 400px;
 }
 
 .hero-slideshow-sizer {
@@ -124,7 +125,7 @@
   display: block;
   visibility: hidden;
   position: static !important;
-  border-radius: 16px;
+  border-radius: 6px;
   pointer-events: none;
 }
 
@@ -144,7 +145,7 @@
 .hero-image img {
   width: 100%;
   height: auto;
-  border-radius: 16px;
+  border-radius: 6px;
   object-fit: cover;
   position: relative;
 }
@@ -154,7 +155,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 16px;
+  border-radius: 6px;
   background: linear-gradient(
     135deg,
     rgba(15, 42, 15, 0.18) 0%,

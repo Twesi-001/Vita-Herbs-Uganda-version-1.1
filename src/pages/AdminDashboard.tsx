@@ -96,6 +96,7 @@ export default function AdminDashboard() {
   const [form, setForm] = useState(emptyForm);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const formPanelRef = useRef<HTMLDivElement>(null);
 
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [savedKey, setSavedKey] = useState<string | null>(null);
@@ -224,8 +225,9 @@ export default function AdminDashboard() {
     URL.revokeObjectURL(url);
   };
 
-  const openAddForm = () => { setForm(emptyForm); setEditId(null); setShowForm(true); };
-  const openEditForm = (p: Product) => { setForm({ name: p.name, description: p.description, image_url: p.image_url ?? '', price: p.price?.toString() ?? '', category: p.category ?? '', active: p.active }); setEditId(p.id); setShowForm(true); };
+  const scrollToForm = () => setTimeout(() => formPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  const openAddForm = () => { setForm(emptyForm); setEditId(null); setShowForm(true); scrollToForm(); };
+  const openEditForm = (p: Product) => { setForm({ name: p.name, description: p.description, image_url: p.image_url ?? '', price: p.price?.toString() ?? '', category: p.category ?? '', active: p.active }); setEditId(p.id); setShowForm(true); scrollToForm(); };
   const closeForm = () => { setShowForm(false); setEditId(null); setForm(emptyForm); };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -454,7 +456,7 @@ export default function AdminDashboard() {
           {activeTab === 'products' && (
             <>
               {showForm && (
-                <div className="panel form-panel">
+                <div className="panel form-panel" ref={formPanelRef}>
                   <div className="panel-head">
                     <h2>{editId ? 'Edit Product' : 'New Product'}</h2>
                     <button className="icon-btn icon-ghost" onClick={closeForm}><X size={18} /></button>
