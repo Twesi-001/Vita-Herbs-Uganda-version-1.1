@@ -47,7 +47,9 @@ function ToastContainer({ toasts }: { toasts: Toast[] }) {
   );
 }
 
-function ContactPage() {
+// Shared Contact content (without the page hero) so it can be reused
+// both on the standalone /contact route and embedded on the Home page.
+export function ContactBody() {
   const [form, setForm] = useState({
     name: "", phone: "", email: "", product: "", quantity: "", message: ""
   });
@@ -107,21 +109,6 @@ function ContactPage() {
 
   return (
     <>
-      <section className="contact-hero">
-        <div className="container">
-          <div className="contact-hero-content">
-            <div className="hero-text">
-              <h1>Get In Touch</h1>
-            </div>
-            <nav className="hero-breadcrumb" aria-label="Breadcrumb">
-              <Link to="/">Home</Link>
-              <span className="sep">·</span>
-              <span className="current">Contact</span>
-            </nav>
-          </div>
-        </div>
-      </section>
-
       <section className="contact-main">
         <div className="container">
           <div className="contact-grid">
@@ -193,6 +180,29 @@ function ContactPage() {
       </section>
 
       <ToastContainer toasts={toasts} />
+    </>
+  );
+}
+
+function ContactPage() {
+  return (
+    <>
+      <section className="contact-hero">
+        <div className="container">
+          <div className="contact-hero-content">
+            <div className="hero-text">
+              <h1>Get In Touch</h1>
+            </div>
+            <nav className="hero-breadcrumb" aria-label="Breadcrumb">
+              <Link to="/">Home</Link>
+              <span className="sep">·</span>
+              <span className="current">Contact</span>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+      <ContactBody />
     </>
   );
 }

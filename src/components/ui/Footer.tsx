@@ -1,10 +1,22 @@
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Leaf,  Mail, Phone, MapPin } from 'lucide-react';
 import './Footer.css';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // About & Contact are sections on the Home page — scroll to them.
+  const scrollToSection = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate(`/#${id}`);
+    }
+  };
 
   return (
     <footer className="footer">
@@ -36,9 +48,9 @@ function Footer() {
             <h3>Quick Links</h3>
             <ul>
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/about">About Us</Link></li>
+              <li><a href="/#about" onClick={scrollToSection('about')}>About Us</a></li>
               <li><Link to="/products">Products</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
+              <li><a href="/#contact" onClick={scrollToSection('contact')}>Contact</a></li>
               <li><Link to="/social">Socials</Link></li>
             </ul>
           </div>

@@ -1,6 +1,6 @@
 // Header.tsx
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Search } from 'lucide-react';
 import './Header.css';
 import logo from '../../assets/logo1.jpeg';
@@ -35,9 +35,24 @@ function Header() {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
     const close = () => setOpen(false);
 
     const linkClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'active' : '');
+
+    // About & Contact now live as sections on the Home page — clicking them
+    // scrolls to that section (navigating home first if we're elsewhere).
+    function scrollToSection(id: string) {
+        return (e: React.MouseEvent) => {
+            e.preventDefault();
+            close();
+            if (location.pathname === '/') {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                navigate(`/#${id}`);
+            }
+        };
+    }
 
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();
@@ -92,10 +107,10 @@ function Header() {
 
                 <nav className={`menu ${open ? 'menu--open' : ''}`}>
                     <NavLink to="/" className={linkClass} onClick={close}>Home</NavLink>
-                    <NavLink to="/about" className={linkClass} onClick={close}>About</NavLink>
+                    <a href="/#about" className="" onClick={scrollToSection('about')}>About</a>
                     <NavLink to="/products" className={linkClass} onClick={close}>Products</NavLink>
                     <NavLink to="/social" className={linkClass} onClick={close}>Socials</NavLink>
-                    <NavLink to="/contact" className={linkClass} onClick={close}>Contact</NavLink>
+                    <a href="/#contact" className="" onClick={scrollToSection('contact')}>Contact</a>
 
                     <a
                         className="btn btn-primary menu-cta"

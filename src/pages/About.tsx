@@ -60,7 +60,9 @@ const team = [
   },
 ];
 
-function AboutPage() {
+// Shared About content (without the page hero) so it can be reused
+// both on the standalone /about route and embedded on the Home page.
+export function AboutBody() {
   const get = useSiteContent();
   const [teamIdx, setTeamIdx] = useState(0);
   const prev = () => setTeamIdx(i => (i - 1 + team.length) % team.length);
@@ -75,22 +77,6 @@ function AboutPage() {
 
   return (
     <>
-      {/* ── Hero ── */}
-      <section className="about-hero">
-        <div className="container">
-          <div className="about-hero-content">
-            <div className="hero-text">
-              <h1>{get('about.hero.heading', 'About KarOrganics Uganda')}</h1>
-            </div>
-            <nav className="hero-breadcrumb" aria-label="Breadcrumb">
-              <Link to="/">Home</Link>
-              <span className="sep">·</span>
-              <span className="current">About</span>
-            </nav>
-          </div>
-        </div>
-      </section>
-
       {/* ── Story + Stats ── */}
       <section className="about-history">
         <div className="container">
@@ -182,6 +168,31 @@ function AboutPage() {
           </div>
         </div>
       </section>
+    </>
+  );
+}
+
+function AboutPage() {
+  const get = useSiteContent();
+  return (
+    <>
+      {/* ── Hero ── */}
+      <section className="about-hero">
+        <div className="container">
+          <div className="about-hero-content">
+            <div className="hero-text">
+              <h1>{get('about.hero.heading', 'About KarOrganics Uganda')}</h1>
+            </div>
+            <nav className="hero-breadcrumb" aria-label="Breadcrumb">
+              <Link to="/">Home</Link>
+              <span className="sep">·</span>
+              <span className="current">About</span>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+      <AboutBody />
     </>
   );
 }

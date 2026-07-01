@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import NewsLetter from '../components/ui/NewsLetter'
 import ValueSection from '../components/ui/ValueSection'
-import MissionSection from '../components/ui/MissionSection'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Products from './Products'
 import Socials from './Socials'
+import { AboutBody } from './About'
+import { ContactBody } from './Contact'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSiteContent } from '../hooks/useSiteContent'
 import'./Home.css'
@@ -11,6 +13,19 @@ import'./Home.css'
 function Home(){
     useScrollReveal();
     const get = useSiteContent();
+    const location = useLocation();
+
+    // When navigated here with a hash (e.g. /#about), scroll to that section.
+    useEffect(() => {
+        if (location.hash) {
+            const id = location.hash.slice(1);
+            // Wait a tick so lazy sections are mounted before scrolling.
+            const t = setTimeout(() => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            return () => clearTimeout(t);
+        }
+    }, [location.hash]);
 
     return(
         <>
@@ -32,7 +47,16 @@ function Home(){
 
           <div className="hero-actions">
             <Link to="/products" className="btn btn-primary">View Products</Link>
-            <Link to="/contact" className="btn btn-outline">Contact Us</Link>
+            <a
+              href="#contact"
+              className="btn btn-outline"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Contact Us
+            </a>
           </div>
 
           <div className="trust-badges">
@@ -50,8 +74,9 @@ function Home(){
 
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
     <ValueSection />
-    <div className="reveal reveal--fade-up"><MissionSection /></div>
+    <section id="about" className="home-anchor reveal reveal--fade-up"><AboutBody /></section>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>
+    <section id="contact" className="home-anchor reveal reveal--fade-up"><ContactBody /></section>
     <div className="reveal reveal--fade-up"><Socials /></div>
   </main>
         

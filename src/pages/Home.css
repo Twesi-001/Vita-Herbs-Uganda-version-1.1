@@ -1,3 +1,9 @@
+/* Anchored sections (About / Contact) — offset so the sticky header
+   doesn't cover the top when scrolled to via nav links. */
+.home-anchor {
+  scroll-margin-top: 90px;
+}
+
 /* Hero Section */
 .hero {
   padding: 6px 10px 40px;
