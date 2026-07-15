@@ -24,7 +24,6 @@ function Footer() {
         <div className="footer-grid">
           <div className="footer-section">
             <div className="footer-logo1">
-              <Leaf className="footer-logo1-icon" />
               <span>KarOrganics<span className="logo1-region">Uganda</span></span>
             </div>
             <p>Premium herbal extracts for holistic wellness. Trusted by thousands across Uganda.</p>
