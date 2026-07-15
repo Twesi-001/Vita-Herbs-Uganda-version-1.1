@@ -242,13 +242,21 @@
 /* Base hidden state */
 .reveal {
   opacity: 0;
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
-/* Fade up variant */
+/* Fly-in variants */
 .reveal--fade-up {
-  transform: translateY(40px);
+  transform: translateY(48px);
+}
+
+.reveal--fade-left {
+  transform: translateX(-56px);
+}
+
+.reveal--fade-right {
+  transform: translateX(56px);
 }
 
 /* Visible state — added by useScrollReveal when element enters viewport */
@@ -262,11 +270,42 @@
   animation: none; /* children rely on parent transition, not their own */
 }
 
+/* Staggered card fly-in inside revealed Home sections — scoped to #home so
+   it can't leave cards invisible on standalone routes that don't run the
+   scroll-reveal observer (e.g. /about, /products visited directly).
+   Uses a one-shot `animation` rather than `transition-delay` so the delay
+   doesn't linger and affect the cards' own hover transitions afterwards. */
+@keyframes flyInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+#home .reveal .mission-card,
+#home .reveal .value-card,
+#home .reveal .cards .card {
+  opacity: 0;
+}
+
+#home .reveal--visible .mission-card,
+#home .reveal--visible .value-card,
+#home .reveal--visible .cards .card {
+  animation: flyInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+#home .mission-card:nth-child(1), #home .value-card:nth-child(1), #home .cards .card:nth-child(1) { animation-delay: 0.05s; }
+#home .mission-card:nth-child(2), #home .value-card:nth-child(2), #home .cards .card:nth-child(2) { animation-delay: 0.16s; }
+#home .mission-card:nth-child(3), #home .value-card:nth-child(3), #home .cards .card:nth-child(3) { animation-delay: 0.27s; }
+#home .cards .card:nth-child(4) { animation-delay: 0.38s; }
+
 /* Respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  #home .reveal .mission-card,
+  #home .reveal .value-card,
+  #home .reveal .cards .card {
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
 }

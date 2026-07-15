@@ -608,13 +608,14 @@
   .why-img { order: -1; }
 
   .team-carousel {
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
   }
 
   .team-arrow--prev { order: 2; }
   .team-arrow--next { order: 3; }
-  .team-item        { order: 1; grid-template-columns: 1fr; }
+  .team-item        { order: 1; flex: 1 1 100%; grid-template-columns: 1fr; }
 
   .team-thumb { min-height: 240px; }
 }
