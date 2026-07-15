@@ -20,7 +20,7 @@ function ValueSection() {
 
   return (
     <section className="value-section" id="value">
-      <div className="value-overlay">
+      <div className="value-overlay reveal reveal--fade-up">
         <div className="container">
           <div className="section-heading">
             <h2>{get('value.heading', "You're Not Just Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>

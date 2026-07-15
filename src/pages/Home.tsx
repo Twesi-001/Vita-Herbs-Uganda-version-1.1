@@ -73,7 +73,7 @@ function Home(){
     </section>
 
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
-    <div className="reveal reveal--fade-up"><ValueSection /></div>
+    <ValueSection />
     <section id="about" className="home-anchor reveal reveal--fade-left"><AboutBody /></section>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>
     <section id="contact" className="home-anchor reveal reveal--fade-right"><ContactBody /></section>
