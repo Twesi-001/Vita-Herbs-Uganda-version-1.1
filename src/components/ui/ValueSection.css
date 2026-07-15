@@ -73,6 +73,15 @@
   height: 28px;
 }
 
+/* Distinct accent color per value card */
+.value-card:nth-child(1) .value-icon {
+  color: #c4832a;
+}
+
+.value-card:nth-child(3) .value-icon {
+  color: #d9463a;
+}
+
 .value-card h3 {
   font-size: 1.0625rem;
   font-weight: 700;

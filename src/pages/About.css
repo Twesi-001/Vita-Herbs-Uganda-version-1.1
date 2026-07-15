@@ -271,9 +271,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--green-light), var(--green));
   border-radius: 50%;
   color: #fff;
+}
+
+/* Distinct accent color per mission card */
+.mission-card:nth-child(1) .mission-icon {
+  background: linear-gradient(135deg, #9aa5a0, #6b7a6b);
+}
+
+.mission-card:nth-child(2) .mission-icon {
+  background: linear-gradient(135deg, var(--green-light), var(--green));
+}
+
+.mission-card:nth-child(3) .mission-icon {
+  background: linear-gradient(135deg, #e05a4e, #b83428);
 }
 
 .mission-icon svg {
@@ -507,9 +519,7 @@
   text-transform: uppercase;
   letter-spacing: 3px;
   color: var(--green);
-  background: rgba(46, 125, 50, 0.08);
   padding: 5px 14px;
-  border-radius: 999px;
   margin-bottom: 14px;
 }
 

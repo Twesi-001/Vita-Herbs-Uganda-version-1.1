@@ -20,13 +20,13 @@ export default function MissionSection() {
             <Link to="/products" className="read-more">Learn More <span>›</span></Link>
           </div>
           <div className="mission-card">
-            <div className="mission-icon"><i className="flaticon-heart" /></div>
+            <div className="mission-icon"><i className="flaticon-solidarity" /></div>
             <h4>{get('about.pillar2.title', 'Wellness')}</h4>
             <p>{get('about.pillar2.body', 'Every product is crafted to support your holistic health - from immunity to energy, digestion and beyond.')}</p>
             <Link to="/products" className="read-more">Learn More <span>›</span></Link>
           </div>
           <div className="mission-card">
-            <div className="mission-icon"><i className="flaticon-solidarity" /></div>
+            <div className="mission-icon"><i className="flaticon-heart" /></div>
             <h4>{get('about.pillar3.title', 'Community')}</h4>
             <p>{get('about.pillar3.body', 'Fair partnerships with local Ugandan farmers ensure sustainable sourcing and shared prosperity.')}</p>
             <Link to="/products" className="read-more">Learn More <span>›</span></Link>
