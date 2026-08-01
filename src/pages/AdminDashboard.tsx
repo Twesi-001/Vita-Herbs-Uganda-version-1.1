@@ -33,12 +33,25 @@ const CONTENT_SECTIONS = [
     { key: 'about.story.eyebrow', label: 'Story eyebrow', type: 'input' },
     { key: 'about.story.heading', label: 'Story heading', type: 'input' },
     { key: 'about.story.body', label: 'Story body text', type: 'textarea' },
+    { key: 'about.story.image', label: 'Heritage image', type: 'image' },
     { key: 'about.pillar1.title', label: 'Pillar 1 — Title', type: 'input' },
     { key: 'about.pillar1.body', label: 'Pillar 1 — Body', type: 'input' },
     { key: 'about.pillar2.title', label: 'Pillar 2 — Title', type: 'input' },
     { key: 'about.pillar2.body', label: 'Pillar 2 — Body', type: 'input' },
     { key: 'about.pillar3.title', label: 'Pillar 3 — Title', type: 'input' },
     { key: 'about.pillar3.body', label: 'Pillar 3 — Body', type: 'input' },
+  ]},
+  { title: 'Why KarOrganics Section', desc: 'The "Trusted Herbal Products" block near the bottom of the About page.', fields: [
+    { key: 'about.why.eyebrow', label: 'Eyebrow label', type: 'input' },
+    { key: 'about.why.heading', label: 'Heading', type: 'input' },
+    { key: 'about.why.body', label: 'Body text', type: 'textarea' },
+    { key: 'about.why.item1', label: 'Checklist item 1', type: 'input' },
+    { key: 'about.why.item2', label: 'Checklist item 2', type: 'input' },
+    { key: 'about.why.item3', label: 'Checklist item 3', type: 'input' },
+    { key: 'about.why.item4', label: 'Checklist item 4', type: 'input' },
+    { key: 'about.why.item5', label: 'Checklist item 5', type: 'input' },
+    { key: 'about.why.cta', label: 'Button label', type: 'input' },
+    { key: 'about.why.image', label: 'Section image', type: 'image' },
   ]},
   { title: 'Why It Matters', desc: 'The value cards shown on the home page.', fields: [
     { key: 'value.heading', label: 'Section heading', type: 'textarea' },
@@ -100,6 +113,7 @@ export default function AdminDashboard() {
 
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [savedKey, setSavedKey] = useState<string | null>(null);
+  const [uploadingContentKey, setUploadingContentKey] = useState<string | null>(null);
   const [openSection, setOpenSection] = useState<string | null>(CONTENT_SECTIONS[0].title);
   const [contactPage, setContactPage] = useState(1);
   const [subPage, setSubPage] = useState(1);
@@ -269,6 +283,14 @@ export default function AdminDashboard() {
       else { setPwError(d.message ?? 'Failed to update password'); }
     } catch { setPwError('Connection failed'); }
     finally { setPwSaving(false); }
+  };
+
+  const handleContentImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+    const file = e.target.files?.[0]; if (!file) return;
+    setUploadingContentKey(key);
+    try { const url = await uploadToCloudinary(file, token()); setContent(c => ({ ...c, [key]: url })); }
+    catch (err) { alert(`Upload failed: ${err instanceof Error ? err.message : err}`); }
+    finally { setUploadingContentKey(null); e.target.value = ''; }
   };
 
   const saveContentKey = async (key: string) => {
@@ -739,7 +761,40 @@ export default function AdminDashboard() {
                           <div key={field.key} className="cf-row">
                             <label>{field.label}</label>
                             <div className="cf-input">
-                              {field.type === 'textarea' ? (
+                              {field.type === 'image' ? (
+                                <div className="image-uploader">
+                                  {content[field.key] ? (
+                                    <div className="uploader-preview">
+                                      <img src={content[field.key]} alt="preview" />
+                                      <button type="button" onClick={() => setContent(c => ({ ...c, [field.key]: '' }))} className="remove-img">
+                                        <X size={14} />
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <label htmlFor={`cimg-${field.key}`} className="uploader-drop">
+                                      {uploadingContentKey === field.key ? (
+                                        <><Loader size={18} className="spin" /> Uploading…</>
+                                      ) : (
+                                        <><Upload size={18} /> Click to upload image</>
+                                      )}
+                                    </label>
+                                  )}
+                                  <input
+                                    id={`cimg-${field.key}`}
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    disabled={uploadingContentKey === field.key}
+                                    onChange={e => handleContentImageUpload(e, field.key)}
+                                  />
+                                  <input
+                                    className="url-input"
+                                    value={content[field.key] ?? ''}
+                                    onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
+                                    placeholder="…or paste an image URL"
+                                  />
+                                </div>
+                              ) : field.type === 'textarea' ? (
                                 <textarea
                                   rows={2}
                                   value={content[field.key] ?? ''}

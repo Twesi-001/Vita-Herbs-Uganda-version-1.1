@@ -82,7 +82,7 @@ export function AboutBody() {
         <div className="container">
           <div className="history-grid">
             <div className="history-img">
-              <img src={herbsImg} alt="KarOrganics herbs" />
+              <img src={get('about.story.image', herbsImg)} alt="KarOrganics herbs" />
             </div>
             <div className="history-info">
               <h4>{get('about.story.eyebrow', 'About Us')}</h4>
@@ -143,15 +143,15 @@ export function AboutBody() {
         <div className="container">
           <div className="why-grid">
             <div className="why-content">
-              <span className="why-eyebrow">Why KarOrganics?</span>
-              <h2>Trusted Herbal Products, Delivered With Care</h2>
-              <p>We make it easy to access premium herbal wellness products wherever you are in Uganda. Order via WhatsApp and receive your products quickly.</p>
+              <span className="why-eyebrow">{get('about.why.eyebrow', 'Why KarOrganics?')}</span>
+              <h2>{get('about.why.heading', 'Trusted Herbal Products, Delivered With Care')}</h2>
+              <p>{get('about.why.body', 'We make it easy to access premium herbal wellness products wherever you are in Uganda. Order via WhatsApp and receive your products quickly.')}</p>
               <ul className="why-list">
-                <li><CheckCircle size={18} /> 100% natural, no synthetic additives</li>
-                <li><CheckCircle size={18} /> Direct WhatsApp ordering - no complicated checkout</li>
-                <li><CheckCircle size={18} /> Fast delivery across Uganda</li>
-                <li><CheckCircle size={18} /> Responsive customer support</li>
-                <li><CheckCircle size={18} /> Sourced directly from Ugandan farmers</li>
+                <li><CheckCircle size={18} /> {get('about.why.item1', '100% natural, no synthetic additives')}</li>
+                <li><CheckCircle size={18} /> {get('about.why.item2', 'Direct WhatsApp ordering - no complicated checkout')}</li>
+                <li><CheckCircle size={18} /> {get('about.why.item3', 'Fast delivery across Uganda')}</li>
+                <li><CheckCircle size={18} /> {get('about.why.item4', 'Responsive customer support')}</li>
+                <li><CheckCircle size={18} /> {get('about.why.item5', 'Sourced directly from Ugandan farmers')}</li>
               </ul>
               <a
                 href="https://wa.me/256701924517"
@@ -159,11 +159,11 @@ export function AboutBody() {
                 rel="noopener noreferrer"
                 className="why-cta"
               >
-                Order on WhatsApp
+                {get('about.why.cta', 'Order on WhatsApp')}
               </a>
             </div>
             <div className="why-img">
-              <img src={herbsImg} alt="Natural herbal products" />
+              <img src={get('about.why.image', herbsImg)} alt="Natural herbal products" />
             </div>
           </div>
         </div>
