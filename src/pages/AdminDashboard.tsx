@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
   Upload, Check, Loader, Menu, X, Download, Search, TrendingUp, KeyRound,
+  Home, Sparkles, Heart, ListChecks, Share2, ImageIcon,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
 import './AdminDashboard.css';
@@ -20,50 +21,54 @@ const PAGE_META: Record<Tab, { title: string; subtitle: string }> = {
   settings: { title: 'Settings', subtitle: 'Manage your admin account and password.' },
 };
 
-const CONTENT_SECTIONS = [
-  { title: 'Hero Section', desc: 'The first thing visitors see on the home page.', fields: [
+type ContentFieldType = 'input' | 'textarea' | 'image';
+interface ContentField { key: string; label: string; type: ContentFieldType; group?: string; }
+interface ContentSection { title: string; desc: string; icon: React.ReactNode; fields: ContentField[]; }
+
+const CONTENT_SECTIONS: ContentSection[] = [
+  { title: 'Hero Section', desc: 'The first thing visitors see on the home page.', icon: <Home size={18} />, fields: [
     { key: 'hero.eyebrow', label: 'Eyebrow label', type: 'input' },
     { key: 'hero.heading', label: 'Main heading', type: 'input' },
     { key: 'hero.subtext', label: 'Subtext paragraph', type: 'textarea' },
   ]},
-  { title: 'About Page', desc: 'Your story, heritage and the three pillars.', fields: [
-    { key: 'about.hero.eyebrow', label: 'Hero eyebrow', type: 'input' },
-    { key: 'about.hero.heading', label: 'Hero heading', type: 'input' },
-    { key: 'about.hero.description', label: 'Hero description', type: 'textarea' },
-    { key: 'about.story.eyebrow', label: 'Story eyebrow', type: 'input' },
-    { key: 'about.story.heading', label: 'Story heading', type: 'input' },
-    { key: 'about.story.body', label: 'Story body text', type: 'textarea' },
-    { key: 'about.story.image', label: 'Heritage image', type: 'image' },
-    { key: 'about.pillar1.title', label: 'Pillar 1 — Title', type: 'input' },
-    { key: 'about.pillar1.body', label: 'Pillar 1 — Body', type: 'input' },
-    { key: 'about.pillar2.title', label: 'Pillar 2 — Title', type: 'input' },
-    { key: 'about.pillar2.body', label: 'Pillar 2 — Body', type: 'input' },
-    { key: 'about.pillar3.title', label: 'Pillar 3 — Title', type: 'input' },
-    { key: 'about.pillar3.body', label: 'Pillar 3 — Body', type: 'input' },
+  { title: 'About Page', desc: 'Your story, heritage and the three pillars.', icon: <Sparkles size={18} />, fields: [
+    { key: 'about.hero.eyebrow', label: 'Eyebrow', type: 'input', group: 'Page Header' },
+    { key: 'about.hero.heading', label: 'Heading', type: 'input', group: 'Page Header' },
+    { key: 'about.hero.description', label: 'Description', type: 'textarea', group: 'Page Header' },
+    { key: 'about.story.eyebrow', label: 'Eyebrow', type: 'input', group: 'Heritage Story' },
+    { key: 'about.story.heading', label: 'Heading', type: 'input', group: 'Heritage Story' },
+    { key: 'about.story.body', label: 'Body text', type: 'textarea', group: 'Heritage Story' },
+    { key: 'about.story.image', label: 'Heritage image', type: 'image', group: 'Heritage Story' },
+    { key: 'about.pillar1.title', label: 'Title', type: 'input', group: 'Pillar 1' },
+    { key: 'about.pillar1.body', label: 'Body', type: 'input', group: 'Pillar 1' },
+    { key: 'about.pillar2.title', label: 'Title', type: 'input', group: 'Pillar 2' },
+    { key: 'about.pillar2.body', label: 'Body', type: 'input', group: 'Pillar 2' },
+    { key: 'about.pillar3.title', label: 'Title', type: 'input', group: 'Pillar 3' },
+    { key: 'about.pillar3.body', label: 'Body', type: 'input', group: 'Pillar 3' },
   ]},
-  { title: 'Why KarOrganics Section', desc: 'The "Trusted Herbal Products" block near the bottom of the About page.', fields: [
-    { key: 'about.why.eyebrow', label: 'Eyebrow label', type: 'input' },
-    { key: 'about.why.heading', label: 'Heading', type: 'input' },
-    { key: 'about.why.body', label: 'Body text', type: 'textarea' },
-    { key: 'about.why.item1', label: 'Checklist item 1', type: 'input' },
-    { key: 'about.why.item2', label: 'Checklist item 2', type: 'input' },
-    { key: 'about.why.item3', label: 'Checklist item 3', type: 'input' },
-    { key: 'about.why.item4', label: 'Checklist item 4', type: 'input' },
-    { key: 'about.why.item5', label: 'Checklist item 5', type: 'input' },
+  { title: 'Why KarOrganics Section', desc: 'The "Trusted Herbal Products" block near the bottom of the About page.', icon: <Heart size={18} />, fields: [
+    { key: 'about.why.eyebrow', label: 'Eyebrow', type: 'input', group: 'Section Intro' },
+    { key: 'about.why.heading', label: 'Heading', type: 'input', group: 'Section Intro' },
+    { key: 'about.why.body', label: 'Body text', type: 'textarea', group: 'Section Intro' },
+    { key: 'about.why.item1', label: 'Item 1', type: 'input', group: 'Checklist' },
+    { key: 'about.why.item2', label: 'Item 2', type: 'input', group: 'Checklist' },
+    { key: 'about.why.item3', label: 'Item 3', type: 'input', group: 'Checklist' },
+    { key: 'about.why.item4', label: 'Item 4', type: 'input', group: 'Checklist' },
+    { key: 'about.why.item5', label: 'Item 5', type: 'input', group: 'Checklist' },
     { key: 'about.why.cta', label: 'Button label', type: 'input' },
     { key: 'about.why.image', label: 'Section image', type: 'image' },
   ]},
-  { title: 'Why It Matters', desc: 'The value cards shown on the home page.', fields: [
-    { key: 'value.heading', label: 'Section heading', type: 'textarea' },
-    { key: 'value.subtext', label: 'Subtext', type: 'textarea' },
-    { key: 'value.card1.title', label: 'Card 1 — Title', type: 'input' },
-    { key: 'value.card1.text', label: 'Card 1 — Text', type: 'textarea' },
-    { key: 'value.card2.title', label: 'Card 2 — Title', type: 'input' },
-    { key: 'value.card2.text', label: 'Card 2 — Text', type: 'textarea' },
-    { key: 'value.card4.title', label: 'Card 3 — Title', type: 'input' },
-    { key: 'value.card4.text', label: 'Card 3 — Text', type: 'textarea' },
+  { title: 'Why It Matters', desc: 'The value cards shown on the home page.', icon: <ListChecks size={18} />, fields: [
+    { key: 'value.heading', label: 'Section heading', type: 'textarea', group: 'Section Intro' },
+    { key: 'value.subtext', label: 'Subtext', type: 'textarea', group: 'Section Intro' },
+    { key: 'value.card1.title', label: 'Title', type: 'input', group: 'Card 1' },
+    { key: 'value.card1.text', label: 'Text', type: 'textarea', group: 'Card 1' },
+    { key: 'value.card2.title', label: 'Title', type: 'input', group: 'Card 2' },
+    { key: 'value.card2.text', label: 'Text', type: 'textarea', group: 'Card 2' },
+    { key: 'value.card4.title', label: 'Title', type: 'input', group: 'Card 3' },
+    { key: 'value.card4.text', label: 'Text', type: 'textarea', group: 'Card 3' },
   ]},
-  { title: 'Social Links', desc: 'Where your social buttons point to.', fields: [
+  { title: 'Social Links', desc: 'Where your social buttons point to.', icon: <Share2 size={18} />, fields: [
     { key: 'social.whatsapp.url', label: 'WhatsApp URL', type: 'input' },
     { key: 'social.tiktok.url', label: 'TikTok URL', type: 'input' },
     { key: 'social.instagram.url', label: 'Instagram URL', type: 'input' },
@@ -71,6 +76,24 @@ const CONTENT_SECTIONS = [
     { key: 'social.youtube.url', label: 'YouTube URL', type: 'input' },
   ]},
 ];
+
+// Bundle consecutive fields that share a `group` label into one visual block,
+// so e.g. a pillar's title+body render together instead of as two anonymous rows.
+type ContentBlock = { kind: 'single'; field: ContentField } | { kind: 'group'; name: string; fields: ContentField[] };
+function groupContentFields(fields: ContentField[]): ContentBlock[] {
+  const blocks: ContentBlock[] = [];
+  for (const field of fields) {
+    const last = blocks[blocks.length - 1];
+    if (field.group && last?.kind === 'group' && last.name === field.group) {
+      last.fields.push(field);
+    } else if (field.group) {
+      blocks.push({ kind: 'group', name: field.group, fields: [field] });
+    } else {
+      blocks.push({ kind: 'single', field });
+    }
+  }
+  return blocks;
+}
 
 const emptyForm = { name: '', description: '', image_url: '', price: '', category: '', active: true };
 
@@ -115,6 +138,8 @@ export default function AdminDashboard() {
   const [savedKey, setSavedKey] = useState<string | null>(null);
   const [uploadingContentKey, setUploadingContentKey] = useState<string | null>(null);
   const [openSection, setOpenSection] = useState<string | null>(CONTENT_SECTIONS[0].title);
+  // Last-persisted values, so we can flag fields with unsaved edits.
+  const [baseline, setBaseline] = useState<Record<string, string>>({});
   const [contactPage, setContactPage] = useState(1);
   const [subPage, setSubPage] = useState(1);
 
@@ -139,7 +164,9 @@ export default function AdminDashboard() {
     setSubscribers(Array.isArray(su) ? su : []);
     setContacts(Array.isArray(co) ? co : []);
     setProducts(Array.isArray(pr) ? pr : []);
-    setContent(ct && typeof ct === 'object' && !Array.isArray(ct) ? ct : {});
+    const contentMap = ct && typeof ct === 'object' && !Array.isArray(ct) ? ct : {};
+    setContent(contentMap);
+    setBaseline(contentMap);
   };
 
   // Authentication check - runs once on mount
@@ -212,6 +239,7 @@ export default function AdminDashboard() {
     setContacts([]);
     setProducts([]);
     setContent({});
+    setBaseline({});
   };
 
   const deleteRow = async (type: 'subscribers' | 'contacts', id: number) => {
@@ -295,11 +323,101 @@ export default function AdminDashboard() {
 
   const saveContentKey = async (key: string) => {
     setSavingKey(key);
+    const value = content[key] ?? '';
     try {
-      await fetch(`${API_URL}/admin/content/${encodeURIComponent(key)}`, { method: 'PUT', headers: authHeader(), body: JSON.stringify({ value: content[key] ?? '' }) });
+      await fetch(`${API_URL}/admin/content/${encodeURIComponent(key)}`, { method: 'PUT', headers: authHeader(), body: JSON.stringify({ value }) });
+      setBaseline(b => ({ ...b, [key]: value }));
       setSavedKey(key); setTimeout(() => setSavedKey(null), 2000);
     } finally { setSavingKey(null); }
   };
+
+  const isFieldDirty = (key: string) => (content[key] ?? '') !== (baseline[key] ?? '');
+  const isSectionDirty = (s: ContentSection) => s.fields.some(f => isFieldDirty(f.key));
+
+  const renderSaveButton = (key: string) => {
+    const dirty = isFieldDirty(key);
+    return (
+      <button
+        className={`save-btn ${savedKey === key ? 'saved' : ''} ${dirty ? '' : 'save-btn--clean'}`}
+        onClick={() => saveContentKey(key)}
+        disabled={savingKey === key || (!dirty && savedKey !== key)}
+        title={dirty ? 'Save changes' : 'No changes to save'}
+      >
+        {savingKey === key ? (
+          <Loader size={14} className="spin" />
+        ) : savedKey === key ? (
+          <><Check size={15} /> Saved</>
+        ) : (
+          'Save'
+        )}
+      </button>
+    );
+  };
+
+  const renderContentField = (field: ContentField) => (
+    <div key={field.key} className={`cf-row ${isFieldDirty(field.key) ? 'cf-row--dirty' : ''}`}>
+      <label>
+        {field.label}
+        {isFieldDirty(field.key) && <span className="cf-unsaved">Unsaved</span>}
+      </label>
+      {field.type === 'image' ? (
+        <div className="cf-image-row">
+          <div className="cf-image-preview-wrap">
+            {content[field.key] ? (
+              <div className="uploader-preview">
+                <img src={content[field.key]} alt="preview" />
+                <button type="button" onClick={() => setContent(c => ({ ...c, [field.key]: '' }))} className="remove-img">
+                  <X size={14} />
+                </button>
+              </div>
+            ) : (
+              <label htmlFor={`cimg-${field.key}`} className="uploader-drop-compact">
+                {uploadingContentKey === field.key ? (
+                  <Loader size={18} className="spin" />
+                ) : (
+                  <ImageIcon size={18} />
+                )}
+                <span>{uploadingContentKey === field.key ? 'Uploading…' : 'Upload'}</span>
+              </label>
+            )}
+            <input
+              id={`cimg-${field.key}`}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              disabled={uploadingContentKey === field.key}
+              onChange={e => handleContentImageUpload(e, field.key)}
+            />
+          </div>
+          <div className="cf-image-meta">
+            <input
+              className="url-input"
+              value={content[field.key] ?? ''}
+              onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
+              placeholder="…or paste an image URL"
+            />
+            {renderSaveButton(field.key)}
+          </div>
+        </div>
+      ) : (
+        <div className="cf-input">
+          {field.type === 'textarea' ? (
+            <textarea
+              rows={3}
+              value={content[field.key] ?? ''}
+              onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
+            />
+          ) : (
+            <input
+              value={content[field.key] ?? ''}
+              onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
+            />
+          )}
+          {renderSaveButton(field.key)}
+        </div>
+      )}
+    </div>
+  );
 
   // ── Loading State ──
   if (authState === 'loading') {
@@ -380,6 +498,7 @@ export default function AdminDashboard() {
   ];
 
   const showSearch = activeTab !== 'content' && activeTab !== 'settings';
+  const activeSection = CONTENT_SECTIONS.find(s => s.title === openSection) ?? CONTENT_SECTIONS[0];
 
   return (
     <div className="admin-layout">
@@ -742,91 +861,52 @@ export default function AdminDashboard() {
 
           {/* ── SITE CONTENT ── */}
           {activeTab === 'content' && (
-            <div className="content-wrap">
-              <div className="content-notice">Changes go live immediately after saving. Reload the website to see them.</div>
-              {CONTENT_SECTIONS.map(section => {
-                const open = openSection === section.title;
-                return (
-                  <div key={section.title} className={`accordion ${open ? 'acc-open' : ''}`}>
-                    <button className="accordion-head" onClick={() => setOpenSection(open ? null : section.title)}>
-                      <div>
-                        <h3>{section.title}</h3>
-                        <p>{section.desc}</p>
-                      </div>
-                      <span className="acc-chevron">{open ? '−' : '+'}</span>
-                    </button>
-                    {open && (
-                      <div className="accordion-body">
-                        {section.fields.map(field => (
-                          <div key={field.key} className="cf-row">
-                            <label>{field.label}</label>
-                            <div className="cf-input">
-                              {field.type === 'image' ? (
-                                <div className="image-uploader">
-                                  {content[field.key] ? (
-                                    <div className="uploader-preview">
-                                      <img src={content[field.key]} alt="preview" />
-                                      <button type="button" onClick={() => setContent(c => ({ ...c, [field.key]: '' }))} className="remove-img">
-                                        <X size={14} />
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    <label htmlFor={`cimg-${field.key}`} className="uploader-drop">
-                                      {uploadingContentKey === field.key ? (
-                                        <><Loader size={18} className="spin" /> Uploading…</>
-                                      ) : (
-                                        <><Upload size={18} /> Click to upload image</>
-                                      )}
-                                    </label>
-                                  )}
-                                  <input
-                                    id={`cimg-${field.key}`}
-                                    type="file"
-                                    accept="image/*"
-                                    style={{ display: 'none' }}
-                                    disabled={uploadingContentKey === field.key}
-                                    onChange={e => handleContentImageUpload(e, field.key)}
-                                  />
-                                  <input
-                                    className="url-input"
-                                    value={content[field.key] ?? ''}
-                                    onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
-                                    placeholder="…or paste an image URL"
-                                  />
-                                </div>
-                              ) : field.type === 'textarea' ? (
-                                <textarea
-                                  rows={2}
-                                  value={content[field.key] ?? ''}
-                                  onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
-                                />
-                              ) : (
-                                <input
-                                  value={content[field.key] ?? ''}
-                                  onChange={e => setContent(c => ({ ...c, [field.key]: e.target.value }))}
-                                />
-                              )}
-                              <button
-                                className={`save-btn ${savedKey === field.key ? 'saved' : ''}`}
-                                onClick={() => saveContentKey(field.key)}
-                                disabled={savingKey === field.key}
-                              >
-                                {savingKey === field.key ? (
-                                  <Loader size={14} className="spin" />
-                                ) : savedKey === field.key ? (
-                                  <Check size={15} />
-                                ) : (
-                                  'Save'
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+            <div className="content-layout">
+              {/* Section picker */}
+              <aside className="content-rail">
+                <div className="content-rail-label">Sections</div>
+                {CONTENT_SECTIONS.map(section => (
+                  <button
+                    key={section.title}
+                    className={`rail-item ${activeSection.title === section.title ? 'rail-on' : ''}`}
+                    onClick={() => setOpenSection(section.title)}
+                  >
+                    <span className="rail-icon">{section.icon}</span>
+                    <span className="rail-text">{section.title}</span>
+                    {isSectionDirty(section) && <span className="rail-dot" title="Unsaved changes" />}
+                  </button>
+                ))}
+              </aside>
+
+              {/* Fields for the selected section */}
+              <div className="content-detail">
+                <div className="detail-head">
+                  <span className="detail-icon">{activeSection.icon}</span>
+                  <div>
+                    <h2>{activeSection.title}</h2>
+                    <p>{activeSection.desc}</p>
                   </div>
-                );
-              })}
+                </div>
+
+                <div className="content-notice">
+                  Each field saves on its own. Changes go live immediately — reload the website to see them.
+                </div>
+
+                {groupContentFields(activeSection.fields).map(block =>
+                  block.kind === 'single' ? (
+                    <div key={block.field.key} className="cf-card">
+                      {renderContentField(block.field)}
+                    </div>
+                  ) : (
+                    <div key={block.name} className="cf-card">
+                      <div className="cf-card-label">{block.name}</div>
+                      <div className={`cf-card-body ${block.fields.length === 2 && block.fields.every(f => f.type === 'input') ? 'cf-card-body--pair' : ''}`}>
+                        {block.fields.map(renderContentField)}
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
           )}
         </div>
