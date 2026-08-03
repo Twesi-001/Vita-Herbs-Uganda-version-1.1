@@ -13,7 +13,14 @@ html, body {
 }
 
 /* Contain any horizontal overflow without breaking the sticky header
-   (overflow-x: clip does not create a scroll container). */
+   (overflow-x: clip does not create a scroll container). Set on both html
+   and body: not-yet-revealed .reveal--fade-left/right sections sit
+   translated off their final position until scrolled into view, and that
+   transform still contributes to html's own scrollWidth even when body
+   alone has the clip — some browsers don't propagate body's overflow to
+   the document scroller reliably, leaving the page horizontally
+   scrollable despite body being clipped. */
+html,
 body {
   overflow-x: clip;
 }

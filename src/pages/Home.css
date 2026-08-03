@@ -76,20 +76,40 @@
 
 .btn-outline {
   display: inline-block;
-  background: transparent;
-  color: var(--green, #2e7d32);
+  background: var(--brown, #7a5025);
+  color: white;
   padding: 12px 24px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  border: 2px solid var(--green, #2e7d32);
+  border: 2px solid var(--brown, #7a5025);
   transition: all 0.3s ease;
 }
 
 .btn-outline:hover {
+  background: var(--green, #2e7d32);
+  border-color: var(--green, #2e7d32);
+  color: white;
+}
+
+/* Hero CTAs specifically: brown draws the eye to "View Products",
+   green (site's usual action color) is the secondary "Contact Us". */
+.hero-actions .btn-primary {
+  background: var(--brown, #7a5025);
+}
+
+.hero-actions .btn-primary:hover {
+  background: var(--green, #2e7d32);
+}
+
+.hero-actions .btn-outline {
+  background: var(--green, #2e7d32);
+  border-color: var(--green, #2e7d32);
+}
+
+.hero-actions .btn-outline:hover {
   background: var(--brown, #7a5025);
   border-color: var(--brown, #7a5025);
-  color: white;
 }
 
 .trust-badges {

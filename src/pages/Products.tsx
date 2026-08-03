@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { API_URL } from '../lib/api';
@@ -32,7 +33,12 @@ function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: ()
     };
   }, [onClose]);
 
-  return (
+  // Rendered via a portal straight into <body> — otherwise, when this component
+  // is embedded on the Home page inside a `.reveal` wrapper (which has a CSS
+  // `transform` for the fly-in animation), that ancestor becomes the containing
+  // block for this `position: fixed` overlay instead of the viewport, and the
+  // lightbox can end up positioned off-screen depending on scroll position.
+  return createPortal(
     <div className="lightbox-backdrop" onClick={onClose}>
       <button className="lightbox-close" onClick={onClose} aria-label="Close">✕</button>
       <img
@@ -41,7 +47,8 @@ function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: ()
         className="lightbox-img"
         onClick={e => e.stopPropagation()}
       />
-    </div>
+    </div>,
+    document.body,
   );
 }
 
