@@ -642,7 +642,9 @@
 }
 
 @media (max-width: 768px) {
-  .history-gallery { display: none; }
+  .history-gallery { padding: 0 20px; }
+  .history-img-1, .history-img-2 { height: 220px; }
+  .history-img-2 { margin-top: 30px; margin-left: 8px; }
 
   .about-hero {
     background-attachment: scroll;
