@@ -4,10 +4,10 @@
 }
 
 .socials-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  max-width: 620px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 

@@ -26,8 +26,6 @@ app.use(express.json());
 
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: { message: 'Too many login attempts, try again later' } });
 const publicWriteLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 20, message: { message: 'Too many requests, try again later' } });
-const reviewSubmitLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 10, message: { message: 'Too many reviews submitted, try again later' } });
-const reviewUploadLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { message: 'Too many uploads, try again later' } });
 
 // Health check — also reports whether the DB is reachable.
 app.get('/api/health', async (_req, res) => {
@@ -45,8 +43,7 @@ app.use('/api/inquiries', publicWriteLimiter, inquiriesRouter);
 app.use('/api/admin/login', loginLimiter);
 app.use('/api/admin', adminRouter);
 app.use('/api/content', contentRouter);
-app.use('/api/reviews/upload', reviewUploadLimiter);
-app.use('/api/reviews', reviewSubmitLimiter, reviewsRouter);
+app.use('/api/reviews', reviewsRouter);
 
 // 404 for unknown API routes.
 app.use((_req, res) => {

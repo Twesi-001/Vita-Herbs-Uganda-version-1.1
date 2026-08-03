@@ -1,10 +1,16 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import multer from 'multer';
+import rateLimit from 'express-rate-limit';
 import { query } from '../db';
 import { uploadToCloudinary } from '../lib/cloudinary';
 
 const router = Router();
+
+// Scoped to the POST handlers only — GET / (the public listing every page
+// load fetches) must never be throttled by the submission/upload limits.
+const reviewSubmitLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 10, message: { message: 'Too many reviews submitted, try again later' } });
+const reviewUploadLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { message: 'Too many uploads, try again later' } });
 
 const reviewInput = z
   .object({
@@ -19,7 +25,7 @@ const reviewInput = z
   });
 
 // POST /api/reviews — public submission, always lands as 'pending'.
-router.post('/', async (req, res, next) => {
+router.post('/', reviewSubmitLimiter, async (req, res, next) => {
   const parsed = reviewInput.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ message: 'Invalid review', details: parsed.error.flatten() });
@@ -65,7 +71,7 @@ const upload = multer({
   },
 });
 
-router.post('/upload', (req, res, next) => {
+router.post('/upload', reviewUploadLimiter, (req, res, next) => {
   upload.single('file')(req, res, (err: unknown) => {
     if (err) {
       const message = err instanceof Error ? err.message : 'Upload failed';

@@ -98,7 +98,8 @@
   transform: scale(1.12);
 }
 
-.star-btn.star-on {
+.star-btn.star-on,
+.review-stars[role='radiogroup'] .star-btn.star-on {
   color: #f4b400;
 }
 

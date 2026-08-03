@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import NewsLetter from '../components/ui/NewsLetter'
 import ValueSection from '../components/ui/ValueSection'
 import { Link, useLocation } from 'react-router-dom'
@@ -9,12 +9,41 @@ import { ContactBody } from './Contact'
 import { ReviewsBody } from '../components/ui/ReviewsSection'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSiteContent } from '../hooks/useSiteContent'
+import { API_URL } from '../lib/api'
 import'./Home.css'
+
+interface HeroSlide { src: string; alt: string; }
+
+const DEFAULT_HERO_SLIDE: HeroSlide = { src: '/assets/anti-ulcers.jpeg', alt: 'Kar Anti Ulcer herbal tea' };
 
 function Home(){
     useScrollReveal();
     const get = useSiteContent();
     const location = useLocation();
+    const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([DEFAULT_HERO_SLIDE]);
+    const [heroIdx, setHeroIdx] = useState(0);
+
+    // Pull in live product photos so the hero rotates through real products too.
+    useEffect(() => {
+        fetch(`${API_URL}/products`)
+            .then(r => r.json())
+            .then((data: { name: string; image_url: string | null; active: boolean }[]) => {
+                if (!Array.isArray(data)) return;
+                const productSlides = data
+                    .filter(p => p.active && p.image_url)
+                    .map(p => ({ src: p.image_url as string, alt: p.name }));
+                if (productSlides.length) setHeroSlides([DEFAULT_HERO_SLIDE, ...productSlides]);
+            })
+            .catch(() => {});
+    }, []);
+
+    useEffect(() => {
+        if (heroSlides.length < 2) return;
+        const timer = setInterval(() => {
+            setHeroIdx(i => (i + 1) % heroSlides.length);
+        }, 4500);
+        return () => clearInterval(timer);
+    }, [heroSlides.length]);
 
     // When navigated here with a hash (e.g. /#about), scroll to that section.
     useEffect(() => {
@@ -68,7 +97,26 @@ function Home(){
         </div>
 
         <div className="hero-image">
-          <img src="/assets/anti-ulcers.jpeg" alt="Kar Anti Ulcer herbal tea" className="hero-main-img" />
+          {heroSlides.map((slide, i) => (
+            <img
+              key={slide.src}
+              src={slide.src}
+              alt={slide.alt}
+              className={`hero-main-img ${i === heroIdx ? 'hero-slide-active' : ''}`}
+            />
+          ))}
+          {heroSlides.length > 1 && (
+            <div className="hero-dots">
+              {heroSlides.map((slide, i) => (
+                <button
+                  key={slide.src}
+                  className={`hero-dot ${i === heroIdx ? 'hero-dot-active' : ''}`}
+                  onClick={() => setHeroIdx(i)}
+                  aria-label={`Show slide ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
