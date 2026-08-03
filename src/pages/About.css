@@ -99,9 +99,26 @@
   align-items: stretch;
 }
 
+.history-gallery {
+  display: flex;
+  align-items: flex-start;
+  padding-left: 64px;
+}
+
 .history-img {
   overflow: hidden;
   min-height: 300px;
+}
+
+.history-img-1,
+.history-img-2 {
+  flex: 1 1 50%;
+  height: 380px;
+}
+
+.history-img-2 {
+  margin-top: 40px;
+  margin-left: 10px;
 }
 
 .history-img img {
@@ -605,6 +622,10 @@
     max-width: none;
   }
 
+  .history-gallery { padding: 0 24px; }
+  .history-img-1, .history-img-2 { height: 320px; }
+  .history-img-2 { margin-top: 40px; }
+
   .why-img { order: -1; }
 
   .team-carousel {
@@ -621,7 +642,7 @@
 }
 
 @media (max-width: 768px) {
-  .history-img { display: none; }
+  .history-gallery { display: none; }
 
   .about-hero {
     background-attachment: scroll;

@@ -1,8 +1,20 @@
-import { Routes, Route } from 'react-router-dom';
-import { lazy, Suspense, Component, ReactNode } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { lazy, Suspense, Component, ReactNode, useEffect } from 'react';
 import Header from '../components/ui/Header';
 import Footer from '../components/ui/Footer';
 import BackToTop from '../components/ui/BackToTop';
+
+// React Router doesn't reset scroll position on navigation the way a full
+// page load does — without this, navigating to a new route keeps whatever
+// scroll position the previous page was at. Skip it when a hash is present
+// so in-page anchor links (e.g. /#contact) can still scroll to that section.
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
 
 const Home = lazy(() => import('./Home'));
 const About = lazy(() => import('./About'));
@@ -44,6 +56,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryStat
 function PublicLayout() {
   return (
     <div className="app-container">
+      <ScrollToTop />
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header />
       <main className="main-content" id="main-content">

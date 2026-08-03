@@ -81,8 +81,13 @@ export function AboutBody() {
       <section className="about-history">
         <div className="container">
           <div className="history-grid">
-            <div className="history-img">
-              <img src={get('about.story.image', herbsImg)} alt="KarOrganics herbs" />
+            <div className="history-gallery">
+              <div className="history-img history-img-1">
+                <img src={get('about.story.image', herbsImg)} alt="KarOrganics herbs" />
+              </div>
+              <div className="history-img history-img-2">
+                <img src={get('about.story.image2', herbsImg)} alt="KarOrganics herbal products" />
+              </div>
             </div>
             <div className="history-info">
               <h4>{get('about.story.eyebrow', 'About Us')}</h4>
