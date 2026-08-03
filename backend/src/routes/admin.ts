@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import multer from 'multer';
 import { query } from '../db';
 import { requireAdmin, signToken } from '../middleware/auth';
+import { uploadToCloudinary } from '../lib/cloudinary';
 
 const router = Router();
 
@@ -76,15 +77,17 @@ router.post('/change-password', async (req, res) => {
 // GET /api/admin/stats — dashboard counts.
 router.get('/stats', async (_req, res, next) => {
   try {
-    const [subs, contacts, products] = await Promise.all([
+    const [subs, contacts, products, reviews] = await Promise.all([
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM subscribers'),
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM inquiries'),
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM products'),
+      query<{ c: number }>('SELECT COUNT(*)::int AS c FROM reviews'),
     ]);
     res.json({
       subscribers: subs.rows[0].c,
       contacts: contacts.rows[0].c,
       products: products.rows[0].c,
+      reviews: reviews.rows[0].c,
     });
   } catch (err) {
     next(err);
@@ -146,6 +149,44 @@ router.delete('/contacts/:id', async (req, res, next) => {
   try {
     await query('DELETE FROM inquiries WHERE id = $1', [req.params.id]);
     res.json({ message: 'Contact deleted' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ── Reviews moderation ────────────────────────────────────────────────────────
+
+// GET /api/admin/reviews — all reviews, any status.
+router.get('/reviews', async (_req, res, next) => {
+  try {
+    const { rows } = await query('SELECT * FROM reviews ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PATCH /api/admin/reviews/:id/status
+router.patch('/reviews/:id/status', async (req, res, next) => {
+  const allowed = ['pending', 'approved', 'rejected'];
+  const { status } = req.body;
+  if (!allowed.includes(status)) {
+    res.status(400).json({ message: 'Invalid status value' });
+    return;
+  }
+  try {
+    await query('UPDATE reviews SET status = $1 WHERE id = $2', [status, req.params.id]);
+    res.json({ message: 'Status updated' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE /api/admin/reviews/:id
+router.delete('/reviews/:id', async (req, res, next) => {
+  try {
+    await query('DELETE FROM reviews WHERE id = $1', [req.params.id]);
+    res.json({ message: 'Review deleted' });
   } catch (err) {
     next(err);
   }
@@ -265,46 +306,14 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 
 
 router.post('/upload', requireAdmin, upload.single('file'), async (req, res, next) => {
   try {
-    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-    const apiKey    = process.env.CLOUDINARY_API_KEY;
-    const apiSecret = process.env.CLOUDINARY_API_SECRET;
-
-    if (!cloudName || !apiKey || !apiSecret) {
-      res.status(500).json({ message: 'Cloudinary env vars not configured on server' });
-      return;
-    }
     if (!req.file) {
       res.status(400).json({ message: 'No file uploaded' });
       return;
     }
-
-    const timestamp = Math.floor(Date.now() / 1000).toString();
-    const crypto = await import('crypto');
-    const signature = crypto.createHash('sha1')
-      .update(`folder=karorganics&timestamp=${timestamp}${apiSecret}`)
-      .digest('hex');
-
-    const formData = new FormData();
-    const blob = new Blob([req.file.buffer as unknown as ArrayBuffer], { type: req.file.mimetype });
-    formData.append('file', blob, req.file.originalname);
-    formData.append('api_key', apiKey);
-    formData.append('timestamp', timestamp);
-    formData.append('signature', signature);
-    formData.append('folder', 'karorganics');
-
-    const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-      method: 'POST',
-      body: formData,
-    });
-    const data = await cloudRes.json() as { secure_url?: string; error?: { message: string } };
-
-    if (!data.secure_url) {
-      res.status(500).json({ message: data.error?.message ?? 'Cloudinary upload failed' });
-      return;
-    }
-    res.json({ url: data.secure_url });
+    const url = await uploadToCloudinary(req.file.buffer, req.file.originalname, req.file.mimetype, 'image');
+    res.json({ url });
   } catch (err) {
-    next(err);
+    res.status(500).json({ message: err instanceof Error ? err.message : 'Cloudinary upload failed' });
   }
 });
 

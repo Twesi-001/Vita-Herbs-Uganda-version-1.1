@@ -6,6 +6,7 @@ import Products from './Products'
 import Socials from './Socials'
 import { AboutBody } from './About'
 import { ContactBody } from './Contact'
+import { ReviewsBody } from '../components/ui/ReviewsSection'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSiteContent } from '../hooks/useSiteContent'
 import'./Home.css'
@@ -74,6 +75,7 @@ function Home(){
 
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
     <ValueSection />
+    <section id="reviews" className="home-anchor reveal reveal--fade-up"><ReviewsBody /></section>
     <section id="about" className="home-anchor reveal reveal--fade-left"><AboutBody /></section>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>
     <section id="contact" className="home-anchor reveal reveal--fade-right"><ContactBody /></section>

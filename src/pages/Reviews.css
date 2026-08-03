@@ -1,0 +1,47 @@
+/* REVIEWS PAGE HERO */
+
+.reviews-hero {
+  background:
+    linear-gradient(rgba(15, 42, 15, 0.66), rgba(15, 42, 15, 0.58)),
+    url('../assets/hero-herbs.jpg') center / cover no-repeat fixed;
+  padding: 84px 0;
+  color: #fff;
+}
+
+.reviews-hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  text-align: left;
+}
+
+.reviews-hero .hero-text { max-width: 640px; }
+
+.reviews-hero h1 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .reviews-hero {
+    background-attachment: scroll;
+    padding: 60px 0;
+  }
+  .reviews-hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .reviews-hero h1 { font-size: 26px; }
+}
+
+@media (max-width: 480px) {
+  .reviews-hero h1 { font-size: 22px; }
+}

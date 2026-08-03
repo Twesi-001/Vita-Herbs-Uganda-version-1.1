@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
   Upload, Check, Loader, Menu, X, Download, Search, TrendingUp, KeyRound,
-  Home, Sparkles, Heart, ListChecks, Share2, ImageIcon,
+  Home, Sparkles, Heart, ListChecks, Share2, ImageIcon, Star,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
 import './AdminDashboard.css';
@@ -10,12 +10,14 @@ import './AdminDashboard.css';
 interface Subscriber { id: number; email: string; created_at: string; }
 interface Contact { id: number; name: string; email: string | null; phone: string; product: string; quantity: string; message: string | null; status: string; created_at: string; }
 interface Product { id: number; name: string; description: string; image_url: string | null; price: number | null; category: string | null; active: boolean; created_at: string; }
-interface Stats { subscribers: number; contacts: number; products: number; }
-type Tab = 'products' | 'contacts' | 'subscribers' | 'content' | 'settings';
+interface Review { id: number; name: string; rating: number | null; body: string | null; media_url: string | null; media_type: string | null; status: string; created_at: string; }
+interface Stats { subscribers: number; contacts: number; products: number; reviews: number; }
+type Tab = 'products' | 'contacts' | 'reviews' | 'subscribers' | 'content' | 'settings';
 
 const PAGE_META: Record<Tab, { title: string; subtitle: string }> = {
   products: { title: 'Products', subtitle: 'Add, edit and manage everything customers see in the shop.' },
   contacts: { title: 'Inquiries', subtitle: 'Orders and questions submitted through the contact form.' },
+  reviews: { title: 'Reviews', subtitle: 'Approve or reject customer testimonials before they go live.' },
   subscribers: { title: 'Subscribers', subtitle: 'People who joined your newsletter list.' },
   content: { title: 'Site Content', subtitle: 'Edit the text shown across the public website.' },
   settings: { title: 'Settings', subtitle: 'Manage your admin account and password.' },
@@ -121,8 +123,9 @@ export default function AdminDashboard() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [content, setContent] = useState<Record<string, string>>({});
-  const [stats, setStats] = useState<Stats>({ subscribers: 0, contacts: 0, products: 0 });
+  const [stats, setStats] = useState<Stats>({ subscribers: 0, contacts: 0, products: 0, reviews: 0 });
   const [activeTab, setActiveTab] = useState<Tab>('products');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -142,6 +145,7 @@ export default function AdminDashboard() {
   const [baseline, setBaseline] = useState<Record<string, string>>({});
   const [contactPage, setContactPage] = useState(1);
   const [subPage, setSubPage] = useState(1);
+  const [reviewPage, setReviewPage] = useState(1);
 
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwSaving, setPwSaving] = useState(false);
@@ -153,17 +157,19 @@ export default function AdminDashboard() {
 
   const loadAll = async (tok: string) => {
     const h = { Authorization: `Bearer ${tok}` };
-    const [st, su, co, pr, ct] = await Promise.all([
+    const [st, su, co, pr, rv, ct] = await Promise.all([
       fetch(`${API_URL}/admin/stats`, { headers: h }).then(r => r.json()),
       fetch(`${API_URL}/admin/subscribers`, { headers: h }).then(r => r.json()),
       fetch(`${API_URL}/admin/contacts`, { headers: h }).then(r => r.json()),
       fetch(`${API_URL}/admin/products`, { headers: h }).then(r => r.json()),
+      fetch(`${API_URL}/admin/reviews`, { headers: h }).then(r => r.json()),
       fetch(`${API_URL}/content`).then(r => r.json()),
     ]);
-    setStats(st && typeof st === 'object' ? st : { subscribers: 0, contacts: 0, products: 0 });
+    setStats(st && typeof st === 'object' ? st : { subscribers: 0, contacts: 0, products: 0, reviews: 0 });
     setSubscribers(Array.isArray(su) ? su : []);
     setContacts(Array.isArray(co) ? co : []);
     setProducts(Array.isArray(pr) ? pr : []);
+    setReviews(Array.isArray(rv) ? rv : []);
     const contentMap = ct && typeof ct === 'object' && !Array.isArray(ct) ? ct : {};
     setContent(contentMap);
     setBaseline(contentMap);
@@ -238,11 +244,12 @@ export default function AdminDashboard() {
     setSubscribers([]);
     setContacts([]);
     setProducts([]);
+    setReviews([]);
     setContent({});
     setBaseline({});
   };
 
-  const deleteRow = async (type: 'subscribers' | 'contacts', id: number) => {
+  const deleteRow = async (type: 'subscribers' | 'contacts' | 'reviews', id: number) => {
     if (!confirm('Delete this entry?')) return;
     await fetch(`${API_URL}/admin/${type}/${id}`, { method: 'DELETE', headers: authHeader() });
     await loadAll(token());
@@ -250,6 +257,15 @@ export default function AdminDashboard() {
 
   const updateInquiryStatus = async (id: number, status: string) => {
     await fetch(`${API_URL}/admin/contacts/${id}/status`, {
+      method: 'PATCH',
+      headers: authHeader(),
+      body: JSON.stringify({ status }),
+    });
+    await loadAll(token());
+  };
+
+  const updateReviewStatus = async (id: number, status: string) => {
+    await fetch(`${API_URL}/admin/reviews/${id}/status`, {
       method: 'PATCH',
       headers: authHeader(),
       body: JSON.stringify({ status }),
@@ -482,16 +498,20 @@ export default function AdminDashboard() {
   const filteredProducts = q ? products.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)) : products;
   const filteredContacts = q ? contacts.filter(c => c.name.toLowerCase().includes(q) || c.phone.includes(q) || c.product.toLowerCase().includes(q)) : contacts;
   const filteredSubs = q ? subscribers.filter(s => s.email.toLowerCase().includes(q)) : subscribers;
+  const filteredReviews = q ? reviews.filter(r => r.name.toLowerCase().includes(q) || (r.body ?? '').toLowerCase().includes(q)) : reviews;
 
   const PAGE_SIZE = 10;
   const pagedContacts = filteredContacts.slice((contactPage - 1) * PAGE_SIZE, contactPage * PAGE_SIZE);
   const pagedSubs = filteredSubs.slice((subPage - 1) * PAGE_SIZE, subPage * PAGE_SIZE);
+  const pagedReviews = filteredReviews.slice((reviewPage - 1) * PAGE_SIZE, reviewPage * PAGE_SIZE);
   const contactPages = Math.ceil(filteredContacts.length / PAGE_SIZE);
   const subPages = Math.ceil(filteredSubs.length / PAGE_SIZE);
+  const reviewPages = Math.ceil(filteredReviews.length / PAGE_SIZE);
 
   const NAV: { tab: Tab; icon: React.ReactNode; label: string; count?: number }[] = [
     { tab: 'products', icon: <Package size={19} />, label: 'Products', count: products.length },
     { tab: 'contacts', icon: <MessageSquare size={19} />, label: 'Inquiries', count: contacts.length },
+    { tab: 'reviews', icon: <Star size={19} />, label: 'Reviews', count: reviews.length },
     { tab: 'subscribers', icon: <Users size={19} />, label: 'Subscribers', count: subscribers.length },
     { tab: 'content', icon: <FileEdit size={19} />, label: 'Site Content' },
     { tab: 'settings', icon: <KeyRound size={19} />, label: 'Settings' },
@@ -583,12 +603,16 @@ export default function AdminDashboard() {
               <span className="pill-icon pill-blue"><MessageSquare size={18} /></span>
               <span className="pill-body"><b>{stats.contacts}</b><small>Inquiries</small></span>
             </button>
+            <button className={`stat-pill ${activeTab === 'reviews' ? 'pill-on' : ''}`} onClick={() => setActiveTab('reviews')}>
+              <span className="pill-icon pill-purple"><Star size={18} /></span>
+              <span className="pill-body"><b>{stats.reviews}</b><small>Reviews</small></span>
+            </button>
             <button className={`stat-pill ${activeTab === 'subscribers' ? 'pill-on' : ''}`} onClick={() => setActiveTab('subscribers')}>
               <span className="pill-icon pill-amber"><Users size={18} /></span>
               <span className="pill-body"><b>{stats.subscribers}</b><small>Subscribers</small></span>
             </button>
             <div className="stat-pill stat-static">
-              <span className="pill-icon pill-purple"><TrendingUp size={18} /></span>
+              <span className="pill-icon pill-green"><TrendingUp size={18} /></span>
               <span className="pill-body"><b>{products.filter(p => p.active).length}</b><small>Live products</small></span>
             </div>
           </div>
@@ -773,6 +797,57 @@ export default function AdminDashboard() {
                   <button disabled={contactPage === 1} onClick={() => setContactPage(p => p - 1)} className="page-btn">‹ Prev</button>
                   <span className="page-info">{contactPage} / {contactPages}</span>
                   <button disabled={contactPage === contactPages} onClick={() => setContactPage(p => p + 1)} className="page-btn">Next ›</button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── REVIEWS ── */}
+          {activeTab === 'reviews' && (
+            <div className="panel">
+              {filteredReviews.length === 0 ? (
+                <div className="empty-state"><Star size={40} /><h3>{q ? 'No reviews match your search' : 'No reviews yet'}</h3></div>
+              ) : (
+                <div className="table-scroll">
+                  <table className="data-table">
+                    <thead><tr><th>Reviewer</th><th>Rating</th><th>Review</th><th>Media</th><th>Status</th><th>Date</th><th></th></tr></thead>
+                    <tbody>
+                      {pagedReviews.map(r => (
+                        <tr key={r.id}>
+                          <td><div className="cell-strong">{r.name}</div></td>
+                          <td>{r.rating != null ? '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) : '—'}</td>
+                          <td className="cell-sub cell-msg">{r.body || '—'}</td>
+                          <td>
+                            {r.media_url && r.media_type === 'video' ? (
+                              <a href={r.media_url} target="_blank" rel="noreferrer">
+                                <video src={r.media_url} muted playsInline style={{ width: 64, height: 48, objectFit: 'cover', borderRadius: 6 }} />
+                              </a>
+                            ) : '—'}
+                          </td>
+                          <td>
+                            <select
+                              className={`status-select status-${r.status ?? 'pending'}`}
+                              value={r.status ?? 'pending'}
+                              onChange={e => updateReviewStatus(r.id, e.target.value)}
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="approved">Approved</option>
+                              <option value="rejected">Rejected</option>
+                            </select>
+                          </td>
+                          <td className="cell-sub">{new Date(r.created_at).toLocaleDateString()}</td>
+                          <td><button className="icon-btn icon-danger" onClick={() => deleteRow('reviews', r.id)}><Trash2 size={15} /></button></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {reviewPages > 1 && (
+                <div className="pagination">
+                  <button disabled={reviewPage === 1} onClick={() => setReviewPage(p => p - 1)} className="page-btn">‹ Prev</button>
+                  <span className="page-info">{reviewPage} / {reviewPages}</span>
+                  <button disabled={reviewPage === reviewPages} onClick={() => setReviewPage(p => p + 1)} className="page-btn">Next ›</button>
                 </div>
               )}
             </div>
