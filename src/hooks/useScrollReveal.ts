@@ -17,8 +17,12 @@ export function useScrollReveal() {
         });
       },
       {
-        threshold: 0.12,      // trigger when 12% of element is visible
-        rootMargin: '0px 0px -40px 0px', // slight bottom offset for earlier trigger
+        threshold: 0,
+        // Positive bottom margin extends the observed area below the actual
+        // viewport, so the reveal fires while the section is still below the
+        // fold — giving the 0.8s fade-in time to finish before the user
+        // scrolls it into view, instead of seeing it appear blank then fly in.
+        rootMargin: '0px 0px 200px 0px',
       }
     );
 
