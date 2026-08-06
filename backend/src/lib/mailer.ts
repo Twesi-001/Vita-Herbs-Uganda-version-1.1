@@ -19,6 +19,12 @@ function getTransporter() {
   return transporter;
 }
 
+export interface BroadcastAttachment {
+  filename: string;
+  content: Buffer;
+  contentType: string;
+}
+
 /**
  * Sends one email to the configured sender's own address with every
  * recipient BCC'd, so subscribers never see each other's addresses.
@@ -29,6 +35,7 @@ export async function sendBroadcastEmail(
   recipients: string[],
   subject: string,
   textBody: string,
+  attachments: BroadcastAttachment[] = [],
 ): Promise<void> {
   const user = process.env.EMAIL_USER;
   const transport = getTransporter();
@@ -39,5 +46,6 @@ export async function sendBroadcastEmail(
     bcc: recipients,
     subject,
     text: textBody,
+    attachments,
   });
 }

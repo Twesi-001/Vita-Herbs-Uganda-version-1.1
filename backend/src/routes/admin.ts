@@ -136,8 +136,37 @@ const broadcastInput = z.object({
   message: z.string().min(1).max(10000),
 });
 
+const ALLOWED_ATTACHMENT_MIME = [
+  'application/pdf',
+  'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+const uploadAttachments = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024, files: 5 },
+  fileFilter: (_req, file, cb) => {
+    if (!ALLOWED_ATTACHMENT_MIME.includes(file.mimetype)) {
+      cb(new Error('Only PDF, image, Word, or Excel files are allowed as attachments'));
+      return;
+    }
+    cb(null, true);
+  },
+});
+
 // POST /api/admin/subscribers/broadcast — email every subscriber at once.
-router.post('/subscribers/broadcast', async (req, res, next) => {
+router.post('/subscribers/broadcast', (req, res, next) => {
+  uploadAttachments.array('attachments', 5)(req, res, (err: unknown) => {
+    if (err) {
+      const message = err instanceof Error ? err.message : 'Upload failed';
+      res.status(400).json({ message });
+      return;
+    }
+    next();
+  });
+}, async (req, res, next) => {
   const parsed = broadcastInput.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ message: 'Subject and message are required' });
@@ -150,7 +179,9 @@ router.post('/subscribers/broadcast', async (req, res, next) => {
       res.status(400).json({ message: 'There are no subscribers to email yet' });
       return;
     }
-    await sendBroadcastEmail(recipients, parsed.data.subject, parsed.data.message);
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const attachments = files.map((f) => ({ filename: f.originalname, content: f.buffer, contentType: f.mimetype }));
+    await sendBroadcastEmail(recipients, parsed.data.subject, parsed.data.message, attachments);
     res.json({ message: `Sent to ${recipients.length} subscriber${recipients.length === 1 ? '' : 's'}` });
   } catch (err) {
     if (err instanceof Error && err.message.includes('EMAIL_USER')) {
@@ -261,6 +292,20 @@ router.get('/export/contacts', async (_req, res, next) => {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="contacts.csv"');
     res.send(toCsv(['id', 'name', 'email', 'phone', 'product', 'quantity', 'message', 'created_at'], rows));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/admin/export/products?token=...  -> CSV download
+router.get('/export/products', async (_req, res, next) => {
+  try {
+    const { rows } = await query(
+      'SELECT id, name, description, category, price, active, created_at FROM products ORDER BY id',
+    );
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="products.csv"');
+    res.send(toCsv(['id', 'name', 'description', 'category', 'price', 'active', 'created_at'], rows));
   } catch (err) {
     next(err);
   }

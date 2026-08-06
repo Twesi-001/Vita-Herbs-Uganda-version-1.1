@@ -3,7 +3,9 @@ import {
   Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
   Upload, Check, Loader, Menu, X, Download, Search, TrendingUp, KeyRound,
   Home, Sparkles, Heart, ListChecks, Share2, ImageIcon, Star, Mail, Send,
-  Video as VideoIcon, LayoutDashboard, ArrowRight,
+  Video as VideoIcon, LayoutDashboard, ArrowRight, Paperclip,
+  ChevronsLeft, Maximize, Minimize, Bell, Settings as SettingsIcon, ChevronDown,
+  CalendarDays, ArrowLeft,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
 import './AdminDashboard.css';
@@ -148,7 +150,15 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({ subscribers: 0, contacts: 0, products: 0, reviews: 0, videos: 0 });
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [search, setSearch] = useState('');
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -173,6 +183,7 @@ export default function AdminDashboard() {
   const [contactPage, setContactPage] = useState(1);
   const [subPage, setSubPage] = useState(1);
   const [reviewPage, setReviewPage] = useState(1);
+  const [productPage, setProductPage] = useState(1);
 
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwSaving, setPwSaving] = useState(false);
@@ -181,8 +192,10 @@ export default function AdminDashboard() {
 
   const [showBroadcast, setShowBroadcast] = useState(false);
   const [broadcastForm, setBroadcastForm] = useState({ subject: '', message: '' });
+  const [broadcastAttachments, setBroadcastAttachments] = useState<File[]>([]);
   const [broadcastSending, setBroadcastSending] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const broadcastFileRef = useRef<HTMLInputElement>(null);
 
   const token = () => localStorage.getItem('adminToken') ?? '';
   const authHeader = () => ({ Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' });
@@ -242,7 +255,43 @@ export default function AdminDashboard() {
   }, []);
 
   // reset search when switching tabs
-  useEffect(() => { setSearch(''); setSidebarOpen(false); }, [activeTab]);
+  useEffect(() => { setSearch(''); setSidebarOpen(false); setShowNotifications(false); setShowProfileMenu(false); }, [activeTab]);
+
+  // Ctrl/Cmd+K focuses the search box, matching the on-screen hint.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  };
+
+  // Close the notifications/profile dropdowns when clicking outside them.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setShowNotifications(false);
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setShowProfileMenu(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -308,7 +357,7 @@ export default function AdminDashboard() {
     await loadAll(token());
   };
 
-  const exportCSV = async (type: 'subscribers' | 'contacts') => {
+  const exportCSV = async (type: 'subscribers' | 'contacts' | 'products') => {
     const res = await fetch(`${API_URL}/admin/export/${type}`, { headers: authHeader() });
     if (!res.ok) return;
     const blob = await res.blob();
@@ -318,6 +367,20 @@ export default function AdminDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  const addBroadcastAttachments = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length) setBroadcastAttachments(prev => [...prev, ...files]);
+    if (broadcastFileRef.current) broadcastFileRef.current.value = '';
+  };
+  const removeBroadcastAttachment = (index: number) => {
+    setBroadcastAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+  const closeBroadcastForm = () => {
+    setShowBroadcast(false);
+    setBroadcastForm({ subject: '', message: '' });
+    setBroadcastAttachments([]);
+  };
+
   const sendBroadcast = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!broadcastForm.subject.trim() || !broadcastForm.message.trim()) return;
@@ -325,15 +388,20 @@ export default function AdminDashboard() {
     setBroadcastSending(true);
     setBroadcastMsg(null);
     try {
+      const fd = new FormData();
+      fd.append('subject', broadcastForm.subject);
+      fd.append('message', broadcastForm.message);
+      broadcastAttachments.forEach(file => fd.append('attachments', file));
       const r = await fetch(`${API_URL}/admin/subscribers/broadcast`, {
         method: 'POST',
-        headers: authHeader(),
-        body: JSON.stringify(broadcastForm),
+        headers: { Authorization: `Bearer ${token()}` },
+        body: fd,
       });
       const d = await r.json() as { message?: string };
       if (r.ok) {
         setBroadcastMsg({ type: 'success', text: d.message ?? 'Email sent' });
         setBroadcastForm({ subject: '', message: '' });
+        setBroadcastAttachments([]);
         setShowBroadcast(false);
       } else {
         setBroadcastMsg({ type: 'error', text: d.message ?? 'Failed to send' });
@@ -588,19 +656,31 @@ export default function AdminDashboard() {
   const pagedContacts = filteredContacts.slice((contactPage - 1) * PAGE_SIZE, contactPage * PAGE_SIZE);
   const pagedSubs = filteredSubs.slice((subPage - 1) * PAGE_SIZE, subPage * PAGE_SIZE);
   const pagedReviews = filteredReviews.slice((reviewPage - 1) * PAGE_SIZE, reviewPage * PAGE_SIZE);
+  const pagedProducts = filteredProducts.slice((productPage - 1) * PAGE_SIZE, productPage * PAGE_SIZE);
   const contactPages = Math.ceil(filteredContacts.length / PAGE_SIZE);
   const subPages = Math.ceil(filteredSubs.length / PAGE_SIZE);
   const reviewPages = Math.ceil(filteredReviews.length / PAGE_SIZE);
+  const productPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
-  const NAV: { tab: Tab; icon: React.ReactNode; label: string; count?: number }[] = [
-    { tab: 'dashboard', icon: <LayoutDashboard size={19} />, label: 'Dashboard' },
-    { tab: 'products', icon: <Package size={19} />, label: 'Products', count: products.length },
-    { tab: 'contacts', icon: <MessageSquare size={19} />, label: 'Inquiries', count: contacts.length },
-    { tab: 'reviews', icon: <Star size={19} />, label: 'Reviews', count: reviews.length },
-    { tab: 'videos', icon: <VideoIcon size={19} />, label: 'Videos', count: videos.length },
-    { tab: 'subscribers', icon: <Users size={19} />, label: 'Subscribers', count: subscribers.length },
-    { tab: 'content', icon: <FileEdit size={19} />, label: 'Site Content' },
-    { tab: 'settings', icon: <KeyRound size={19} />, label: 'Settings' },
+  type NavItem = { tab: Tab; icon: React.ReactNode; label: string; count?: number; onSelect?: () => void; isActive?: boolean };
+  const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
+    { label: 'Overview', items: [
+      { tab: 'dashboard', icon: <LayoutDashboard size={19} />, label: 'Dashboard' },
+    ]},
+    { label: 'Catalog', items: [
+      { tab: 'products', icon: <Package size={19} />, label: 'Products', count: products.length, onSelect: closeForm, isActive: activeTab === 'products' && !showForm },
+      { tab: 'products', icon: <Plus size={19} />, label: 'Create Product', onSelect: openAddForm, isActive: activeTab === 'products' && showForm },
+      { tab: 'videos', icon: <VideoIcon size={19} />, label: 'Videos', count: videos.length },
+    ]},
+    { label: 'Customers', items: [
+      { tab: 'contacts', icon: <MessageSquare size={19} />, label: 'Inquiries', count: contacts.length },
+      { tab: 'reviews', icon: <Star size={19} />, label: 'Reviews', count: reviews.length },
+      { tab: 'subscribers', icon: <Users size={19} />, label: 'Subscribers', count: subscribers.length },
+    ]},
+    { label: 'Settings', items: [
+      { tab: 'content', icon: <FileEdit size={19} />, label: 'Site Content' },
+      { tab: 'settings', icon: <KeyRound size={19} />, label: 'Account' },
+    ]},
   ];
 
   const pendingReviews = reviews.filter(r => (r.status ?? 'pending') === 'pending');
@@ -608,7 +688,7 @@ export default function AdminDashboard() {
   const activeSection = CONTENT_SECTIONS.find(s => s.title === openSection) ?? CONTENT_SECTIONS[0];
 
   return (
-    <div className="admin-layout">
+    <div className={`admin-layout ${sidebarCollapsed ? 'layout-collapsed' : ''}`}>
       {/* ── Mobile overlay ── */}
       {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
 
@@ -616,40 +696,48 @@ export default function AdminDashboard() {
       <aside className={`admin-sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-brand">
           <img src="/assets/logo.jpeg" alt="Kar Organics" className="brand-logo-img" />
-          <div>
+          <div className="brand-text">
             <div className="brand-name">Kar Organics</div>
             <div className="brand-sub">Admin Panel</div>
           </div>
+          <button className="sidebar-collapse-btn" onClick={() => setSidebarCollapsed(v => !v)} title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+            <ChevronsLeft size={16} />
+          </button>
           <button className="sidebar-close" onClick={() => setSidebarOpen(false)}><X size={20} /></button>
         </div>
 
         <nav className="sidebar-nav">
-          <div className="nav-section-label">Manage</div>
-          {NAV.map(({ tab, icon, label, count }) => (
-            <div key={tab} className="nav-group">
-              <button
-                className={`nav-item ${activeTab === tab ? 'nav-active' : ''}`}
-                onClick={() => setActiveTab(tab)}
-              >
-                <span className="nav-icon">{icon}</span>
-                <span className="nav-label">{label}</span>
-                {count !== undefined && <span className="nav-badge">{count}</span>}
-              </button>
-              {tab === 'content' && activeTab === 'content' && (
-                <div className="nav-submenu">
-                  {CONTENT_SECTIONS.map(section => (
-                    <button
-                      key={section.title}
-                      className={`nav-subitem ${openSection === section.title ? 'nav-subitem-active' : ''}`}
-                      onClick={() => setOpenSection(section.title)}
-                    >
-                      <span className="nav-subicon">{section.icon}</span>
-                      <span className="nav-sublabel">{section.title}</span>
-                      {isSectionDirty(section) && <span className="rail-dot" title="Unsaved changes" />}
-                    </button>
-                  ))}
+          {NAV_GROUPS.map(group => (
+            <div key={group.label} className="nav-section">
+              <div className="nav-section-label">{group.label}</div>
+              {group.items.map(({ tab, icon, label, count, onSelect, isActive }) => (
+                <div key={label} className="nav-group">
+                  <button
+                    className={`nav-item ${(isActive ?? activeTab === tab) ? 'nav-active' : ''}`}
+                    onClick={() => { setActiveTab(tab); onSelect?.(); }}
+                    title={sidebarCollapsed ? label : undefined}
+                  >
+                    <span className="nav-icon">{icon}</span>
+                    <span className="nav-label">{label}</span>
+                    {count !== undefined && <span className="nav-badge">{count}</span>}
+                  </button>
+                  {tab === 'content' && activeTab === 'content' && (
+                    <div className="nav-submenu">
+                      {CONTENT_SECTIONS.map(section => (
+                        <button
+                          key={section.title}
+                          className={`nav-subitem ${openSection === section.title ? 'nav-subitem-active' : ''}`}
+                          onClick={() => setOpenSection(section.title)}
+                        >
+                          <span className="nav-subicon">{section.icon}</span>
+                          <span className="nav-sublabel">{section.title}</span>
+                          {isSectionDirty(section) && <span className="rail-dot" title="Unsaved changes" />}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
           ))}
         </nav>
@@ -676,24 +764,31 @@ export default function AdminDashboard() {
               <div className="search-box">
                 <Search size={16} />
                 <input
+                  ref={searchRef}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search…"
                 />
+                <kbd className="search-kbd">Ctrl K</kbd>
               </div>
             )}
-            {activeTab === 'products' && (
-              <button className="btn btn-primary" onClick={openAddForm}>
+            {(activeTab === 'dashboard' || activeTab === 'products') && (
+              <button className="btn btn-primary" onClick={() => { setActiveTab('products'); openAddForm(); }}>
                 <Plus size={16} /> Add Product
               </button>
             )}
-            {activeTab === 'videos' && (
-              <button className="btn btn-primary" onClick={openAddVideoForm}>
+            {(activeTab === 'dashboard' || activeTab === 'videos') && (
+              <button className="btn btn-outline" onClick={() => { setActiveTab('videos'); openAddVideoForm(); }}>
                 <Plus size={16} /> Add Video
               </button>
             )}
-            {(activeTab === 'contacts' || activeTab === 'subscribers') && (
-              <button className="btn btn-outline" onClick={() => exportCSV(activeTab as 'subscribers' | 'contacts')}>
+            {activeTab === 'dashboard' && (
+              <button className="btn btn-primary" onClick={() => { setActiveTab('subscribers'); setShowBroadcast(true); }}>
+                <Mail size={16} /> Email Subscribers
+              </button>
+            )}
+            {(activeTab === 'contacts' || activeTab === 'subscribers' || activeTab === 'products') && (
+              <button className="btn btn-outline" onClick={() => exportCSV(activeTab as 'subscribers' | 'contacts' | 'products')}>
                 <Download size={16} /> Export
               </button>
             )}
@@ -702,6 +797,71 @@ export default function AdminDashboard() {
                 <Mail size={16} /> Email Subscribers
               </button>
             )}
+
+            <div className="topbar-icons">
+              <button className="icon-chip" onClick={toggleFullscreen} title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}>
+                {isFullscreen ? <Minimize size={17} /> : <Maximize size={17} />}
+              </button>
+
+              <div className="topbar-dropdown" ref={notifRef}>
+                <button
+                  className="icon-chip"
+                  onClick={() => { setShowNotifications(v => !v); setShowProfileMenu(false); }}
+                  title="Notifications"
+                >
+                  <Bell size={17} />
+                  {pendingReviews.length > 0 && <span className="icon-chip-badge">{pendingReviews.length}</span>}
+                </button>
+                {showNotifications && (
+                  <div className="topbar-menu topbar-menu--wide">
+                    <div className="topbar-menu-head">Notifications</div>
+                    {pendingReviews.length === 0 ? (
+                      <p className="topbar-menu-empty">You're all caught up.</p>
+                    ) : (
+                      <ul className="topbar-menu-list">
+                        {pendingReviews.slice(0, 5).map(r => (
+                          <li key={r.id}>
+                            <span className="dash-avatar dash-avatar--purple">{r.name.charAt(0).toUpperCase()}</span>
+                            <div className="dash-list-main">
+                              <div className="cell-strong">{r.name}</div>
+                              <div className="cell-sub">left a review awaiting approval</div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <button className="topbar-menu-footer" onClick={() => { setActiveTab('reviews'); setShowNotifications(false); }}>
+                      View all reviews
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button className="icon-chip" onClick={() => setActiveTab('settings')} title="Settings">
+                <SettingsIcon size={17} />
+              </button>
+
+              <div className="topbar-dropdown" ref={profileRef}>
+                <button
+                  className="profile-chip"
+                  onClick={() => { setShowProfileMenu(v => !v); setShowNotifications(false); }}
+                >
+                  <span className="profile-avatar">A</span>
+                  <ChevronDown size={14} />
+                </button>
+                {showProfileMenu && (
+                  <div className="topbar-menu">
+                    <div className="topbar-menu-head">Admin</div>
+                    <button className="topbar-menu-item" onClick={() => { setActiveTab('settings'); setShowProfileMenu(false); }}>
+                      <KeyRound size={15} /> Account settings
+                    </button>
+                    <button className="topbar-menu-item topbar-menu-item--danger" onClick={handleLogout}>
+                      <LogOut size={15} /> Log out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </header>
 
@@ -709,30 +869,78 @@ export default function AdminDashboard() {
           {/* ── DASHBOARD ── */}
           {activeTab === 'dashboard' && (
             <>
-              <div className="stat-strip">
-                <button className="stat-pill" onClick={() => setActiveTab('products')}>
-                  <span className="pill-icon pill-green"><Package size={18} /></span>
-                  <span className="pill-body"><b>{stats.products}</b><small>Products</small></span>
+              <div className="dash-welcome">
+                <div>
+                  <h2>Welcome back</h2>
+                  <p>Here's what's happening with your store.</p>
+                </div>
+                <div className="dash-date-pill">
+                  <CalendarDays size={15} />
+                  <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                </div>
+              </div>
+
+              <div className="stat-card-row">
+                <button className="stat-card stat-card--green" onClick={() => setActiveTab('products')}>
+                  <span className="stat-card-icon"><Package size={22} /></span>
+                  <div className="stat-card-body">
+                    <p>Products</p>
+                    <h4>{stats.products}</h4>
+                  </div>
                 </button>
-                <button className="stat-pill" onClick={() => setActiveTab('contacts')}>
-                  <span className="pill-icon pill-blue"><MessageSquare size={18} /></span>
-                  <span className="pill-body"><b>{stats.contacts}</b><small>Inquiries</small></span>
+                <button className="stat-card stat-card--navy" onClick={() => setActiveTab('contacts')}>
+                  <span className="stat-card-icon"><MessageSquare size={22} /></span>
+                  <div className="stat-card-body">
+                    <p>Inquiries</p>
+                    <h4>{stats.contacts}</h4>
+                  </div>
                 </button>
-                <button className="stat-pill" onClick={() => setActiveTab('reviews')}>
-                  <span className="pill-icon pill-purple"><Star size={18} /></span>
-                  <span className="pill-body"><b>{stats.reviews}</b><small>Reviews</small></span>
+                <button className="stat-card stat-card--purple" onClick={() => setActiveTab('reviews')}>
+                  <span className="stat-card-icon"><Star size={22} /></span>
+                  <div className="stat-card-body">
+                    <p>Reviews</p>
+                    <h4>{stats.reviews}</h4>
+                  </div>
                 </button>
-                <button className="stat-pill" onClick={() => setActiveTab('videos')}>
-                  <span className="pill-icon pill-blue"><VideoIcon size={18} /></span>
-                  <span className="pill-body"><b>{stats.videos}</b><small>Videos</small></span>
+                <button className="stat-card stat-card--amber" onClick={() => setActiveTab('subscribers')}>
+                  <span className="stat-card-icon"><Users size={22} /></span>
+                  <div className="stat-card-body">
+                    <p>Subscribers</p>
+                    <h4>{stats.subscribers}</h4>
+                  </div>
                 </button>
-                <button className="stat-pill" onClick={() => setActiveTab('subscribers')}>
-                  <span className="pill-icon pill-amber"><Users size={18} /></span>
-                  <span className="pill-body"><b>{stats.subscribers}</b><small>Subscribers</small></span>
-                </button>
-                <div className="stat-pill stat-static">
-                  <span className="pill-icon pill-green"><TrendingUp size={18} /></span>
-                  <span className="pill-body"><b>{products.filter(p => p.active).length}</b><small>Live products</small></span>
+              </div>
+
+              <div className="metric-card-row">
+                <div className="metric-card">
+                  <div className="metric-card-top">
+                    <div><h4>{stats.videos}</h4><p>Videos</p></div>
+                    <span className="metric-icon metric-icon--blue"><VideoIcon size={17} /></span>
+                  </div>
+                  <div className="metric-card-footer">
+                    <span>Company &amp; product videos</span>
+                    <button onClick={() => setActiveTab('videos')}>View all</button>
+                  </div>
+                </div>
+                <div className="metric-card">
+                  <div className="metric-card-top">
+                    <div><h4>{products.filter(p => p.active).length}</h4><p>Live Products</p></div>
+                    <span className="metric-icon metric-icon--green"><TrendingUp size={17} /></span>
+                  </div>
+                  <div className="metric-card-footer">
+                    <span>Visible on the website</span>
+                    <button onClick={() => setActiveTab('products')}>View all</button>
+                  </div>
+                </div>
+                <div className="metric-card">
+                  <div className="metric-card-top">
+                    <div><h4>{pendingReviews.length}</h4><p>Pending Reviews</p></div>
+                    <span className="metric-icon metric-icon--purple"><Star size={17} /></span>
+                  </div>
+                  <div className="metric-card-footer">
+                    <span>Awaiting approval</span>
+                    <button onClick={() => setActiveTab('reviews')}>View all</button>
+                  </div>
                 </div>
               </div>
 
@@ -748,7 +956,8 @@ export default function AdminDashboard() {
                     <ul className="dashboard-list">
                       {contacts.slice(0, 5).map(c => (
                         <li key={c.id}>
-                          <div><div className="cell-strong">{c.name}</div><div className="cell-sub">{c.product}</div></div>
+                          <span className="dash-avatar dash-avatar--blue">{c.name.charAt(0).toUpperCase()}</span>
+                          <div className="dash-list-main"><div className="cell-strong">{c.name}</div><div className="cell-sub">{c.product}</div></div>
                           <span className="cell-sub">{new Date(c.created_at).toLocaleDateString()}</span>
                         </li>
                       ))}
@@ -767,7 +976,8 @@ export default function AdminDashboard() {
                     <ul className="dashboard-list">
                       {pendingReviews.slice(0, 5).map(r => (
                         <li key={r.id}>
-                          <div><div className="cell-strong">{r.name}</div><div className="cell-sub">{r.rating != null ? '★'.repeat(r.rating) : 'No rating'}</div></div>
+                          <span className="dash-avatar dash-avatar--purple">{r.name.charAt(0).toUpperCase()}</span>
+                          <div className="dash-list-main"><div className="cell-strong">{r.name}</div><div className="cell-sub">{r.rating != null ? '★'.repeat(r.rating) : 'No rating'}</div></div>
                           <span className="cell-sub">{new Date(r.created_at).toLocaleDateString()}</span>
                         </li>
                       ))}
@@ -779,142 +989,181 @@ export default function AdminDashboard() {
           )}
 
           {/* ── PRODUCTS ── */}
-          {activeTab === 'products' && (
-            <>
-              {showForm && (
-                <div className="panel form-panel" ref={formPanelRef}>
-                  <div className="panel-head">
-                    <h2>{editId ? 'Edit Product' : 'New Product'}</h2>
-                    <button className="icon-btn icon-ghost" onClick={closeForm}><X size={18} /></button>
-                  </div>
-                  <form onSubmit={saveProduct} className="product-form">
-                    <div className="form-grid">
-                      <div className="field">
-                        <label>Product Name <span>*</span></label>
-                        <input
-                          required
-                          value={form.name}
-                          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                          placeholder="e.g. Kar Detox Extract"
-                        />
-                      </div>
-                      <div className="field">
-                        <label>Price (UGX)</label>
-                        <input
-                          type="number"
-                          value={form.price}
-                          onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
-                          placeholder="e.g. 25000"
-                        />
-                      </div>
-                      <div className="field">
-                        <label>Category</label>
-                        <input
-                          value={form.category}
-                          onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                          placeholder="e.g. Teas, Oils, Capsules"
-                        />
-                      </div>
-                      <div className="field field-full">
-                        <label>Description</label>
-                        <textarea
-                          rows={2}
-                          value={form.description}
-                          onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                          placeholder="Short product description"
-                        />
-                      </div>
-                      <div className="field field-full">
-                        <label>Product Image</label>
-                        <div className="image-uploader">
-                          {form.image_url ? (
-                            <div className="uploader-preview">
-                              <img src={form.image_url} alt="preview" />
-                              <button type="button" onClick={() => setForm(f => ({ ...f, image_url: '' }))} className="remove-img">
-                                <X size={14} />
-                              </button>
-                            </div>
-                          ) : (
-                            <button
-                              type="button"
-                              className="uploader-drop"
-                              onClick={() => fileRef.current?.click()}
-                              disabled={uploading}
-                            >
-                              {uploading ? (
-                                <><Loader size={18} className="spin" /> Uploading…</>
-                              ) : (
-                                <><Upload size={18} /> Click to upload image</>
-                              )}
-                            </button>
-                          )}
-                          <input
-                            ref={fileRef}
-                            type="file"
-                            accept="image/*"
-                            style={{ display: 'none' }}
-                            onChange={handleImageUpload}
-                          />
-                        </div>
-                        <input
-                          className="url-input"
-                          value={form.image_url}
-                          onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
-                          placeholder="…or paste an image URL"
-                        />
-                      </div>
-                    </div>
-                    <label className="toggle-row">
-                      <input
-                        type="checkbox"
-                        checked={form.active}
-                        onChange={e => setForm(f => ({ ...f, active: e.target.checked }))}
-                      />
-                      <span>Active — visible on the website</span>
-                    </label>
-                    <div className="form-actions">
-                      <button type="submit" className="btn btn-primary">
-                        {editId ? 'Save Changes' : 'Create Product'}
-                      </button>
-                      <button type="button" className="btn btn-ghost" onClick={closeForm}>Cancel</button>
-                    </div>
-                  </form>
+          {activeTab === 'products' && (showForm ? (
+            <div className="product-page" ref={formPanelRef}>
+              <div className="product-page-header">
+                <button type="button" className="icon-btn icon-ghost" onClick={closeForm} title="Back to products">
+                  <ArrowLeft size={19} />
+                </button>
+                <div>
+                  <h1>{editId ? 'Edit Product' : 'New Product'}</h1>
+                  <p>{editId ? "Update this product's details." : 'Add a new product to your catalog.'}</p>
                 </div>
-              )}
+              </div>
 
-              {filteredProducts.length === 0 ? (
-                <div className="empty-state">
-                  <Package size={40} />
-                  <h3>{q ? 'No products match your search' : 'No products yet'}</h3>
-                  {!q && (
-                    <button className="btn btn-primary" onClick={openAddForm}>
-                      <Plus size={16} /> Add your first product
-                    </button>
-                  )}
+              <div className="panel">
+                <div className="product-form-section-head">
+                  <h2>Basic Information</h2>
+                  <p>Add the details customers will see in the shop.</p>
                 </div>
-              ) : (
-                <div className="product-grid">
-                  {filteredProducts.map(p => (
-                    <div key={p.id} className="product-card">
-                      <div className="pc-image">
-                        {p.image_url ? <img src={p.image_url} alt={p.name} /> : <div className="pc-noimg"><Package size={28} /></div>}
-                        <span className={`pc-status ${p.active ? 'on' : 'off'}`}>{p.active ? 'Active' : 'Hidden'}</span>
+                <form onSubmit={saveProduct} className="product-form">
+                  <div className="field">
+                    <label>Product Image</label>
+                    <div className="image-upload-row">
+                      <button
+                        type="button"
+                        className="image-dropzone"
+                        onClick={() => fileRef.current?.click()}
+                        disabled={uploading}
+                      >
+                        {form.image_url ? (
+                          <img src={form.image_url} alt="preview" />
+                        ) : uploading ? (
+                          <Loader size={20} className="spin" />
+                        ) : (
+                          <>
+                            <Plus size={22} />
+                            <span>Add Image</span>
+                          </>
+                        )}
+                      </button>
+                      <div className="image-upload-side">
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => fileRef.current?.click()}
+                          disabled={uploading}
+                        >
+                          <Upload size={15} /> {uploading ? 'Uploading…' : 'Upload Image'}
+                        </button>
+                        <p className="field-hint">JPG or PNG, up to 10MB.</p>
+                        {form.image_url && (
+                          <button type="button" className="link-btn" onClick={() => setForm(f => ({ ...f, image_url: '' }))}>
+                            Remove image
+                          </button>
+                        )}
                       </div>
-                      <div className="pc-body">
-                        <h3>{p.name}</h3>
-                        <p>{p.description || 'No description'}</p>
-                        <div className="pc-price">{p.price ? `UGX ${Number(p.price).toLocaleString()}` : 'No price set'}</div>
-                      </div>
-                      <div className="pc-actions">
-                        <button className="btn btn-soft" onClick={() => openEditForm(p)}><Pencil size={14} /> Edit</button>
-                        <button className="icon-btn icon-danger" onClick={() => deleteProduct(p.id)}><Trash2 size={15} /></button>
-                      </div>
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={handleImageUpload}
+                      />
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+                  </div>
+
+                  <div className="field">
+                    <label>Product Name <span>*</span></label>
+                    <input
+                      required
+                      value={form.name}
+                      onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                      placeholder="e.g. Kar Detox Extract"
+                    />
+                  </div>
+
+                  <div className="form-grid">
+                    <div className="field">
+                      <label>Category</label>
+                      <input
+                        value={form.category}
+                        onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                        placeholder="e.g. Teas, Oils, Capsules"
+                      />
+                    </div>
+                    <div className="field">
+                      <label>Price (UGX)</label>
+                      <input
+                        type="number"
+                        value={form.price}
+                        onChange={e => setForm(f => ({ ...f, price: e.target.value }))}
+                        placeholder="e.g. 25000"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="field">
+                    <label>Description</label>
+                    <textarea
+                      rows={3}
+                      value={form.description}
+                      onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                      placeholder="Short product description"
+                    />
+                    <p className="field-hint">A brief description shown alongside the product on the shop page.</p>
+                  </div>
+
+                  <label className="toggle-row">
+                    <input
+                      type="checkbox"
+                      checked={form.active}
+                      onChange={e => setForm(f => ({ ...f, active: e.target.checked }))}
+                    />
+                    <span>Active — visible on the website</span>
+                  </label>
+
+                  <div className="form-actions">
+                    <button type="submit" className="btn btn-primary">
+                      {editId ? 'Save Changes' : 'Create Product'}
+                    </button>
+                    <button type="button" className="btn btn-ghost" onClick={closeForm}>Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          ) : (
+              <div className="panel">
+                {filteredProducts.length === 0 ? (
+                  <div className="empty-state">
+                    <Package size={40} />
+                    <h3>{q ? 'No products match your search' : 'No products yet'}</h3>
+                    {!q && (
+                      <button className="btn btn-primary" onClick={openAddForm}>
+                        <Plus size={16} /> Add your first product
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="table-scroll">
+                    <table className="data-table">
+                      <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Status</th><th></th></tr></thead>
+                      <tbody>
+                        {pagedProducts.map(p => (
+                          <tr key={p.id}>
+                            <td>
+                              <div className="table-product-cell">
+                                {p.image_url ? <img src={p.image_url} alt={p.name} className="table-product-thumb" /> : <div className="table-product-thumb table-product-thumb--empty"><Package size={16} /></div>}
+                                <div>
+                                  <div className="cell-strong">{p.name}</div>
+                                  <div className="cell-sub cell-msg">{p.description || 'No description'}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{p.category ? <span className="tag tag-green">{p.category}</span> : <span className="cell-sub">—</span>}</td>
+                            <td className="cell-strong">{p.price ? `UGX ${Number(p.price).toLocaleString()}` : '—'}</td>
+                            <td><span className={`pc-status ${p.active ? 'on' : 'off'}`}>{p.active ? 'Active' : 'Hidden'}</span></td>
+                            <td>
+                              <div className="table-row-actions">
+                                <button className="btn btn-soft" onClick={() => openEditForm(p)}><Pencil size={14} /> Edit</button>
+                                <button className="icon-btn icon-danger" onClick={() => deleteProduct(p.id)}><Trash2 size={15} /></button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                {productPages > 1 && (
+                  <div className="pagination">
+                    <button disabled={productPage === 1} onClick={() => setProductPage(p => p - 1)} className="page-btn">‹ Prev</button>
+                    <span className="page-info">{productPage} / {productPages}</span>
+                    <button disabled={productPage === productPages} onClick={() => setProductPage(p => p + 1)} className="page-btn">Next ›</button>
+                  </div>
+                )}
+              </div>
+          ))}
 
           {/* ── INQUIRIES ── */}
           {activeTab === 'contacts' && (
@@ -1153,7 +1402,7 @@ export default function AdminDashboard() {
                 <div className="panel form-panel">
                   <div className="panel-head">
                     <h2>Email All Subscribers</h2>
-                    <button className="icon-btn icon-ghost" onClick={() => setShowBroadcast(false)}><X size={18} /></button>
+                    <button className="icon-btn icon-ghost" onClick={closeBroadcastForm}><X size={18} /></button>
                   </div>
                   <form onSubmit={sendBroadcast} className="product-form">
                     <div className="form-grid">
@@ -1177,14 +1426,41 @@ export default function AdminDashboard() {
                         />
                       </div>
                     </div>
+
+                    <div className="field field-full">
+                      <label>Attachments</label>
+                      {broadcastAttachments.length > 0 && (
+                        <ul className="attachment-list">
+                          {broadcastAttachments.map((file, i) => (
+                            <li key={`${file.name}-${i}`}>
+                              <span className="attachment-name">{file.name}</span>
+                              <span className="attachment-size">{(file.size / 1024 / 1024).toFixed(1)} MB</span>
+                              <button type="button" className="icon-btn icon-ghost" onClick={() => removeBroadcastAttachment(i)}><X size={14} /></button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <button type="button" className="btn btn-outline" onClick={() => broadcastFileRef.current?.click()}>
+                        <Paperclip size={15} /> Attach file
+                      </button>
+                      <input
+                        ref={broadcastFileRef}
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx"
+                        style={{ display: 'none' }}
+                        onChange={addBroadcastAttachments}
+                      />
+                    </div>
+
                     <p className="broadcast-hint">
-                      This will be sent as one email to all {subscribers.length} subscriber{subscribers.length === 1 ? '' : 's'}, BCC'd so no one sees the others' addresses.
+                      This will be sent as one email to all {subscribers.length} subscriber{subscribers.length === 1 ? '' : 's'}, BCC'd so no one sees the others' addresses. Attachments: PDF, image, Word, or Excel, up to 10MB each.
                     </p>
                     <div className="form-actions">
                       <button type="submit" className="btn btn-primary" disabled={broadcastSending}>
                         {broadcastSending ? <><Loader size={16} className="spin" /> Sending…</> : <><Send size={16} /> Send to all subscribers</>}
                       </button>
-                      <button type="button" className="btn btn-ghost" onClick={() => setShowBroadcast(false)}>Cancel</button>
+                      <button type="button" className="btn btn-ghost" onClick={closeBroadcastForm}>Cancel</button>
                     </div>
                   </form>
                 </div>
