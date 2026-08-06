@@ -165,6 +165,26 @@
 }
 .nav-active .nav-badge { background: rgba(255,255,255,0.25); }
 
+.nav-group { display: flex; flex-direction: column; }
+.nav-submenu {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 3px 0 6px 20px; margin-left: 14px;
+  border-left: 1.5px solid var(--nav-hover);
+}
+.nav-subitem {
+  position: relative;
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  padding: 8px 10px; border-radius: 8px; border: none; background: none;
+  cursor: pointer; text-align: left; color: var(--nav-muted);
+  font-size: 0.82rem; font-weight: 600; font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-subitem:hover { background: var(--nav-hover); color: #fff; }
+.nav-subitem-active { background: var(--nav-hover); color: #fff; }
+.nav-subicon { flex-shrink: 0; display: inline-flex; opacity: 0.85; }
+.nav-sublabel { flex: 1; min-width: 0; }
+.nav-subitem .rail-dot { flex-shrink: 0; }
+
 .sidebar-footer { padding: 14px; border-top: 1px solid var(--side-border); }
 .nav-logout { color: #f3a3a3; }
 .nav-logout:hover { background: rgba(226,59,59,0.14) !important; color: #ffb4b4 !important; }
@@ -231,11 +251,36 @@
 .pill-body b { font-size: 1.5rem; font-weight: 800; line-height: 1; color: var(--ink); }
 .pill-body small { font-size: 0.78rem; color: var(--ink-faint); margin-top: 3px; }
 
+/* ── Dashboard overview ── */
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.dashboard-panel .panel-head h2 { font-size: 1rem; }
+.dashboard-list { list-style: none; margin: 0; padding: 0; }
+.dashboard-list li {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 22px; border-bottom: 1px solid var(--bd);
+}
+.dashboard-list li:last-child { border-bottom: none; }
+.dashboard-panel .empty-state { padding: 32px 22px; }
+
+@media (max-width: 900px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+
 /* ── Panel ── */
 .panel { background: var(--card); border: 1px solid var(--bd); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
 .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border-bottom: 1px solid var(--bd); }
 .panel-head h2 { font-size: 1.1rem; font-weight: 700; margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 .form-panel { margin-bottom: 24px; }
+
+/* ── Broadcast (email subscribers) ── */
+.broadcast-hint { font-size: 0.85rem; color: var(--ink-faint); margin: 4px 0 18px; }
+.broadcast-banner {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; font-weight: 500;
+  margin-bottom: 16px;
+}
+.broadcast-banner--success { background: #dcfce7; color: #166534; }
+.broadcast-banner--error { background: #fee2e2; color: #b91c1c; }
 
 /* ── Product form ── */
 .product-form { padding: 22px; }
@@ -307,6 +352,7 @@
 .cell-link:hover { text-decoration: underline; }
 .tag { font-size: 0.76rem; font-weight: 600; padding: 4px 11px; border-radius: 999px; white-space: nowrap; }
 .tag-green { background: var(--accent-soft); color: var(--accent-dark); }
+.tag-blue { background: #dbeafe; color: #1d4ed8; }
 
 /* Inquiry status select */
 /* Pagination */
@@ -336,41 +382,10 @@
 .empty-state { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 64px 24px; color: var(--ink-faint); text-align: center; }
 .empty-state h3 { margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--ink-soft); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
-/* ══ Site content — master/detail ══ */
-.content-layout { display: grid; grid-template-columns: 244px 1fr; gap: 20px; align-items: start; }
-
-/* Left rail — section picker */
-.content-rail {
-  background: var(--card); border: 1px solid var(--bd); border-radius: var(--radius);
-  box-shadow: var(--shadow-sm); padding: 10px;
-  position: sticky; top: 94px;
-  display: flex; flex-direction: column; gap: 3px;
-}
-.content-rail-label {
-  font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.3px;
-  color: var(--ink-faint); padding: 8px 11px 7px;
-}
-.rail-item {
-  position: relative;
-  display: flex; align-items: center; gap: 11px; width: 100%;
-  padding: 9px 11px; border-radius: 10px; border: none; background: none;
-  cursor: pointer; text-align: left; color: var(--ink-soft);
-  font-size: 0.86rem; font-weight: 600; font-family: inherit;
-  transition: background 0.15s, color 0.15s;
-}
-.rail-item:hover { background: var(--bg); color: var(--ink); }
-.rail-on { background: var(--accent-soft); color: var(--accent-dark); }
-.rail-icon {
-  width: 31px; height: 31px; flex-shrink: 0; border-radius: 9px;
-  background: var(--bg); color: var(--ink-soft);
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: background 0.15s, color 0.15s;
-}
-.rail-on .rail-icon { background: var(--accent); color: #fff; }
-.rail-text { flex: 1; min-width: 0; line-height: 1.25; }
+/* ══ Site content — master/detail (section picker lives in the sidebar) ══ */
+.content-layout { display: flex; flex-direction: column; }
 .rail-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
 
-/* Right pane — the selected section's fields */
 .content-detail { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .detail-head { display: flex; align-items: center; gap: 14px; padding: 2px 2px 2px; }
 .detail-icon {
@@ -449,15 +464,6 @@
 /* ══ Responsive ══ */
 @media (max-width: 1024px) {
   .stat-strip { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 1100px) {
-  /* Section rail becomes a horizontal strip above the fields */
-  .content-layout { grid-template-columns: 1fr; }
-  .content-rail { position: static; flex-direction: row; overflow-x: auto; padding: 8px; gap: 6px; }
-  .content-rail-label { display: none; }
-  .rail-item { flex-direction: column; gap: 7px; min-width: 104px; text-align: center; font-size: 0.72rem; padding: 11px 8px; }
-  .rail-text { flex: none; }
-  .rail-dot { position: absolute; top: 7px; right: 7px; }
 }
 @media (max-width: 900px) {
   .admin-sidebar { transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: var(--shadow-lg); }

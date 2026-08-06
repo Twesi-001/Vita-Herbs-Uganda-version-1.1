@@ -21,6 +21,7 @@ const About = lazy(() => import('./About'));
 const Products = lazy(() => import('./Products'));
 const Contact = lazy(() => import('./Contact'));
 const Reviews = lazy(() => import('./Reviews'));
+const Videos = lazy(() => import('./Videos'));
 const Socials = lazy(() => import('./Socials'));
 const AdminDashboard = lazy(() => import('./AdminDashboard'));
 const NotFound = lazy(() => import('./NotFound'));
@@ -69,6 +70,7 @@ function PublicLayout() {
               <Route path="/social" element={<Socials />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/reviews" element={<Reviews />} />
+              <Route path="/videos" element={<Videos />} />
               <Route path="/AdminDashboard" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

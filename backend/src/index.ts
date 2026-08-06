@@ -11,6 +11,7 @@ import inquiriesRouter from './routes/inquiries';
 import adminRouter from './routes/admin';
 import contentRouter from './routes/content';
 import reviewsRouter from './routes/reviews';
+import videosRouter from './routes/videos';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
@@ -44,6 +45,7 @@ app.use('/api/admin/login', loginLimiter);
 app.use('/api/admin', adminRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/reviews', reviewsRouter);
+app.use('/api/videos', videosRouter);
 
 // 404 for unknown API routes.
 app.use((_req, res) => {

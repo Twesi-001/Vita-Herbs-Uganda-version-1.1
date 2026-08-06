@@ -41,12 +41,24 @@ CREATE TABLE IF NOT EXISTS reviews (
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS videos (
+    id          SERIAL PRIMARY KEY,
+    title       TEXT        NOT NULL,
+    description TEXT,
+    category    TEXT        NOT NULL CHECK (category IN ('company', 'product')),
+    video_url   TEXT        NOT NULL,
+    active      BOOLEAN     NOT NULL DEFAULT TRUE,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Indexes for common query patterns
 CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_inquiries_status     ON inquiries (status);
 CREATE INDEX IF NOT EXISTS idx_products_active      ON products (active);
 CREATE INDEX IF NOT EXISTS idx_reviews_created_at   ON reviews (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_reviews_status       ON reviews (status);
+CREATE INDEX IF NOT EXISTS idx_videos_active        ON videos (active);
+CREATE INDEX IF NOT EXISTS idx_videos_category      ON videos (category);
 
 -- Seed the featured products (only if the table is empty).
 INSERT INTO products (name, description, image_url)

@@ -5,6 +5,7 @@ import multer from 'multer';
 import { query } from '../db';
 import { requireAdmin, signToken } from '../middleware/auth';
 import { uploadToCloudinary } from '../lib/cloudinary';
+import { sendBroadcastEmail } from '../lib/mailer';
 
 const router = Router();
 
@@ -77,17 +78,19 @@ router.post('/change-password', async (req, res) => {
 // GET /api/admin/stats — dashboard counts.
 router.get('/stats', async (_req, res, next) => {
   try {
-    const [subs, contacts, products, reviews] = await Promise.all([
+    const [subs, contacts, products, reviews, videos] = await Promise.all([
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM subscribers'),
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM inquiries'),
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM products'),
       query<{ c: number }>('SELECT COUNT(*)::int AS c FROM reviews'),
+      query<{ c: number }>('SELECT COUNT(*)::int AS c FROM videos'),
     ]);
     res.json({
       subscribers: subs.rows[0].c,
       contacts: contacts.rows[0].c,
       products: products.rows[0].c,
       reviews: reviews.rows[0].c,
+      videos: videos.rows[0].c,
     });
   } catch (err) {
     next(err);
@@ -124,6 +127,36 @@ router.delete('/subscribers/:id', async (req, res, next) => {
     await query('DELETE FROM subscribers WHERE id = $1', [req.params.id]);
     res.json({ message: 'Subscriber deleted' });
   } catch (err) {
+    next(err);
+  }
+});
+
+const broadcastInput = z.object({
+  subject: z.string().min(1).max(200),
+  message: z.string().min(1).max(10000),
+});
+
+// POST /api/admin/subscribers/broadcast — email every subscriber at once.
+router.post('/subscribers/broadcast', async (req, res, next) => {
+  const parsed = broadcastInput.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ message: 'Subject and message are required' });
+    return;
+  }
+  try {
+    const { rows } = await query<{ email: string }>('SELECT email FROM subscribers');
+    const recipients = rows.map((r) => r.email);
+    if (recipients.length === 0) {
+      res.status(400).json({ message: 'There are no subscribers to email yet' });
+      return;
+    }
+    await sendBroadcastEmail(recipients, parsed.data.subject, parsed.data.message);
+    res.json({ message: `Sent to ${recipients.length} subscriber${recipients.length === 1 ? '' : 's'}` });
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('EMAIL_USER')) {
+      res.status(500).json({ message: 'Email is not configured on the server yet' });
+      return;
+    }
     next(err);
   }
 });
@@ -284,6 +317,96 @@ router.delete('/products/:id', async (req, res, next) => {
     await query('DELETE FROM products WHERE id=$1', [req.params.id]);
     res.json({ message: 'Product deleted' });
   } catch (err) { next(err); }
+});
+
+// ── Video management (company/product videos) ─────────────────────────────────
+
+const videoInput = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  category: z.enum(['company', 'product']),
+  video_url: z.string().min(1),
+  active: z.boolean().optional(),
+});
+
+router.get('/videos', async (_req, res, next) => {
+  try {
+    const { rows } = await query('SELECT * FROM videos ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) { next(err); }
+});
+
+router.post('/videos', async (req, res, next) => {
+  const parsed = videoInput.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ message: 'Invalid video' }); return; }
+  const { title, description, category, video_url, active } = parsed.data;
+  try {
+    const { rows } = await query(
+      `INSERT INTO videos (title, description, category, video_url, active)
+       VALUES ($1, $2, $3, $4, COALESCE($5, TRUE)) RETURNING *`,
+      [title, description ?? null, category, video_url, active ?? null],
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) { next(err); }
+});
+
+router.put('/videos/:id', async (req, res, next) => {
+  const parsed = videoInput.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ message: 'Invalid video' }); return; }
+  const { title, description, category, video_url, active } = parsed.data;
+  try {
+    const { rows } = await query(
+      `UPDATE videos SET title=$1, description=$2, category=$3, video_url=$4, active=COALESCE($5, active) WHERE id=$6 RETURNING *`,
+      [title, description ?? null, category, video_url, active ?? null, req.params.id],
+    );
+    if (rows.length === 0) { res.status(404).json({ message: 'Not found' }); return; }
+    res.json(rows[0]);
+  } catch (err) { next(err); }
+});
+
+router.delete('/videos/:id', async (req, res, next) => {
+  try {
+    await query('DELETE FROM videos WHERE id=$1', [req.params.id]);
+    res.json({ message: 'Video deleted' });
+  } catch (err) { next(err); }
+});
+
+// POST /api/admin/upload-video — proxy video upload to Cloudinary (admin only,
+// so a generous size limit is fine — no public abuse surface like the
+// reviews upload endpoint has).
+const ALLOWED_VIDEO_MIME = ['video/mp4', 'video/webm', 'video/quicktime'];
+const uploadVideo = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 150 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (!ALLOWED_VIDEO_MIME.includes(file.mimetype)) {
+      cb(new Error('Only mp4, webm, or mov video files are allowed'));
+      return;
+    }
+    cb(null, true);
+  },
+});
+
+router.post('/upload-video', (req, res, next) => {
+  uploadVideo.single('file')(req, res, (err: unknown) => {
+    if (err) {
+      const message = err instanceof Error ? err.message : 'Upload failed';
+      res.status(400).json({ message });
+      return;
+    }
+    next();
+  });
+}, async (req, res, next) => {
+  try {
+    if (!req.file) {
+      res.status(400).json({ message: 'No file uploaded' });
+      return;
+    }
+    const url = await uploadToCloudinary(req.file.buffer, req.file.originalname, req.file.mimetype, 'video');
+    res.json({ url });
+  } catch (err) {
+    res.status(500).json({ message: err instanceof Error ? err.message : 'Upload failed' });
+  }
 });
 
 // ── Site content management ───────────────────────────────────────────────────
