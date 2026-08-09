@@ -146,18 +146,18 @@
 }
 
 .history-info h2 {
-  font-size: 2.25rem;
-  font-weight: 700;
+  font-size: 2.875rem;
+  font-weight: 600;
   color: var(--text-dark);
-  line-height: 1.25;
-  margin: 0 0 20px;
+  line-height: 1.22;
+  margin: 0 0 22px;
 }
 
 .history-info > p {
   font-size: 1rem;
   color: var(--text-light);
   line-height: 1.75;
-  margin: 0 0 18px;
+  margin: 0 0 22px;
 }
 
 .history-info > p strong {
@@ -170,7 +170,7 @@
   align-items: center;
   gap: 8px;
   position: relative;
-  margin-top: 14px;
+  margin-top: 6px;
   padding-bottom: 4px;
   color: var(--text-dark);
   font-weight: 700;
@@ -675,7 +675,7 @@
 
   .container { padding: 0 20px; }
 
-  .history-info h2 { font-size: 1.5rem; }
+  .history-info h2 { font-size: 1.9rem; }
   .history-info h4 { font-size: 0.9rem; }
 
   .section-header h2 { font-size: 1.7rem; }
@@ -704,7 +704,7 @@
 @media (max-width: 480px) {
   .about-hero h1 { font-size: 22px; }
   .section-header h2 { font-size: 1.4rem; }
-  .history-info h2 { font-size: 1.3rem; }
+  .history-info h2 { font-size: 1.6rem; }
   .why-content h2  { font-size: 1.3rem; }
   .stats-grid { grid-template-columns: 1fr; }
   .team-thumb { min-height: 200px; }
