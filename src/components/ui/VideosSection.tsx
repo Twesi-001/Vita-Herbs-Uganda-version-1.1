@@ -55,7 +55,7 @@ function VideoTile({ video }: { video: VideoItem }) {
         />
         {!started && (
           <>
-            <span className="video-tile-play"><Play size={20} fill="#fff" /></span>
+            <span className="video-tile-play"><Play size={20} fill="#fff" stroke="none" /></span>
             {duration && <span className="video-tile-duration">{duration}</span>}
           </>
         )}

@@ -18,9 +18,6 @@
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--green-dark, #1d4a1a);
-  background: rgba(58, 122, 46, 0.1);
-  padding: 6px 16px;
-  border-radius: 999px;
   margin: 0 0 14px;
 }
 
@@ -144,7 +141,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
+  background: #e8543f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,7 +151,7 @@
 }
 
 .video-tile-media:hover .video-tile-play {
-  background: var(--green, #3a7a2e);
+  background: #d13f2b;
   transform: translate(-50%, -50%) scale(1.08);
 }
 
