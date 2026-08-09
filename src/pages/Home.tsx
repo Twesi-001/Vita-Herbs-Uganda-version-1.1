@@ -7,7 +7,6 @@ import Socials from './Socials'
 import { AboutBody } from './About'
 import { ContactBody } from './Contact'
 import { ReviewsBody } from '../components/ui/ReviewsSection'
-import { VideosBody } from '../components/ui/VideosSection'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSiteContent } from '../hooks/useSiteContent'
 import { API_URL } from '../lib/api'
@@ -124,7 +123,6 @@ function Home(){
 
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
     <ValueSection />
-    <section id="videos" className="home-anchor reveal reveal--fade-up"><VideosBody hideIfEmpty /></section>
     <section id="reviews" className="home-anchor reveal reveal--fade-up"><ReviewsBody /></section>
     <section id="about" className="home-anchor reveal reveal--fade-left"><AboutBody /></section>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>

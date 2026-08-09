@@ -5,6 +5,7 @@ import "./About.css";
 import { useSiteContent } from "../hooks/useSiteContent";
 import herbsImg from "../assets/Herbs.jpg";
 import MissionSection from "../components/ui/MissionSection";
+import { VideosBody } from "../components/ui/VideosSection";
 
 function IconFacebook() {
   return (
@@ -102,6 +103,9 @@ export function AboutBody() {
 
       {/* ── Our Mission ── */}
       <MissionSection />
+
+      {/* ── Videos ── */}
+      <VideosBody hideIfEmpty />
 
       {/* ── Meet Our Team ── */}
       <section className="about-team">

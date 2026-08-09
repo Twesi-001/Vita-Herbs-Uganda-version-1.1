@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Building2, Package } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Building2, Package, Play } from 'lucide-react';
 import { API_URL } from '../../lib/api';
 import './VideosSection.css';
 
@@ -13,6 +13,65 @@ interface VideoItem {
 }
 
 type Filter = 'all' | 'company' | 'product';
+
+function timeAgo(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const steps: [number, string][] = [[60, 'minute'], [24, 'hour'], [30, 'day'], [12, 'month'], [Infinity, 'year']];
+  let value = seconds;
+  for (const [size, unit] of steps) {
+    value = Math.floor(value / size);
+    if (value < size || unit === 'year') return `${value} ${unit}${value !== 1 ? 's' : ''} ago`;
+  }
+  return 'Just now';
+}
+
+function formatDuration(totalSeconds: number): string {
+  if (!isFinite(totalSeconds)) return '';
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = Math.floor(totalSeconds % 60);
+  const ss = String(s).padStart(2, '0');
+  if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${ss}`;
+  return `${m}:${ss}`;
+}
+
+function VideoTile({ video }: { video: VideoItem }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [duration, setDuration] = useState('');
+  const [started, setStarted] = useState(false);
+
+  return (
+    <div className="video-tile">
+      <div className="video-tile-media" onClick={started ? undefined : () => videoRef.current?.play()}>
+        <video
+          ref={videoRef}
+          className="video-tile-video"
+          src={video.video_url}
+          controls={started}
+          preload="metadata"
+          onLoadedMetadata={e => setDuration(formatDuration(e.currentTarget.duration))}
+          onPlay={() => setStarted(true)}
+        />
+        {!started && (
+          <>
+            <span className="video-tile-play"><Play size={20} fill="#fff" /></span>
+            {duration && <span className="video-tile-duration">{duration}</span>}
+          </>
+        )}
+      </div>
+      <div className="video-tile-info">
+        <span className={`video-tile-avatar video-tile-avatar--${video.category}`}>
+          {video.category === 'company' ? <Building2 size={15} /> : <Package size={15} />}
+        </span>
+        <div className="video-tile-text">
+          <h3>{video.title}</h3>
+          <p>{video.category === 'company' ? 'Company' : 'Product'} &middot; {timeAgo(video.created_at)}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function VideosBody({ hideIfEmpty = false }: { hideIfEmpty?: boolean } = {}) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
@@ -54,21 +113,7 @@ export function VideosBody({ hideIfEmpty = false }: { hideIfEmpty?: boolean } = 
           <p className="videos-empty">No videos here yet — check back soon.</p>
         ) : (
           <div className="videos-grid">
-            {shown.map(v => (
-              <div className="video-card" key={v.id}>
-                <div className="video-card-media-wrap">
-                  <video className="video-card-media" src={v.video_url} controls preload="metadata" />
-                  <span className={`video-card-badge video-card-badge--${v.category}`}>
-                    {v.category === 'company' ? <Building2 size={12} /> : <Package size={12} />}
-                    {v.category === 'company' ? 'Company' : 'Product'}
-                  </span>
-                </div>
-                <div className="video-card-body">
-                  <h3>{v.title}</h3>
-                  {v.description && <p>{v.description}</p>}
-                </div>
-              </div>
-            ))}
+            {shown.map(v => <VideoTile key={v.id} video={v} />)}
           </div>
         )}
       </div>
