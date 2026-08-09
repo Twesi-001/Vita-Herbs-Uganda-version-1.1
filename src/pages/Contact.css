@@ -86,7 +86,7 @@
 }
 
 /* ── Form (left column) ─────────────────────────────────── */
-.contact-form-col { }
+.contact-form-col { padding-left: 24px; }
 
 .form-heading {
   font-size: 1.55rem;
@@ -283,6 +283,7 @@
 
 @media (max-width: 640px) {
   .container { padding: 0 16px; }
+  .contact-form-col { padding-left: 12px; }
   .contact-hero h1 { font-size: 26px; }
   .submit-btn { width: 100%; justify-content: center; }
   .address-info { flex-direction: column; }
