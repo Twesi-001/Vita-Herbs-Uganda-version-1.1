@@ -72,6 +72,7 @@ const CONTENT_SECTIONS: ContentSection[] = [
   { title: 'Why It Matters', desc: 'The value cards shown on the home page.', icon: <ListChecks size={18} />, fields: [
     { key: 'value.heading', label: 'Section heading', type: 'richtext', group: 'Section Intro' },
     { key: 'value.subtext', label: 'Subtext', type: 'richtext', group: 'Section Intro' },
+    { key: 'value.bgImage', label: 'Background image', type: 'image' },
     { key: 'value.card1.title', label: 'Title', type: 'input', group: 'Card 1' },
     { key: 'value.card1.text', label: 'Text', type: 'richtext', group: 'Card 1' },
     { key: 'value.card2.title', label: 'Title', type: 'input', group: 'Card 2' },
