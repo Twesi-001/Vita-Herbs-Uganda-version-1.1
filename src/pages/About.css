@@ -102,7 +102,7 @@
 .history-gallery {
   display: flex;
   align-items: flex-start;
-  padding-left: 64px;
+  padding-left: 40px;
 }
 
 .history-img {
@@ -544,6 +544,10 @@
   align-items: center;
 }
 
+.why-content {
+  padding-left: 40px;
+}
+
 .why-eyebrow {
   display: inline-block;
   font-size: 0.75rem;
@@ -642,6 +646,7 @@
   .history-img-2 { margin-top: 40px; }
 
   .why-img { order: -1; }
+  .why-content { padding-left: 0; }
 
   .team-carousel {
     flex-wrap: wrap;
