@@ -35,6 +35,7 @@ export function VideosBody({ hideIfEmpty = false }: { hideIfEmpty?: boolean } = 
     <section className="videos-section">
       <div className="container">
         <div className="section-heading">
+          <span className="eyebrow">Company &amp; Product Videos</span>
           <h2>Watch & Learn</h2>
           <p>Videos from KarOrganics — behind the scenes and how our products work.</p>
         </div>
@@ -55,11 +56,14 @@ export function VideosBody({ hideIfEmpty = false }: { hideIfEmpty?: boolean } = 
           <div className="videos-grid">
             {shown.map(v => (
               <div className="video-card" key={v.id}>
-                <video className="video-card-media" src={v.video_url} controls preload="metadata" />
-                <div className="video-card-body">
-                  <span className={`video-card-tag video-card-tag--${v.category}`}>
+                <div className="video-card-media-wrap">
+                  <video className="video-card-media" src={v.video_url} controls preload="metadata" />
+                  <span className={`video-card-badge video-card-badge--${v.category}`}>
+                    {v.category === 'company' ? <Building2 size={12} /> : <Package size={12} />}
                     {v.category === 'company' ? 'Company' : 'Product'}
                   </span>
+                </div>
+                <div className="video-card-body">
                   <h3>{v.title}</h3>
                   {v.description && <p>{v.description}</p>}
                 </div>
