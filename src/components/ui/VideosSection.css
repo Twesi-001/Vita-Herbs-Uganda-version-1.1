@@ -1,7 +1,7 @@
 /* VIDEOS SECTION */
 
 .videos-section {
-  background: linear-gradient(180deg, #f3f8f1 0%, #ffffff 55%);
+  background: linear-gradient(180deg, #eef6ec 0%, #f7faf5 60%, #ffffff 100%);
   padding: 84px 0;
 }
 
@@ -124,7 +124,8 @@
 .video-tile-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
   display: block;
 }
 
