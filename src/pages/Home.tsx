@@ -123,8 +123,8 @@ function Home(){
 
     <div className="reveal reveal--fade-up"><Products showAllLink /></div>
     <ValueSection />
-    <section id="reviews" className="home-anchor reveal reveal--fade-up"><ReviewsBody /></section>
     <section id="about" className="home-anchor reveal reveal--fade-left"><AboutBody /></section>
+    <section id="reviews" className="home-anchor reveal reveal--fade-up"><ReviewsBody /></section>
     <div className="reveal reveal--fade-up"><NewsLetter /></div>
     <section id="contact" className="home-anchor reveal reveal--fade-right"><ContactBody /></section>
     <div className="reveal reveal--fade-up"><Socials /></div>
