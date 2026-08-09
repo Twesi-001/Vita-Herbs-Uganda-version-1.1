@@ -173,7 +173,7 @@
   position: relative;
   margin-top: 6px;
   padding-bottom: 4px;
-  color: var(--text-dark);
+  color: #e8543f;
   font-weight: 700;
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -192,7 +192,7 @@
 }
 
 .history-cta svg {
-  color: var(--green);
+  color: #e8543f;
   transition: transform 0.2s ease;
 }
 
