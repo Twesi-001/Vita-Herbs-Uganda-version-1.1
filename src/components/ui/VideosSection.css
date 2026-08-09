@@ -13,25 +13,41 @@
 
 .videos-section .section-heading .eyebrow {
   display: inline-block;
-  font-size: 0.875rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--green, #3a7a2e);
-  margin: 0;
+  letter-spacing: 1.5px;
+  color: var(--green-dark, #1d4a1a);
+  background: rgba(58, 122, 46, 0.1);
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin: 0 0 14px;
 }
 
 .videos-section .section-heading h2 {
+  display: block;
   font-size: 2rem;
   font-weight: 800;
   line-height: 1.25;
   color: var(--text, #1f2937);
-  margin: 0.4rem 0 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.videos-section .section-heading h2::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--green, #3a7a2e);
+  border-radius: 2px;
+  margin: 10px auto 0;
 }
 
 .videos-section .section-heading p {
   font-size: 1.0625rem;
   line-height: 1.6;
+  max-width: 560px;
+  margin: 0 auto;
   color: var(--text-light, #4b5563);
 }
 
