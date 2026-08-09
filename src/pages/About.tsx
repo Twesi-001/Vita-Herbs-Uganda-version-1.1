@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import "./About.css";
 import { useSiteContent } from "../hooks/useSiteContent";
 import herbsImg from "../assets/Herbs.jpg";
@@ -95,7 +95,7 @@ export function AboutBody() {
               <h2>{get('about.story.heading', "Bringing Nature's Healing Power to Your Doorstep.")}</h2>
               <p>{get('about.story.body', 'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.')}</p>
               <p>Every product is crafted to the <strong>highest standards of purity and potency</strong>, so you get natural wellness you can rely on, every single day.</p>
-              <Link to="/products" className="history-cta">Explore Our Products</Link>
+              <Link to="/products" className="history-cta">Learn More <ArrowRight size={15} /></Link>
             </div>
           </div>
         </div>
