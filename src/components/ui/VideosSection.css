@@ -105,9 +105,9 @@
 /* ── Video tiles (YouTube-style: no card chrome, thumbnail + avatar + text) ── */
 .videos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 320px));
+  grid-template-columns: repeat(auto-fit, minmax(340px, 460px));
   justify-content: center;
-  gap: 36px 22px;
+  gap: 40px 28px;
 }
 
 .video-tile { display: flex; flex-direction: column; }
