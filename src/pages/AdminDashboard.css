@@ -537,6 +537,82 @@
 .cell-link { color: var(--accent-dark); text-decoration: none; font-weight: 500; }
 .cell-link:hover { text-decoration: underline; }
 
+.review-preview-btn {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 8px;
+  text-align: left;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.review-preview-btn .cell-msg { flex: 1; max-width: none; }
+.review-preview-btn:hover,
+.review-preview-btn:focus-visible { background: #f7fcf8; border-color: var(--bd); }
+.review-preview-btn:focus-visible { outline: none; }
+.review-preview-btn.is-empty { cursor: default; }
+.review-preview-btn.is-empty:hover,
+.review-preview-btn.is-empty:focus-visible { background: transparent; border-color: transparent; }
+.review-preview-action {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+.review-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.review-modal {
+  width: min(720px, 100%);
+  max-height: min(80vh, 640px);
+  overflow: auto;
+  background: #fff;
+  border: 1px solid var(--bd);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  padding: 18px;
+}
+.review-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.review-modal-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.review-modal-head p {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+}
+.review-modal-rating {
+  margin-top: 10px;
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: 0.8px;
+}
+.review-modal-body {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
 /* Product row cell (thumbnail + name/description) */
 .table-product-cell { display: flex; align-items: center; gap: 12px; }
 .table-product-thumb {

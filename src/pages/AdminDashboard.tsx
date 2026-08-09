@@ -199,6 +199,7 @@ export default function AdminDashboard() {
   const [broadcastSending, setBroadcastSending] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const broadcastFileRef = useRef<HTMLInputElement>(null);
+  const [activeReview, setActiveReview] = useState<Review | null>(null);
 
   const token = () => localStorage.getItem('adminToken') ?? '';
   const authHeader = () => ({ Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' });
@@ -258,7 +259,16 @@ export default function AdminDashboard() {
   }, []);
 
   // reset search when switching tabs
-  useEffect(() => { setSearch(''); setSidebarOpen(false); setShowNotifications(false); setShowProfileMenu(false); }, [activeTab]);
+  useEffect(() => { setSearch(''); setSidebarOpen(false); setShowNotifications(false); setShowProfileMenu(false); setActiveReview(null); }, [activeTab]);
+
+  useEffect(() => {
+    if (!activeReview) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveReview(null);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [activeReview]);
 
   // Ctrl/Cmd+K focuses the search box, matching the on-screen hint.
   useEffect(() => {
@@ -1234,7 +1244,18 @@ export default function AdminDashboard() {
                         <tr key={r.id}>
                           <td><div className="cell-strong">{r.name}</div></td>
                           <td>{r.rating != null ? '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) : '—'}</td>
-                          <td className="cell-sub cell-msg">{r.body || '—'}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className={`review-preview-btn ${r.body ? '' : 'is-empty'}`}
+                              disabled={!r.body}
+                              onClick={() => setActiveReview(r)}
+                              title={r.body ? 'Click to read full review' : 'No review text'}
+                            >
+                              <span className="cell-sub cell-msg">{r.body || '—'}</span>
+                              {r.body && <span className="review-preview-action">Read full</span>}
+                            </button>
+                          </td>
                           <td>
                             {r.media_url && r.media_type === 'video' ? (
                               <a href={r.media_url} target="_blank" rel="noreferrer">
@@ -1266,6 +1287,34 @@ export default function AdminDashboard() {
                   <button disabled={reviewPage === 1} onClick={() => setReviewPage(p => p - 1)} className="page-btn">‹ Prev</button>
                   <span className="page-info">{reviewPage} / {reviewPages}</span>
                   <button disabled={reviewPage === reviewPages} onClick={() => setReviewPage(p => p + 1)} className="page-btn">Next ›</button>
+                </div>
+              )}
+
+              {activeReview && (
+                <div className="review-modal-backdrop" onClick={() => setActiveReview(null)} role="presentation">
+                  <div
+                    className="review-modal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="review-modal-title"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <div className="review-modal-head">
+                      <div>
+                        <h3 id="review-modal-title">Review from {activeReview.name}</h3>
+                        <p>{new Date(activeReview.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <button type="button" className="icon-btn icon-ghost" onClick={() => setActiveReview(null)} aria-label="Close review dialog">
+                        <X size={18} />
+                      </button>
+                    </div>
+
+                    <div className="review-modal-rating" aria-label={`Rating ${activeReview.rating ?? 0} out of 5`}>
+                      {activeReview.rating != null ? '★'.repeat(activeReview.rating) + '☆'.repeat(5 - activeReview.rating) : 'No rating'}
+                    </div>
+
+                    <p className="review-modal-body">{activeReview.body}</p>
+                  </div>
                 </div>
               )}
             </div>
