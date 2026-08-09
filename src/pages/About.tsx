@@ -93,8 +93,8 @@ export function AboutBody() {
             <div className="history-info">
               <h4>{get('about.story.eyebrow', 'About Us')}</h4>
               <h2>{get('about.story.heading', "Bringing Nature's Healing Power to Your Doorstep.")}</h2>
-              <p>{get('about.story.body', 'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.')}</p>
-              <p>Every product is crafted to the <strong>highest standards of purity and potency</strong>, so you get natural wellness you can rely on, every single day.</p>
+              <p dangerouslySetInnerHTML={{ __html: get('about.story.body', 'KarOrganics Uganda was born from a simple belief: the herbs that have sustained East African communities for generations deserve to be shared with the world - pure, potent, and properly honored.') }} />
+              <p dangerouslySetInnerHTML={{ __html: get('about.story.body2', 'Every product is crafted to the highest standards of purity and potency, so you get natural wellness you can rely on, every single day.') }} />
               <Link to="/products" className="history-cta">Learn More <ArrowRight size={15} /></Link>
             </div>
           </div>
@@ -154,7 +154,7 @@ export function AboutBody() {
             <div className="why-content">
               <span className="why-eyebrow">{get('about.why.eyebrow', 'Why KarOrganics?')}</span>
               <h2>{get('about.why.heading', 'Trusted Herbal Products, Delivered With Care')}</h2>
-              <p>{get('about.why.body', 'We make it easy to access premium herbal wellness products wherever you are in Uganda. Order via WhatsApp and receive your products quickly.')}</p>
+              <p dangerouslySetInnerHTML={{ __html: get('about.why.body', 'We make it easy to access premium herbal wellness products wherever you are in Uganda. Order via WhatsApp and receive your products quickly.') }} />
               <ul className="why-list">
                 <li><CheckCircle size={18} /> {get('about.why.item1', '100% natural, no synthetic additives')}</li>
                 <li><CheckCircle size={18} /> {get('about.why.item2', 'Direct WhatsApp ordering - no complicated checkout')}</li>

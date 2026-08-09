@@ -23,15 +23,15 @@ function ValueSection() {
       <div className="value-overlay reveal reveal--fade-up">
         <div className="container">
           <div className="section-heading">
-            <h2>{get('value.heading', "You're Not Just Buying Herbs. You're Buying Your Body's Way Back to Balance.")}</h2>
-            <p>{get('value.subtext', 'Every Kar Organics extract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.')}</p>
+            <h2 dangerouslySetInnerHTML={{ __html: get('value.heading', "You're Not Just Buying Herbs. You're Buying Your Body's Way Back to Balance.") }} />
+            <p dangerouslySetInnerHTML={{ __html: get('value.subtext', 'Every Kar Organics extract is crafted with a purpose - helping you feel like yourself again, naturally, day after day.') }} />
           </div>
           <div className="value-grid">
             {cards.map(({ icon: Icon, title, text }) => (
               <div className="value-card" key={title || text}>
                 <div className="value-icon"><Icon /></div>
                 <h3>{title}</h3>
-                <p>{text}</p>
+                <p dangerouslySetInnerHTML={{ __html: text }} />
               </div>
             ))}
           </div>

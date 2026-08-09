@@ -71,9 +71,9 @@ function Home(){
             {' '}
             <span className="hero-nowrap">Everyday Living</span>
           </h1>
-          <p>
-            {get('hero.subtext', 'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.')}
-          </p>
+          <p
+            dangerouslySetInnerHTML={{ __html: get('hero.subtext', 'Kar Organics is a new herbal company focused on natural extract-based wellness products. Discover trusted herbal solutions and order easily through WhatsApp.') }}
+          />
 
           <div className="hero-actions">
             <Link to="/products" className="btn btn-primary">View Products</Link>

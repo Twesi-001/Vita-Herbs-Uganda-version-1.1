@@ -8,6 +8,7 @@ import {
   CalendarDays, ArrowLeft,
 } from 'lucide-react';
 import { API_URL } from '../lib/api';
+import { RichTextEditor } from '../components/ui/RichTextEditor';
 import './AdminDashboard.css';
 
 interface Subscriber { id: number; email: string; created_at: string; }
@@ -29,7 +30,7 @@ const PAGE_META: Record<Tab, { title: string; subtitle: string }> = {
   settings: { title: 'Settings', subtitle: 'Manage your admin account and password.' },
 };
 
-type ContentFieldType = 'input' | 'textarea' | 'image';
+type ContentFieldType = 'input' | 'textarea' | 'image' | 'richtext';
 interface ContentField { key: string; label: string; type: ContentFieldType; group?: string; }
 interface ContentSection { title: string; desc: string; icon: React.ReactNode; fields: ContentField[]; }
 
@@ -37,15 +38,16 @@ const CONTENT_SECTIONS: ContentSection[] = [
   { title: 'Hero Section', desc: 'The first thing visitors see on the home page.', icon: <Home size={18} />, fields: [
     { key: 'hero.eyebrow', label: 'Eyebrow label', type: 'input' },
     { key: 'hero.heading', label: 'Main heading', type: 'input' },
-    { key: 'hero.subtext', label: 'Subtext paragraph', type: 'textarea' },
+    { key: 'hero.subtext', label: 'Subtext paragraph', type: 'richtext' },
   ]},
   { title: 'About Page', desc: 'Your story, heritage and the three pillars.', icon: <Sparkles size={18} />, fields: [
     { key: 'about.hero.eyebrow', label: 'Eyebrow', type: 'input', group: 'Page Header' },
     { key: 'about.hero.heading', label: 'Heading', type: 'input', group: 'Page Header' },
-    { key: 'about.hero.description', label: 'Description', type: 'textarea', group: 'Page Header' },
+    { key: 'about.hero.description', label: 'Description', type: 'richtext', group: 'Page Header' },
     { key: 'about.story.eyebrow', label: 'Eyebrow', type: 'input', group: 'Heritage Story' },
     { key: 'about.story.heading', label: 'Heading', type: 'input', group: 'Heritage Story' },
-    { key: 'about.story.body', label: 'Body text', type: 'textarea', group: 'Heritage Story' },
+    { key: 'about.story.body', label: 'Body text', type: 'richtext', group: 'Heritage Story' },
+    { key: 'about.story.body2', label: 'Second paragraph', type: 'richtext', group: 'Heritage Story' },
     { key: 'about.story.image', label: 'Heritage image (first)', type: 'image', group: 'Heritage Story' },
     { key: 'about.story.image2', label: 'Heritage image (second)', type: 'image', group: 'Heritage Story' },
     { key: 'about.pillar1.title', label: 'Title', type: 'input', group: 'Pillar 1' },
@@ -58,7 +60,7 @@ const CONTENT_SECTIONS: ContentSection[] = [
   { title: 'Why KarOrganics Section', desc: 'The "Trusted Herbal Products" block near the bottom of the About page.', icon: <Heart size={18} />, fields: [
     { key: 'about.why.eyebrow', label: 'Eyebrow', type: 'input', group: 'Section Intro' },
     { key: 'about.why.heading', label: 'Heading', type: 'input', group: 'Section Intro' },
-    { key: 'about.why.body', label: 'Body text', type: 'textarea', group: 'Section Intro' },
+    { key: 'about.why.body', label: 'Body text', type: 'richtext', group: 'Section Intro' },
     { key: 'about.why.item1', label: 'Item 1', type: 'input', group: 'Checklist' },
     { key: 'about.why.item2', label: 'Item 2', type: 'input', group: 'Checklist' },
     { key: 'about.why.item3', label: 'Item 3', type: 'input', group: 'Checklist' },
@@ -68,14 +70,14 @@ const CONTENT_SECTIONS: ContentSection[] = [
     { key: 'about.why.image', label: 'Section image', type: 'image' },
   ]},
   { title: 'Why It Matters', desc: 'The value cards shown on the home page.', icon: <ListChecks size={18} />, fields: [
-    { key: 'value.heading', label: 'Section heading', type: 'textarea', group: 'Section Intro' },
-    { key: 'value.subtext', label: 'Subtext', type: 'textarea', group: 'Section Intro' },
+    { key: 'value.heading', label: 'Section heading', type: 'richtext', group: 'Section Intro' },
+    { key: 'value.subtext', label: 'Subtext', type: 'richtext', group: 'Section Intro' },
     { key: 'value.card1.title', label: 'Title', type: 'input', group: 'Card 1' },
-    { key: 'value.card1.text', label: 'Text', type: 'textarea', group: 'Card 1' },
+    { key: 'value.card1.text', label: 'Text', type: 'richtext', group: 'Card 1' },
     { key: 'value.card2.title', label: 'Title', type: 'input', group: 'Card 2' },
-    { key: 'value.card2.text', label: 'Text', type: 'textarea', group: 'Card 2' },
+    { key: 'value.card2.text', label: 'Text', type: 'richtext', group: 'Card 2' },
     { key: 'value.card4.title', label: 'Title', type: 'input', group: 'Card 3' },
-    { key: 'value.card4.text', label: 'Text', type: 'textarea', group: 'Card 3' },
+    { key: 'value.card4.text', label: 'Text', type: 'richtext', group: 'Card 3' },
   ]},
   { title: 'Social Links', desc: 'Where your social buttons point to.', icon: <Share2 size={18} />, fields: [
     { key: 'social.whatsapp.url', label: 'WhatsApp URL', type: 'input' },
@@ -568,7 +570,12 @@ export default function AdminDashboard() {
         </div>
       ) : (
         <div className="cf-input">
-          {field.type === 'textarea' ? (
+          {field.type === 'richtext' ? (
+            <RichTextEditor
+              value={content[field.key] ?? ''}
+              onChange={html => setContent(c => ({ ...c, [field.key]: html }))}
+            />
+          ) : field.type === 'textarea' ? (
             <textarea
               rows={3}
               value={content[field.key] ?? ''}
