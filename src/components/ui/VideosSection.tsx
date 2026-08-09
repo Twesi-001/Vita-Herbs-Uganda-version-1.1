@@ -14,16 +14,20 @@ interface VideoItem {
 
 type Filter = 'all' | 'company' | 'product';
 
-export function VideosBody() {
+export function VideosBody({ hideIfEmpty = false }: { hideIfEmpty?: boolean } = {}) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const [filter, setFilter] = useState<Filter>('all');
 
   useEffect(() => {
     fetch(`${API_URL}/videos`)
       .then(r => r.json())
       .then((d: VideoItem[]) => setVideos(Array.isArray(d) ? d : []))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
+
+  if (hideIfEmpty && loaded && videos.length === 0) return null;
 
   const shown = filter === 'all' ? videos : videos.filter(v => v.category === filter);
 
