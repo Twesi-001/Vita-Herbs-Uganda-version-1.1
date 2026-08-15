@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Package, MessageSquare, Users, FileEdit, LogOut, Plus, Pencil, Trash2,
   Upload, Check, Loader, Menu, X, Download, Search, TrendingUp, KeyRound,
@@ -1232,54 +1233,54 @@ export default function AdminDashboard() {
 
           {/* ── REVIEWS ── */}
           {activeTab === 'reviews' && (
-            <div className="panel">
+            <div className="reviews-tab">
               {filteredReviews.length === 0 ? (
-                <div className="empty-state"><Star size={40} /><h3>{q ? 'No reviews match your search' : 'No reviews yet'}</h3></div>
+                <div className="panel"><div className="empty-state"><Star size={40} /><h3>{q ? 'No reviews match your search' : 'No reviews yet'}</h3></div></div>
               ) : (
-                <div className="table-scroll">
-                  <table className="data-table">
-                    <thead><tr><th>Reviewer</th><th>Rating</th><th>Review</th><th>Media</th><th>Status</th><th>Date</th><th></th></tr></thead>
-                    <tbody>
-                      {pagedReviews.map(r => (
-                        <tr key={r.id}>
-                          <td><div className="cell-strong">{r.name}</div></td>
-                          <td>{r.rating != null ? '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) : '—'}</td>
-                          <td>
-                            <button
-                              type="button"
-                              className={`review-preview-btn ${r.body ? '' : 'is-empty'}`}
-                              disabled={!r.body}
-                              onClick={() => setActiveReview(r)}
-                              title={r.body ? 'Click to read full review' : 'No review text'}
-                            >
-                              <span className="cell-sub cell-msg">{r.body || '—'}</span>
-                              {r.body && <span className="review-preview-action">Read full</span>}
-                            </button>
-                          </td>
-                          <td>
-                            {r.media_url && r.media_type === 'video' ? (
-                              <a href={r.media_url} target="_blank" rel="noreferrer">
-                                <video src={r.media_url} muted playsInline style={{ width: 64, height: 48, objectFit: 'cover', borderRadius: 6 }} />
-                              </a>
-                            ) : '—'}
-                          </td>
-                          <td>
-                            <select
-                              className={`status-select status-${r.status ?? 'pending'}`}
-                              value={r.status ?? 'pending'}
-                              onChange={e => updateReviewStatus(r.id, e.target.value)}
-                            >
-                              <option value="pending">Pending</option>
-                              <option value="approved">Approved</option>
-                              <option value="rejected">Rejected</option>
-                            </select>
-                          </td>
-                          <td className="cell-sub">{new Date(r.created_at).toLocaleDateString()}</td>
-                          <td><button className="icon-btn icon-danger" onClick={() => deleteRow('reviews', r.id)}><Trash2 size={15} /></button></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="review-grid">
+                  {pagedReviews.map(r => (
+                    <div className="review-card" key={r.id}>
+                      <div className="review-card-head">
+                        <div className="review-card-id">
+                          <div className="review-card-name">{r.name}</div>
+                          <div className="review-card-rating" aria-label={`Rating ${r.rating ?? 0} out of 5`}>
+                            {r.rating != null ? '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) : '—'}
+                          </div>
+                        </div>
+                        <select
+                          className={`status-select status-${r.status ?? 'pending'}`}
+                          value={r.status ?? 'pending'}
+                          onChange={e => updateReviewStatus(r.id, e.target.value)}
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="approved">Approved</option>
+                          <option value="rejected">Rejected</option>
+                        </select>
+                      </div>
+
+                      {r.media_url && r.media_type === 'video' && (
+                        <a href={r.media_url} target="_blank" rel="noreferrer" className="review-card-media">
+                          <video src={r.media_url} muted playsInline />
+                        </a>
+                      )}
+
+                      <button
+                        type="button"
+                        className={`review-card-body-btn ${r.body ? '' : 'is-empty'}`}
+                        disabled={!r.body}
+                        onClick={() => setActiveReview(r)}
+                        title={r.body ? 'Click to read full review' : 'No review text'}
+                      >
+                        <p className="review-card-body-text">{r.body || 'No review text'}</p>
+                        {r.body && <span className="review-preview-action">Read full</span>}
+                      </button>
+
+                      <div className="review-card-foot">
+                        <span className="cell-sub">{new Date(r.created_at).toLocaleDateString()}</span>
+                        <button className="icon-btn icon-danger" onClick={() => deleteRow('reviews', r.id)}><Trash2 size={15} /></button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
               {reviewPages > 1 && (
@@ -1290,7 +1291,7 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {activeReview && (
+              {activeReview && createPortal(
                 <div className="review-modal-backdrop" onClick={() => setActiveReview(null)} role="presentation">
                   <div
                     className="review-modal"
@@ -1315,7 +1316,8 @@ export default function AdminDashboard() {
 
                     <p className="review-modal-body">{activeReview.body}</p>
                   </div>
-                </div>
+                </div>,
+                document.body
               )}
             </div>
           )}
