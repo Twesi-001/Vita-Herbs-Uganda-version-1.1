@@ -36,11 +36,11 @@ export async function sendBroadcastEmail(
   subject: string,
   textBody: string,
   attachments: BroadcastAttachment[] = [],
-): Promise<void> {
+): Promise<{ accepted: string[]; rejected: string[] }> {
   const user = process.env.EMAIL_USER;
   const transport = getTransporter();
 
-  await transport.sendMail({
+  const info = await transport.sendMail({
     from: `KarOrganics Uganda <${user}>`,
     to: user,
     bcc: recipients,
@@ -48,4 +48,17 @@ export async function sendBroadcastEmail(
     text: textBody,
     attachments,
   });
+
+  console.log('[mailer] broadcast result', {
+    messageId: info.messageId,
+    response: info.response,
+    accepted: info.accepted,
+    rejected: info.rejected,
+    attachments: attachments.map((a) => ({ filename: a.filename, contentType: a.contentType, bytes: a.content.length })),
+  });
+
+  return {
+    accepted: (info.accepted ?? []).map(String),
+    rejected: (info.rejected ?? []).map(String),
+  };
 }

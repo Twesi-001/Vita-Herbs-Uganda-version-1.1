@@ -181,8 +181,12 @@ router.post('/subscribers/broadcast', (req, res, next) => {
     }
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
     const attachments = files.map((f) => ({ filename: f.originalname, content: f.buffer, contentType: f.mimetype }));
-    await sendBroadcastEmail(recipients, parsed.data.subject, parsed.data.message, attachments);
-    res.json({ message: `Sent to ${recipients.length} subscriber${recipients.length === 1 ? '' : 's'}` });
+    const { accepted, rejected } = await sendBroadcastEmail(recipients, parsed.data.subject, parsed.data.message, attachments);
+    if (rejected.length > 0) {
+      res.status(502).json({ message: `Gmail rejected ${rejected.length} of ${recipients.length} recipient${recipients.length === 1 ? '' : 's'}: ${rejected.join(', ')}` });
+      return;
+    }
+    res.json({ message: `Sent to ${accepted.length} subscriber${accepted.length === 1 ? '' : 's'}` });
   } catch (err) {
     if (err instanceof Error && err.message.includes('EMAIL_USER')) {
       res.status(500).json({ message: 'Email is not configured on the server yet' });
