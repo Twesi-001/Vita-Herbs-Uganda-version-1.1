@@ -608,14 +608,17 @@
   padding: 16px;
 }
 .review-modal {
-  width: min(720px, 100%);
-  max-height: min(80vh, 640px);
+  width: min(560px, 100%);
+  min-height: min(70vh, 520px);
+  max-height: min(85vh, 720px);
   overflow: auto;
   background: #fff;
   border: 1px solid var(--bd);
-  border-radius: 14px;
+  border-radius: 22px;
   box-shadow: var(--shadow-lg);
-  padding: 18px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
 }
 .review-modal-head {
   display: flex;
@@ -625,24 +628,25 @@
 }
 .review-modal-head h3 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   color: var(--ink);
 }
 .review-modal-head p {
-  margin: 4px 0 0;
-  font-size: 0.82rem;
+  margin: 6px 0 0;
+  font-size: 0.85rem;
   color: var(--ink-faint);
 }
 .review-modal-rating {
-  margin-top: 10px;
+  margin-top: 18px;
   color: #f59e0b;
-  font-size: 1rem;
-  letter-spacing: 0.8px;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
 }
 .review-modal-body {
-  margin: 12px 0 0;
+  margin: 24px 0 0;
   white-space: pre-wrap;
-  line-height: 1.6;
+  line-height: 1.75;
+  font-size: 1.02rem;
   color: var(--ink-soft);
 }
 
