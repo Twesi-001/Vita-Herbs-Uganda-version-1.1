@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { lazy, Suspense, Component, ReactNode, useEffect } from 'react';
+import { lazy, Suspense, Component, useEffect, type ReactNode } from 'react';
 import Header from '../components/ui/Header';
 import Footer from '../components/ui/Footer';
 import BackToTop from '../components/ui/BackToTop';

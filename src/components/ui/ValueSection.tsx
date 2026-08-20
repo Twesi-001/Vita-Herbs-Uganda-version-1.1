@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { Sunrise, Zap, Heart } from 'lucide-react';
 import './ValueSection.css';
 import { useSiteContent } from '../../hooks/useSiteContent';
