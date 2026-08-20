@@ -1,0 +1,49 @@
+/* ══ Responsive ══ */
+@media (max-width: 1024px) {
+  .stat-card-row { grid-template-columns: repeat(2, 1fr); }
+  .metric-card-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .admin-sidebar,
+  .layout-collapsed .admin-sidebar { transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: var(--shadow-lg); width: var(--side-w); }
+  .sidebar-open { transform: translateX(0); }
+  .sidebar-close { display: inline-flex; }
+  .sidebar-collapse-btn { display: none; }
+  .admin-main,
+  .layout-collapsed .admin-main { margin-left: 0; }
+  .layout-collapsed .brand-text,
+  .layout-collapsed .nav-section-label,
+  .layout-collapsed .nav-label,
+  .layout-collapsed .nav-badge { display: block; }
+  .layout-collapsed .nav-item { justify-content: flex-start; padding: 12px 13px; }
+  .layout-collapsed .sidebar-brand { padding: 22px 20px; justify-content: flex-start; }
+  .layout-collapsed .sidebar-footer .nav-item { justify-content: flex-start; padding: 12px 13px; }
+  .layout-collapsed .nav-logout .nav-label { display: inline; }
+  .hamburger { display: inline-flex; }
+}
+@media (max-width: 620px) {
+  .admin-topbar { flex-wrap: wrap; padding: 14px 16px; gap: 12px; }
+  .topbar-titles { order: 2; flex-basis: 100%; }
+  .topbar-right { order: 3; flex-basis: 100%; }
+  .search-box { flex: 1; }
+  .search-box input { width: 100%; }
+  .admin-content { padding: 16px; }
+  .dash-welcome { flex-direction: column; align-items: flex-start; padding: 4px 2px 18px; }
+  .dash-date-pill { width: 100%; justify-content: center; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .stat-card-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric-card-row { grid-template-columns: 1fr; gap: 10px; }
+  .stat-card-body h4 { font-size: 1.25rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .page-title { font-size: 1.15rem; }
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cf-card-body--pair { grid-template-columns: 1fr; }
+  .cf-input { flex-direction: column; align-items: stretch; }
+  .cf-input .save-btn { align-self: flex-end; }
+  .cf-image-row { flex-direction: column; }
+  .detail-head h2 { font-size: 1.05rem; }
+}
+@media (max-width: 430px) {
+  .product-grid { grid-template-columns: 1fr; }
+  .topbar-right .btn { flex: 1; }
+}

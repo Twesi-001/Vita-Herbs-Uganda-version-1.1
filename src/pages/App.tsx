@@ -23,7 +23,7 @@ const Contact = lazy(() => import('./Contact'));
 const Reviews = lazy(() => import('./Reviews'));
 const Videos = lazy(() => import('./Videos'));
 const Socials = lazy(() => import('./Socials'));
-const AdminDashboard = lazy(() => import('./AdminDashboard'));
+const AdminApp = lazy(() => import('../admin/AdminApp'));
 const NotFound = lazy(() => import('./NotFound'));
 
 function PageLoader() {
@@ -71,7 +71,6 @@ function PublicLayout() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/videos" element={<Videos />} />
-              <Route path="/AdminDashboard" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
@@ -88,7 +87,8 @@ function App() {
     <ErrorBoundary>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/admin" element={<AdminDashboard />} />
+          {/* Wildcard so the admin owns its own nested routes (/admin/products/new etc.). */}
+          <Route path="/admin/*" element={<AdminApp />} />
           <Route path="/*" element={<PublicLayout />} />
         </Routes>
       </Suspense>

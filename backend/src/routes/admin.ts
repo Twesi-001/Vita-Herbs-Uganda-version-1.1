@@ -113,7 +113,7 @@ router.get('/subscribers', async (_req, res, next) => {
 router.get('/contacts', async (_req, res, next) => {
   try {
     const { rows } = await query(
-      'SELECT id, name, email, phone, product, quantity, message, created_at FROM inquiries ORDER BY created_at DESC',
+      'SELECT id, name, email, phone, product, quantity, message, status, created_at FROM inquiries ORDER BY created_at DESC',
     );
     res.json(rows);
   } catch (err) {
@@ -291,7 +291,7 @@ router.get('/export/subscribers', async (_req, res, next) => {
 router.get('/export/contacts', async (_req, res, next) => {
   try {
     const { rows } = await query(
-      'SELECT id, name, email, phone, product, quantity, message, created_at FROM inquiries ORDER BY created_at DESC',
+      'SELECT id, name, email, phone, product, quantity, message, status, created_at FROM inquiries ORDER BY created_at DESC',
     );
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="contacts.csv"');
@@ -330,6 +330,17 @@ router.get('/products', async (_req, res, next) => {
   try {
     const { rows } = await query('SELECT * FROM products ORDER BY id');
     res.json(rows);
+  } catch (err) { next(err); }
+});
+
+// Single product for the admin edit form. The public GET /products/:id would
+// mostly work, but it isn't behind requireAdmin and is free to start filtering
+// to active-only — which would silently break editing a hidden product.
+router.get('/products/:id', async (req, res, next) => {
+  try {
+    const { rows } = await query('SELECT * FROM products WHERE id = $1', [req.params.id]);
+    if (rows.length === 0) { res.status(404).json({ error: 'Not found' }); return; }
+    res.json(rows[0]);
   } catch (err) { next(err); }
 });
 

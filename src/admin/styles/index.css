@@ -1,0 +1,9 @@
+/* Admin stylesheet entry point.
+   Import order matters — it preserves the cascade of the original
+   single-file AdminDashboard.css, with responsive overrides last. */
+@import './tokens.css';
+@import './layout.css';
+@import './components.css';
+@import './admin-ui.css';
+@import './pages.css';
+@import './responsive.css';

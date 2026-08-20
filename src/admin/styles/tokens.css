@@ -1,0 +1,56 @@
+/* ══════════════════════════════════════════════════════════════
+   KarOrganicsAdmin Dashboard — scoped variables (never use :root,
+   it would leak into the public site)
+   ══════════════════════════════════════════════════════════════ */
+.admin-shell,
+.admin-layout,
+.admin-login-page,
+.admin-splash {
+  --side-w: 256px;
+  --side-bg: #0d1b0d;
+  --side-bg-2: #122312;
+  --side-border: rgba(255,255,255,0.07);
+  --nav-muted: rgba(255,255,255,0.55);
+  --nav-hover: rgba(255,255,255,0.08);
+  --accent: #34a853;
+  --accent-dark: #1e7e34;
+  --accent-soft: rgba(52,168,83,0.12);
+  --bg: #f4f6f4;
+  --card: #ffffff;
+  --bd: #e6e9e6;
+  --bd-strong: #d3d8d3;
+  --ink: #16241a;
+  --ink-soft: #5d6b5f;
+  --ink-faint: #5c6b5e;
+  --red: #e23b3b;
+  --red-soft: #fdecec;
+  --blue: #2563eb;
+  --blue-soft: #e8f0fe;
+  --amber: #d9920a;
+  --amber-soft: #fdf4e3;
+  --purple: #7c3aed;
+  --purple-soft: #f1ebfd;
+  --radius: 8px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(16,40,20,0.06);
+  --shadow: 0 2px 8px rgba(16,40,20,0.07), 0 1px 2px rgba(16,40,20,0.05);
+  --shadow-lg: 0 10px 30px rgba(16,40,20,0.10);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6,
+.admin-layout .page-title,
+.admin-layout .pc-body h3,
+.admin-layout .panel-head h2,
+.admin-layout .detail-head h2,
+.admin-layout .empty-state h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
