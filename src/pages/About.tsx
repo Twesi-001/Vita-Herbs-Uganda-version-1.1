@@ -1,80 +1,68 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CheckCircle, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight, ArrowRight, Mail } from "lucide-react";
 import "./About.css";
 import { useSiteContent } from "../hooks/useSiteContent";
 import herbsImg from "../assets/Herbs.jpg";
+import { FOUNDER_DEFAULTS, FOUNDERS_HEADING, FOUNDERS_SUBTEXT, founderKey, type Founder } from "../lib/founders";
 import MissionSection from "../components/ui/MissionSection";
 import { VideosBody } from "../components/ui/VideosSection";
 
-function IconFacebook() {
-  return (
-    <svg viewBox="0 0 320 512" fill="currentColor" aria-hidden="true">
-      <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
-    </svg>
-  );
-}
-function IconTwitter() {
-  return (
-    <svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
-      <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
-    </svg>
-  );
-}
-function IconInstagram() {
-  return (
-    <svg viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
-      <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
-    </svg>
-  );
-}
-function IconLinkedIn() {
-  return (
-    <svg viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
-      <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" />
-    </svg>
-  );
-}
+// Same address the header and contact page use.
+const KAR_EMAIL = "hello@karorganics.ug";
 
-
-const team = [
-  {
-    name: "Sarah Nakato",
-    role: "Founder & CEO",
-    location: "Kampala, Uganda",
-    bio: "Sarah founded KarOrganics Uganda with a passion for preserving Uganda's rich herbal heritage. She leads the company's vision to make natural wellness accessible to every household.",
-    photo: "https://i.pravatar.cc/600?img=47",
-  },
-  {
-    name: "James Mugisha",
-    role: "Head of Production",
-    location: "Kampala, Uganda",
-    bio: "James oversees the sourcing and processing of all herbal products, working directly with local farmers to ensure the highest quality and ethical harvesting practices.",
-    photo: "https://i.pravatar.cc/600?img=12",
-  },
-  {
-    name: "Grace Achieng",
-    role: "Customer Relations",
-    location: "Kampala, Uganda",
-    bio: "Grace is the friendly voice behind our WhatsApp support. She ensures every customer receives personalised guidance and prompt responses to their inquiries.",
-    photo: "https://i.pravatar.cc/600?img=32",
-  },
-];
+// Ugandan numbers are shared locally ("0701924517") but wa.me needs E.164
+// digits, so normalise before building the link while still displaying the
+// number exactly as it was typed in the admin panel.
+function toWhatsAppNumber(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('256')) return digits;
+  if (digits.startsWith('0')) return `256${digits.slice(1)}`;
+  return digits;
+}
 
 // Shared About content (without the page hero) so it can be reused
 // both on the standalone /about route and embedded on the Home page.
 export function AboutBody() {
   const get = useSiteContent();
+
+  // Founders come from the admin Site Content keys, falling back to the
+  // built-in defaults. A founder without a name is treated as unset and
+  // dropped, so the carousel never shows a blank slide.
+  const founders: Founder[] = FOUNDER_DEFAULTS.map((def, i) => {
+    const k = (field: string) => founderKey(i, field);
+    return {
+      name: get(k('name'), def.name),
+      role: get(k('role'), def.role),
+      location: get(k('location'), def.location),
+      bio: get(k('bio'), def.bio),
+      // A cleared photo falls back to the bundled one rather than an empty src.
+      photo: get(k('photo'), def.photo) || def.photo,
+      phones: [get(k('phone1'), def.phones[0] ?? ''), get(k('phone2'), def.phones[1] ?? '')]
+        .map(p => p.trim())
+        .filter(Boolean),
+    };
+  }).filter(f => f.name.trim());
+
   const [teamIdx, setTeamIdx] = useState(0);
-  const prev = () => setTeamIdx(i => (i - 1 + team.length) % team.length);
-  const next = () => setTeamIdx(i => (i + 1) % team.length);
+  const count = founders.length;
+  const activeIdx = count ? teamIdx % count : 0;
+  const founder = founders[activeIdx];
+  const prev = () => setTeamIdx(i => (i - 1 + count) % count);
+  const next = () => setTeamIdx(i => (i + 1) % count);
+
+  // Hovering (or tabbing into) the carousel holds the current founder so the
+  // slide can't change out from under someone reading it or reaching for a
+  // contact link.
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
+    if (count < 2 || paused) return;
     const timer = setInterval(() => {
-      setTeamIdx(i => (i + 1) % team.length);
+      setTeamIdx(i => (i + 1) % count);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [count, paused]);
 
   return (
     <>
@@ -107,45 +95,83 @@ export function AboutBody() {
       {/* ── Videos ── */}
       <VideosBody hideIfEmpty />
 
-      {/* ── Meet Our Team ── */}
-      <section className="about-team">
-        <div className="container">
-          <div className="section-header">
-            <h2>Meet Our Team</h2>
-            <p>The passionate people behind KarOrganics Uganda - dedicated to bringing you the finest herbal products from the heart of East Africa.</p>
-          </div>
-          <div className="team-carousel">
-            <button className="team-arrow team-arrow--prev" onClick={prev} aria-label="Previous">
-              <ChevronLeft />
-            </button>
+      {/* ── Meet Our Founders ── */}
+      {founder && (
+        <section className="about-team">
+          <div className="container">
+            <div className="section-header">
+              <h2>{get('founders.heading', FOUNDERS_HEADING)}</h2>
+              <p>{get('founders.subtext', FOUNDERS_SUBTEXT)}</p>
+            </div>
+            <div
+              className={`team-carousel ${paused ? 'is-paused' : ''}`}
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
+              onFocusCapture={() => setPaused(true)}
+              onBlurCapture={() => setPaused(false)}
+            >
+              {count > 1 && (
+                <button className="team-arrow team-arrow--prev" onClick={prev} aria-label="Previous">
+                  <ChevronLeft />
+                </button>
+              )}
 
-            <div className="team-item">
-              <div className="team-thumb">
-                <img src={team[teamIdx].photo} alt={team[teamIdx].name} />
-              </div>
-              <div className="team-info">
-                <h3>{team[teamIdx].name}</h3>
-                <h5>{team[teamIdx].role}</h5>
-                <ul className="team-meta">
-                  <li>Location: <span>{team[teamIdx].location}</span></li>
-                  <li>Department: <span>KarOrganics Uganda</span></li>
-                </ul>
-                <p>{team[teamIdx].bio}</p>
-                <div className="team-social">
-                  <a href="#" aria-label="Facebook"><IconFacebook /></a>
-                  <a href="#" aria-label="Twitter"><IconTwitter /></a>
-                  <a href="#" aria-label="Instagram"><IconInstagram /></a>
-                  <a href="#" aria-label="LinkedIn"><IconLinkedIn /></a>
+              <div className="team-item">
+                <div className="team-thumb">
+                  <img
+                    src={founder.photo}
+                    alt={founder.name}
+                    // A saved URL can go stale (a removed upload, or a bundled
+                    // path whose build hash has since changed) - drop back to
+                    // the photo shipped with the site rather than a broken image.
+                    onError={(e) => {
+                      const fallback = FOUNDER_DEFAULTS[activeIdx]?.photo;
+                      if (fallback && !e.currentTarget.src.endsWith(fallback)) {
+                        e.currentTarget.src = fallback;
+                      }
+                    }}
+                  />
+                </div>
+                <div className="team-info">
+                  <h3>{founder.name}</h3>
+                  <h5>{founder.role}</h5>
+                  <ul className="team-meta">
+                    {founder.location && <li>Location: <span>{founder.location}</span></li>}
+                    {founder.phones.length > 0 && (
+                      <li>
+                        Contact:
+                        <span className="team-phones">
+                          {founder.phones.map((phone) => (
+                            <a
+                              key={phone}
+                              className="team-phone"
+                              href={`https://wa.me/${toWhatsAppNumber(phone)}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {phone}
+                            </a>
+                          ))}
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+                  <div className="team-bio" dangerouslySetInnerHTML={{ __html: founder.bio }} />
+                  <a className="team-contact-btn" href={`mailto:${KAR_EMAIL}`}>
+                    <Mail size={16} /> Contact Us
+                  </a>
                 </div>
               </div>
-            </div>
 
-            <button className="team-arrow team-arrow--next" onClick={next} aria-label="Next">
-              <ChevronRight />
-            </button>
+              {count > 1 && (
+                <button className="team-arrow team-arrow--next" onClick={next} aria-label="Next">
+                  <ChevronRight />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── Why KarOrganics ── */}
       <section className="about-why">

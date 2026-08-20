@@ -7,6 +7,8 @@
   --green-dark: #1b5e20;
   --green-light: #4caf50;
   --gold: #d4af37;
+  --red: #c0392b;
+  --red-dark: #96281b;
   --text-dark: #1f2937;
   --text-light: #4b5563;
   --text-muted: #6b7280;
@@ -395,35 +397,66 @@
   align-self: stretch;
 }
 
-.team-arrow:hover { color: var(--green-dark); }
-
+/* The bare chevron read as decoration - give it a real target and an
+   obvious hover state so it's clear the carousel can be stepped by hand. */
 .team-arrow svg {
   width: 28px;
   height: 28px;
+  border-radius: 50%;
+  padding: 6px;
+  box-sizing: content-box;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.team-arrow:hover svg {
+  background: var(--green);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.team-arrow:active svg { transform: scale(0.96); }
+
+.team-arrow:focus-visible svg {
+  outline: 2px solid var(--green-dark);
+  outline-offset: 2px;
 }
 
 /* The card — flat, no radius, no shadow, like the reference */
 .team-item {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Photo takes the narrower column so the portrait stays a portrait
+     instead of dominating the card. */
+  grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr);
   background: #fff;
   overflow: hidden;
 }
 
-/* Image side — fills the full left half */
+/* Image side */
 .team-thumb {
-  min-height: 360px;
+  position: relative;
+  min-height: 260px;
+  max-height: 460px;
+  align-self: center;
+  aspect-ratio: 3 / 4;
+  width: 100%;
   background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Taken out of flow so a tall portrait can't stretch the card - the photo
+   fills whatever height the info column needs and crops to fit. */
 .team-thumb img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Founder portraits are full-length shots, so bias the crop upward to keep
+     faces in frame instead of centring on the torso. */
+  object-position: 50% 18%;
   display: block;
 }
 
@@ -461,6 +494,9 @@
   font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 6px;
+  /* Uppercased in CSS so the admin panel keeps the name in normal case. */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .team-info h5 {
@@ -495,40 +531,61 @@
   font-weight: 500;
 }
 
-.team-info > p {
+.team-info > p,
+.team-bio {
   font-size: 0.95rem;
   color: #666;
   line-height: 1.8;
   margin: 0 0 28px;
 }
 
-/* Filled-circle social icons — exactly like the reference */
-.team-social {
+/* The bio is rich text from the admin panel, so tame the tags it can emit. */
+.team-bio p { margin: 0 0 12px; }
+.team-bio p:last-child { margin-bottom: 0; }
+.team-bio ul,
+.team-bio ol { margin: 0 0 12px; padding-left: 20px; }
+.team-bio a { color: var(--green); }
+
+/* Both numbers share one "Contact" row, stacked so each stays tappable. */
+.team-phones {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
 }
 
-.team-social a {
-  width: 42px;
-  height: 42px;
+.team-phone {
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.team-phone:hover {
+  color: var(--green);
+  text-decoration: underline;
+}
+
+/* Mail the company about this founder */
+.team-contact-btn {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--green);
+  gap: 9px;
+  background: var(--red);
   color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 26px;
+  border-radius: 4px;
   text-decoration: none;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.team-social a:hover {
-  background: var(--green-dark);
+.team-contact-btn:hover {
+  background: var(--red-dark);
   transform: translateY(-2px);
-}
-
-.team-social svg {
-  width: 15px;
-  height: 15px;
 }
 
 /* ── Why Choose Us ──────────────────────────────────────── */
@@ -658,7 +715,14 @@
   .team-arrow--next { order: 3; }
   .team-item        { order: 1; flex: 1 1 100%; grid-template-columns: 1fr; }
 
-  .team-thumb { min-height: 240px; }
+  /* Stacked layout: keep the portrait a centred card rather than a
+     full-bleed band across the top. */
+  .team-thumb {
+    min-height: 220px;
+    max-height: 360px;
+    max-width: 270px;
+    margin: 28px auto 0;
+  }
 }
 
 @media (max-width: 768px) {
@@ -694,6 +758,9 @@
   /* team */
   .team-info { padding: 28px 24px; }
   .team-info h3 { font-size: 1.2rem; }
+  /* The carousel rotates on its own, so the arrows are just clutter on a
+     phone where they wrap onto their own row below the card. */
+  .team-arrow { display: none; }
   .about-team  { padding: 56px 0; }
   .about-history,
   .about-mission,
@@ -704,7 +771,7 @@
   .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
   .about-hero h1 { font-size: 26px; }
   .team-info { padding: 22px 18px; }
-  .team-social a { width: 34px; height: 34px; }
+  .team-contact-btn { padding: 11px 20px; font-size: 0.8rem; }
 }
 
 @media (max-width: 480px) {
